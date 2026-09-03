@@ -26,6 +26,7 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import java.net.URI
 import java.net.URISyntaxException
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -70,7 +71,7 @@ class BloomFilterAdBlocker @Inject constructor(
                         if (trimmed.isEmpty() || trimmed.startsWith("#")) continue
                         val parts = trimmed.split(Regex("\\s+"))
                         val host = if (parts.size >= 2) parts[1] else parts[0]
-                        temp.add(host.lowercase())
+                        temp.add(host.toLowerCase(Locale.ROOT))
                     }
                     synchronized(fastHostSet) {
                         fastHostSet.clear()
@@ -162,7 +163,7 @@ class BloomFilterAdBlocker @Inject constructor(
             return false
         }
 
-        var current = domain.name.lowercase()
+        var current = domain.name.toLowerCase(Locale.ROOT)
         while (current.isNotEmpty()) {
             synchronized(fastHostSet) {
                 if (fastHostSet.contains(current)) {

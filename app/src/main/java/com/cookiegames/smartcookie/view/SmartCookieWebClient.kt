@@ -150,7 +150,7 @@ class SmartCookieWebClient(
         if (whitelistModel.isUrlAllowedAds(pageUrl)) return false
         if (adBlock.isAd(requestUrl)) return true
 
-        val lower = requestUrl.lowercase()
+        val lower = requestUrl.toLowerCase(Locale.ROOT)
         if (lower.contains("/pagead/") ||
             lower.contains("/ads.js") ||
             lower.contains("/pagead.js") ||
@@ -888,8 +888,8 @@ class SmartCookieWebClient(
     override fun onReceivedSslError(webView: WebView, handler: SslErrorHandler, error: SslError) {
         val currentUrl = webView.url ?: ""
         val errorUrl = error.url ?: ""
-        val currentHost = try { java.net.URI(currentUrl).host?.lowercase() } catch (e: Exception) { null } ?: ""
-        val errorHost = try { java.net.URI(errorUrl).host?.lowercase() } catch (e: Exception) { null } ?: ""
+        val currentHost = try { java.net.URI(currentUrl).host?.toLowerCase(Locale.ROOT) } catch (e: Exception) { null } ?: ""
+        val errorHost = try { java.net.URI(errorUrl).host?.toLowerCase(Locale.ROOT) } catch (e: Exception) { null } ?: ""
 
         val isMainPage = currentHost.isNotEmpty() && (currentHost == errorHost || currentUrl == errorUrl)
 
