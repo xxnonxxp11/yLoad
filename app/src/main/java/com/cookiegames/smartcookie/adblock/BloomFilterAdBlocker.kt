@@ -137,20 +137,25 @@ class BloomFilterAdBlocker @Inject constructor(
             return false
         }
 
-        val mightBeOnBlockList = bloomFilter.mightContain(domain)
-
-        return if (mightBeOnBlockList) {
-            val isOnBlockList = hostsRepository.containsHost(domain)
-            if (isOnBlockList) {
-                logger.log(TAG, "URL '$url' is an ad")
-            } else {
-                logger.log(TAG, "False positive for $url")
+        var current = domain.name
+        while (current.isNotEmpty()) {
+            val host = Host(current)
+            if (bloomFilter.mightContain(host)) {
+                if (hostsRepository.containsHost(host)) {
+                    logger.log(TAG, "URL '$url' blocked by host rule: $current")
+                    return true
+                }
             }
-
-            isOnBlockList
-        } else {
-            false
+            val dotIndex = current.indexOf('.')
+            if (dotIndex != -1 && dotIndex < current.length - 1) {
+                current = current.substring(dotIndex + 1)
+                if (!current.contains('.')) break
+            } else {
+                break
+            }
         }
+
+        return false
     }
 
     /**

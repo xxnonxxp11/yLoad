@@ -25,6 +25,7 @@ import com.cookiegames.smartcookie.AppTheme
 import com.cookiegames.smartcookie.BuildConfig
 import com.cookiegames.smartcookie.R
 import com.cookiegames.smartcookie.adblock.AdBlocker
+import com.cookiegames.smartcookie.adblock.UBlockAdDefuser
 import com.cookiegames.smartcookie.adblock.allowlist.AllowListModel
 import com.cookiegames.smartcookie.browser.JavaScriptChoice
 import com.cookiegames.smartcookie.browser.SiteBlockChoice
@@ -102,6 +103,7 @@ class SmartCookieWebClient(
     @Inject internal lateinit var noAMP: BlockAMP
     @Inject internal lateinit var cookieBlock: CookieBlock
     @Inject internal lateinit var blockAds: BlockAds
+    @Inject internal lateinit var uBlockAdDefuser: UBlockAdDefuser
     @Inject internal lateinit var setWidenView: SetWidenViewport
     @Inject internal lateinit var javascriptRepository: JavaScriptRepository
     @Inject @field:DatabaseScheduler internal lateinit var databaseScheduler: Scheduler
@@ -338,6 +340,13 @@ class SmartCookieWebClient(
                 view.evaluateJavascript("javascript:(function() {"
                         + "link" + i + "var = '" + preferenceArray[i - 1] + "';"
                         + "})();", null)
+            }
+        }
+
+        if (userPreferences.adBlockEnabled) {
+            view.evaluateJavascript(uBlockAdDefuser.cosmeticInjectionJs, null)
+            if (url.contains("youtube.com") || url.contains("youtu.be")) {
+                view.evaluateJavascript(uBlockAdDefuser.youtubeAdDefuserJs, null)
             }
         }
 
@@ -598,6 +607,13 @@ class SmartCookieWebClient(
             view.evaluateJavascript(noAMP.provideJs(), null)
             if(url.contains("&ampcf=1")){
                 view.evaluateJavascript("window.location.replace(\"" + url.replace("&ampcf=1", "") + "\");", null)
+            }
+        }
+
+        if (userPreferences.adBlockEnabled) {
+            view.evaluateJavascript(uBlockAdDefuser.cosmeticInjectionJs, null)
+            if (url.contains("youtube.com") || url.contains("youtu.be")) {
+                view.evaluateJavascript(uBlockAdDefuser.youtubeAdDefuserJs, null)
             }
         }
 

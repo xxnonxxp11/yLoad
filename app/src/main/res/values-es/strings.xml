@@ -18,6 +18,7 @@
     <string name="fullscreen">Modo de pantalla completa</string>
     <string name="java">Habilitar Javascript</string>
     <string name="download">Descargar ubicación</string>
+    <string name="action_menu">Menú</string>
     <string name="settings_advanced">Ajustes avanzados</string>
     <string name="settings_advanced_explain">Contenido del cuadro de URL, modo de representación, codificación de texto ...</string>
     <string name="apache">Licencia Apache 2.0</string>

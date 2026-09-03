@@ -774,8 +774,8 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         val currentView = tabsManager.currentTab
         val extraBar = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
-        if(isDarkTheme && userPreferences.navbar){
-            extraBar.setBackgroundColor(resources.getColor(R.color.black))
+        if(userPreferences.navbar){
+            extraBar.setBackgroundColor(if(isDarkTheme) resources.getColor(R.color.black) else resources.getColor(R.color.white))
         }
 
         webPageBitmap?.let { webBitmap ->
@@ -805,31 +805,33 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         }
         else{
             extraBar.visibility = VISIBLE
-            if(!userPreferences.showTabsInDrawer){
-                extraBar.menu.removeItem(R.id.tabs)
-            }
             extraBar.setOnNavigationItemSelectedListener { item ->
                 when(item.itemId) {
-                    R.id.tabs -> {
-                        drawer_layout.closeDrawer(getBookmarkDrawer())
-                        toggleDrawer(drawer_layout, getTabDrawer())
-                        true
-                    }
-                    R.id.bookmarks -> {
-                        drawer_layout.closeDrawer(getTabDrawer())
-                        toggleDrawer(drawer_layout, getBookmarkDrawer())
+                    R.id.back -> {
+                        tabsManager.currentTab?.goBack()
                         true
                     }
                     R.id.forward -> {
                         tabsManager.currentTab?.goForward()
                         true
                     }
-                    R.id.back -> {
-                        tabsManager.currentTab?.goBack()
-                        true
-                    }
                     R.id.home -> {
                         tabsManager.currentTab?.loadHomePage()
+                        true
+                    }
+                    R.id.tabs -> {
+                        drawer_layout.closeDrawer(getBookmarkDrawer())
+                        toggleDrawer(drawer_layout, getTabDrawer())
+                        true
+                    }
+                    R.id.menu -> {
+                        val anchor = extraBar.findViewById<View>(R.id.menu) ?: extraBar
+                        popUpClass.showPopupWindow(anchor, this)
+                        true
+                    }
+                    R.id.bookmarks -> {
+                        drawer_layout.closeDrawer(getTabDrawer())
+                        toggleDrawer(drawer_layout, getBookmarkDrawer())
                         true
                     }
                     else -> false

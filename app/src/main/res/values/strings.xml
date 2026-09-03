@@ -20,6 +20,7 @@
     <string name="agent">User agent</string>
     <string name="flash">Enable Adobe Flash</string>
     <string name="home">Homepage</string>
+    <string name="action_menu">Menu</string>
     <string name="fullscreen">Hide URL bar while scrolling</string>
     <string name="java">Enable JavaScript</string>
     <string name="download">Download location</string>

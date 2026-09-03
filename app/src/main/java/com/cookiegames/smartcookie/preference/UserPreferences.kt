@@ -376,8 +376,8 @@ class UserPreferences @Inject constructor(
 
     var useNewDownloader by preferences.booleanPreference(NEW_DOWNLOADER, false)
 
-    // Show second navbar at the bottom of the screen
-    var navbar by preferences.booleanPreference(SECOND_BAR, false)
+    // Show second navbar at the bottom of the screen (Via Browser style)
+    var navbar by preferences.booleanPreference(SECOND_BAR, true)
 
     // Load all tabs on browser start
     var allTabs by preferences.booleanPreference(ALL_TABS, false)

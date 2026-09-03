@@ -125,23 +125,13 @@ class HomePageFactory @Inject constructor(
         .doOnSuccess { (page, content) ->
             FileWriter(page, false).use {
                 if(userPreferences.startPageThemeEnabled && userPreferences.useTheme == AppTheme.LIGHT){
-                    it.write(content)
+                    it.write(content + "<style>body { background-color: #ffffff !important; } .text, .edit { color: #111111; fill: #111111; } .search_bar { background-color: #ffffff !important; border: 1px solid rgba(0,0,0,0.18) !important; border-radius: 24px !important; box-shadow: none !important; } #search_input { color: #111111 !important; }</style>")
                 }
                 else if(userPreferences.startPageThemeEnabled && userPreferences.useTheme == AppTheme.BLACK){
-                    it.write(content + "<style>body {\n" +
-                            "    background-color: #000000;\n" +
-                            "} .text, .edit{" +
-                            "color: #ffffff;" +
-                            "fill: #ffffff;" +
-                            "}</style>")
+                    it.write(content + "<style>body { background-color: #000000 !important; } .text, .edit { color: #ffffff; fill: #ffffff; } .search_bar { background-color: #000000 !important; border: 1px solid rgba(255,255,255,0.22) !important; border-radius: 24px !important; box-shadow: none !important; } #search_input { color: #ffffff !important; }</style>")
                 }
                 else if(userPreferences.startPageThemeEnabled && userPreferences.useTheme == AppTheme.DARK){
-                    it.write(content + "<style>body {\n" +
-                            "    background-color: #2a2a2a;\n" +
-                            "} .text, .edit{" +
-                            "color: #ffffff;" +
-                            "fill: #ffffff;" +
-                            "}</style>")
+                    it.write(content + "<style>body { background-color: #121212 !important; } .text, .edit { color: #ffffff; fill: #ffffff; } .search_bar { background-color: #1a1a1a !important; border: 1px solid rgba(255,255,255,0.18) !important; border-radius: 24px !important; box-shadow: none !important; } #search_input { color: #ffffff !important; }</style>")
                 }
                 else{
                     it.write(content)
