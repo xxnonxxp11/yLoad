@@ -12,7 +12,6 @@ import android.graphics.Point
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.graphics.Color
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
@@ -52,6 +51,9 @@ import butterknife.ButterKnife
 import com.anthonycr.grant.PermissionsManager
 import com.cookiegames.smartcookie.AppTheme
 import com.cookiegames.smartcookie.IncognitoActivity
+import com.cookiegames.smartcookie.download.DownloadActivity
+import com.cookiegames.smartcookie.history.HistoryActivity
+import com.cookiegames.smartcookie.settings.activity.SettingsActivity
 import com.cookiegames.smartcookie.R
 import com.cookiegames.smartcookie.browser.*
 import com.google.android.material.bottomsheet.BottomSheetDialog
