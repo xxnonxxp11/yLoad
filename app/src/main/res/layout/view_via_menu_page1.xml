@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Row 1 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        android:weightSum="5">
+
+        <!-- 1. Modo nocturno -->
+        <LinearLayout
+            android:id="@+id/btn_via_night_mode"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/icon_via_night_mode"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_via_night" />
+            <TextView
+                android:id="@+id/text_via_night_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Modo noche"
+                android:textSize="11sp"
+                android:gravity="center"
+                android:maxLines="1" />
+        </LinearLayout>
+
+        <!-- 2. Marcadores -->
+        <LinearLayout
+            android:id="@+id/btn_via_bookmarks"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/icon_via_bookmarks"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_bookmark" />
+            <TextView
+                android:id="@+id/text_via_bookmarks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Marcadores"
+                android:textSize="11sp"
+                android:gravity="center"
+                android:maxLines="1" />
+        </LinearLayout>
+
+        <!-- 3. Historial -->
+        <LinearLayout
+            android:id="@+id/btn_via_history"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/icon_via_history"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_history" />
+            <TextView
+                android:id="@+id/text_via_history"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Historial"
+                android:textSize="11sp"
+                android:gravity="center"
+                android:maxLines="1" />
+        </LinearLayout>
+
+        <!-- 4. Descargas -->
+        <LinearLayout
+            android:id="@+id/btn_via_downloads"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/icon_via_downloads"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_file_download_black" />
+            <TextView
+                android:id="@+id/text_via_downloads"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Descargas"
+                android:textSize="11sp"
+                android:gravity="center"
+                android:maxLines="1" />
+        </LinearLayout>
+
+        <!-- 5. Modo incógnito -->
+        <LinearLayout
+            android:id="@+id/btn_via_incognito"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/icon_via_incognito"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/incognito_mode" />
+            <TextView
+                android:id="@+id/text_via_incognito"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Incógnito"
+                android:textSize="11sp"
+                android:gravity="center"
+                android:maxLines="1" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Row 2 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        android:weightSum="5">
+
+        <!-- 6. Compartir -->
+        <LinearLayout
+            android:id="@+id/btn_via_share"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/icon_via_share"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_share_black" />
+            <TextView
+                android:id="@+id/text_via_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Compartir"
+                android:textSize="11sp"
+                android:gravity="center"
+                android:maxLines="1" />
+        </LinearLayout>
+
+        <!-- 7. Añadir marcador -->
+        <LinearLayout
+            android:id="@+id/btn_via_add_bookmark"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/icon_via_add_bookmark"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_action_star" />
+            <TextView
+                android:id="@+id/text_via_add_bookmark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Favorito"
+                android:textSize="11sp"
+                android:gravity="center"
+                android:maxLines="1" />
+        </LinearLayout>
+
+        <!-- 8. Sitio de escritorio -->
+        <LinearLayout
+            android:id="@+id/btn_via_desktop"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/icon_via_desktop"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_action_desktop" />
+            <TextView
+                android:id="@+id/text_via_desktop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Escritorio"
+                android:textSize="11sp"
+                android:gravity="center"
+                android:maxLines="1" />
+        </LinearLayout>
+
+        <!-- 9. Buscar en página (Magnifying glass / lupa) -->
+        <LinearLayout
+            android:id="@+id/btn_via_tools"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/icon_via_tools"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_search" />
+            <TextView
+                android:id="@+id/text_via_tools"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Buscar"
+                android:textSize="11sp"
+                android:gravity="center"
+                android:maxLines="1" />
+        </LinearLayout>
+
+        <!-- 10. Ajustes -->
+        <LinearLayout
+            android:id="@+id/btn_via_settings"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/icon_via_settings"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_settings_customize" />
+            <TextView
+                android:id="@+id/text_via_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Ajustes"
+                android:textSize="11sp"
+                android:gravity="center"
+                android:maxLines="1" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

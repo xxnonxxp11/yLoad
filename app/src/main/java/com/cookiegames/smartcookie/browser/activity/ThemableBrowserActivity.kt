@@ -93,6 +93,13 @@ abstract class ThemableBrowserActivity : AppCompatActivity() {
         }
     }
 
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (themeId != userPreferences.useTheme) {
+            restart()
+        }
+    }
+
     protected fun restart() {
         finish()
         startActivity(Intent(this, javaClass))

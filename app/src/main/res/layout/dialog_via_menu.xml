@@ -5,296 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/dialog_via_menu_bg"
-    android:paddingTop="20dp"
+    android:background="@drawable/dialog_via_menu_bg_dark"
+    android:paddingTop="16dp"
     android:paddingBottom="12dp"
     android:paddingStart="8dp"
     android:paddingEnd="8dp">
 
-    <LinearLayout
+    <!-- Swipeable ViewPager with 2 pages of actions -->
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/via_menu_view_pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:baselineAligned="false"
-        android:weightSum="5">
+        android:layout_height="160dp" />
 
-        <LinearLayout
-            android:id="@+id/btn_via_night_mode"
-            android:layout_width="0dp"
-            android:layout_height="72dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_via_moon"
-                app:tint="#FFB0B3B8" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Modo nocturno"
-                android:textColor="#FFB0B3B8"
-                android:textSize="11sp"
-                android:gravity="center"
-                android:maxLines="2" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/btn_via_bookmarks"
-            android:layout_width="0dp"
-            android:layout_height="72dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_bookmark"
-                app:tint="#FFB0B3B8" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Marcadores"
-                android:textColor="#FFB0B3B8"
-                android:textSize="11sp"
-                android:gravity="center"
-                android:maxLines="1" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/btn_via_history"
-            android:layout_width="0dp"
-            android:layout_height="72dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_history"
-                app:tint="#FFB0B3B8" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Historial"
-                android:textColor="#FFB0B3B8"
-                android:textSize="11sp"
-                android:gravity="center"
-                android:maxLines="1" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/btn_via_downloads"
-            android:layout_width="0dp"
-            android:layout_height="72dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_file_download_black"
-                app:tint="#FFB0B3B8" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Descargas"
-                android:textColor="#FFB0B3B8"
-                android:textSize="11sp"
-                android:gravity="center"
-                android:maxLines="1" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/btn_via_incognito"
-            android:layout_width="0dp"
-            android:layout_height="72dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/incognito_mode"
-                app:tint="#FFB0B3B8" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Incógnito"
-                android:textColor="#FFB0B3B8"
-                android:textSize="11sp"
-                android:gravity="center"
-                android:maxLines="1" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:orientation="horizontal"
-        android:baselineAligned="false"
-        android:weightSum="5">
-
-        <LinearLayout
-            android:id="@+id/btn_via_share"
-            android:layout_width="0dp"
-            android:layout_height="72dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_share_black"
-                app:tint="#FFB0B3B8" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Compartir"
-                android:textColor="#FFB0B3B8"
-                android:textSize="11sp"
-                android:gravity="center"
-                android:maxLines="1" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/btn_via_add_bookmark"
-            android:layout_width="0dp"
-            android:layout_height="72dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_action_star"
-                app:tint="#FFB0B3B8" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Favorito"
-                android:textColor="#FFB0B3B8"
-                android:textSize="11sp"
-                android:gravity="center"
-                android:maxLines="1" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/btn_via_desktop"
-            android:layout_width="0dp"
-            android:layout_height="72dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_action_desktop"
-                app:tint="#FFB0B3B8" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Escritorio"
-                android:textColor="#FFB0B3B8"
-                android:textSize="11sp"
-                android:gravity="center"
-                android:maxLines="1" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/btn_via_tools"
-            android:layout_width="0dp"
-            android:layout_height="72dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_page_tools"
-                app:tint="#FFB0B3B8" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Herramientas"
-                android:textColor="#FFB0B3B8"
-                android:textSize="11sp"
-                android:gravity="center"
-                android:maxLines="1" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/btn_via_settings"
-            android:layout_width="0dp"
-            android:layout_height="72dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_settings_customize"
-                app:tint="#FFB0B3B8" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Ajustes"
-                android:textColor="#FFB0B3B8"
-                android:textSize="11sp"
-                android:gravity="center"
-                android:maxLines="1" />
-        </LinearLayout>
-    </LinearLayout>
-
+    <!-- Bottom Action Bar -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginTop="16dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="10dp"
         android:paddingStart="12dp"
         android:paddingEnd="12dp">
 
+        <!-- Exit / Power Button (Left) -->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/btn_via_exit"
             android:layout_width="36dp"
@@ -304,18 +35,36 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="6dp"
             android:src="@drawable/ic_via_power"
-            app:tint="#FFB0B3B8"
             android:clickable="true"
             android:focusable="true" />
 
-        <TextView
+        <!-- Real Page Dots Indicator (Center) -->
+        <LinearLayout
+            android:id="@+id/dots_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="---"
-            android:textColor="#FF505358"
-            android:textSize="12sp" />
+            android:orientation="horizontal"
+            android:gravity="center">
 
+            <TextView
+                android:id="@+id/dot_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="●"
+                android:textSize="13sp"
+                android:padding="4dp" />
+
+            <TextView
+                android:id="@+id/dot_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="○"
+                android:textSize="13sp"
+                android:padding="4dp" />
+        </LinearLayout>
+
+        <!-- Close Button (Right) -->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/btn_via_close"
             android:layout_width="36dp"
@@ -325,7 +74,6 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="6dp"
             android:src="@drawable/ic_via_chevron_down"
-            app:tint="#FFB0B3B8"
             android:clickable="true"
             android:focusable="true" />
     </RelativeLayout>

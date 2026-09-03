@@ -164,9 +164,14 @@
         <item name="android:windowExitAnimation">@anim/toolbar_out</item>
     </style>
 
-    <style name="ToolbarAnimReverse">
-        <item name="android:windowEnterAnimation">@anim/toolbar_in_bottom</item>
-        <item name="android:windowExitAnimation">@anim/toolbar_out_bottom</item>
+    <style name="ViaBottomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackground">@android:color/transparent</item>
+        <item name="bottomSheetStyle">@style/ViaBottomSheetModalStyle</item>
+    </style>
+
+    <style name="ViaBottomSheetModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
 </resources>

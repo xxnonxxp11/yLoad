@@ -10,6 +10,8 @@ import com.cookiegames.smartcookie.search.SearchEngineProvider
 import com.cookiegames.smartcookie.search.engine.GoogleSearch
 import com.cookiegames.smartcookie.utils.FileUtils
 import com.cookiegames.smartcookie.view.RenderingMode
+import android.app.Application
+import android.content.res.Configuration
 import android.content.SharedPreferences
 import com.cookiegames.smartcookie.browser.*
 import javax.inject.Inject
@@ -20,6 +22,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class UserPreferences @Inject constructor(
+    private val application: Application,
     @UserPrefs preferences: SharedPreferences,
     screenSize: ScreenSize
 ) {
@@ -238,9 +241,16 @@ class UserPreferences @Inject constructor(
 
     var forceZoom by preferences.booleanPreference(FORCE_ZOOM, false)
     /**
-     * The index of the theme used by the application.
+     * The theme used by the application, automatically detecting system dark/light mode.
      */
-    var useTheme by preferences.enumPreference(THEME, AppTheme.LIGHT)
+    var useTheme: AppTheme
+        get() {
+            val isNight = (application.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+            return if (isNight) AppTheme.DARK else AppTheme.LIGHT
+        }
+        set(value) {
+            preferences.edit().putInt(THEME, value.value).apply()
+        }
 
     /**
      * The text encoding used by the browser.

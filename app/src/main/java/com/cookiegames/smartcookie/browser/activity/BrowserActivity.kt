@@ -47,6 +47,8 @@ import androidx.core.view.marginRight
 import androidx.core.view.marginTop
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.palette.graphics.Palette
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
 import butterknife.ButterKnife
 import com.anthonycr.grant.PermissionsManager
 import com.cookiegames.smartcookie.AppTheme
@@ -492,6 +494,11 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 
         customView.findViewById<FrameLayout>(R.id.more_button).setOnClickListener(this)
         customView.findViewById<FrameLayout>(R.id.download_button).setOnClickListener(this)
+
+        if (userPreferences.navbar) {
+            customView.findViewById<FrameLayout>(R.id.home_button)?.visibility = GONE
+            customView.findViewById<FrameLayout>(R.id.more_button)?.visibility = GONE
+        }
 
         // create the search EditText in the ToolBar
         searchView = customView.findViewById<SearchView>(R.id.search).apply {
@@ -2274,40 +2281,115 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
             }
 
     /**
-     * Show the bottom sheet menu modeled directly after Via Browser's 10-item quick action grid.
+     * Show the bottom sheet menu modeled directly after Via Browser's swipeable quick action grid.
      */
     fun showViaMenu() {
-        val dialog = BottomSheetDialog(this)
+        val dialog = BottomSheetDialog(this, R.style.ViaBottomSheetDialogTheme)
         val view = LayoutInflater.from(this).inflate(R.layout.dialog_via_menu, null)
         dialog.setContentView(view)
 
+        // Make bottom sheet container completely transparent to eliminate white border leak
         try {
-            dialog.window?.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)?.background = ColorDrawable(Color.TRANSPARENT)
+            dialog.window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
+            dialog.window?.decorView?.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+            dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)?.background = ColorDrawable(android.graphics.Color.TRANSPARENT)
         } catch (e: Exception) {}
+
+        val isDark = isDarkTheme
+        val rootBg = if (isDark) R.drawable.dialog_via_menu_bg_dark else R.drawable.dialog_via_menu_bg_light
+        view.findViewById<View>(R.id.via_menu_root)?.setBackgroundResource(rootBg)
+
+        val textColor = if (isDark) 0xFFE8EAED.toInt() else 0xFF202124.toInt()
+        val iconColor = if (isDark) 0xFFB0B3B8.toInt() else 0xFF5F6368.toInt()
+        val activeDotColor = if (isDark) 0xFFFFFFFF.toInt() else 0xFF202124.toInt()
+        val inactiveDotColor = if (isDark) 0xFF505358.toInt() else 0xFFDADCE0.toInt()
+
+        view.findViewById<androidx.appcompat.widget.AppCompatImageView>(R.id.btn_via_exit)?.setColorFilter(iconColor)
+        view.findViewById<androidx.appcompat.widget.AppCompatImageView>(R.id.btn_via_close)?.setColorFilter(iconColor)
+
+        val page1View = LayoutInflater.from(this).inflate(R.layout.view_via_menu_page1, null)
+        val page2View = LayoutInflater.from(this).inflate(R.layout.view_via_menu_page2, null)
+
+        fun colorize(page: View) {
+            if (page !is ViewGroup) return
+            for (i in 0 until page.childCount) {
+                val row = page.getChildAt(i)
+                if (row is ViewGroup) {
+                    for (j in 0 until row.childCount) {
+                        val item = row.getChildAt(j)
+                        if (item is ViewGroup) {
+                            for (k in 0 until item.childCount) {
+                                val child = item.getChildAt(k)
+                                if (child is ImageView) {
+                                    child.setColorFilter(iconColor)
+                                } else if (child is TextView) {
+                                    child.setTextColor(textColor)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        colorize(page1View)
+        colorize(page2View)
+
+        val viewPager = view.findViewById<ViewPager>(R.id.via_menu_view_pager)
+        val pages = listOf(page1View, page2View)
+        viewPager.adapter = object : PagerAdapter() {
+            override fun getCount(): Int = pages.size
+            override fun isViewFromObject(v: View, obj: Any): Boolean = v === obj
+            override fun instantiateItem(container: ViewGroup, position: Int): Any {
+                container.addView(pages[position])
+                return pages[position]
+            }
+            override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
+                container.removeView(obj as View)
+            }
+        }
+
+        val dot1 = view.findViewById<TextView>(R.id.dot_1)
+        val dot2 = view.findViewById<TextView>(R.id.dot_2)
+        fun updateDots(position: Int) {
+            if (position == 0) {
+                dot1.text = "●"
+                dot1.setTextColor(activeDotColor)
+                dot2.text = "○"
+                dot2.setTextColor(inactiveDotColor)
+            } else {
+                dot1.text = "○"
+                dot1.setTextColor(inactiveDotColor)
+                dot2.text = "●"
+                dot2.setTextColor(activeDotColor)
+            }
+        }
+        updateDots(0)
+        viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+            override fun onPageSelected(position: Int) {
+                updateDots(position)
+            }
+        })
 
         val currentTab = tabsManager.currentTab
 
-        // 1. Modo nocturno
-        view.findViewById<View>(R.id.btn_via_night_mode).setOnClickListener {
+        // Page 1 Actions
+        page1View.findViewById<View>(R.id.btn_via_night_mode)?.setOnClickListener {
             dialog.dismiss()
             userPreferences.invertColors = !userPreferences.invertColors
             currentTab?.reload()
         }
 
-        // 2. Marcadores
-        view.findViewById<View>(R.id.btn_via_bookmarks).setOnClickListener {
+        page1View.findViewById<View>(R.id.btn_via_bookmarks)?.setOnClickListener {
             dialog.dismiss()
             drawer_layout.openDrawer(getBookmarkDrawer())
         }
 
-        // 3. Historial
-        view.findViewById<View>(R.id.btn_via_history).setOnClickListener {
+        page1View.findViewById<View>(R.id.btn_via_history)?.setOnClickListener {
             dialog.dismiss()
             startActivity(Intent(this, HistoryActivity::class.java))
         }
 
-        // 4. Descargas
-        view.findViewById<View>(R.id.btn_via_downloads).setOnClickListener {
+        page1View.findViewById<View>(R.id.btn_via_downloads)?.setOnClickListener {
             dialog.dismiss()
             if (userPreferences.useNewDownloader) {
                 startActivity(Intent(this, DownloadActivity::class.java))
@@ -2316,22 +2398,19 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
             }
         }
 
-        // 5. Modo incógnito
-        view.findViewById<View>(R.id.btn_via_incognito).setOnClickListener {
+        page1View.findViewById<View>(R.id.btn_via_incognito)?.setOnClickListener {
             dialog.dismiss()
             startActivity(IncognitoActivity.createIntent(this, null))
         }
 
-        // 6. Compartir
-        view.findViewById<View>(R.id.btn_via_share).setOnClickListener {
+        page1View.findViewById<View>(R.id.btn_via_share)?.setOnClickListener {
             dialog.dismiss()
             currentTab?.let { tab ->
                 IntentUtils(this).shareUrl(tab.url, tab.title)
             }
         }
 
-        // 7. Añadir marcador
-        view.findViewById<View>(R.id.btn_via_add_bookmark).setOnClickListener {
+        page1View.findViewById<View>(R.id.btn_via_add_bookmark)?.setOnClickListener {
             dialog.dismiss()
             currentTab?.let { tab ->
                 val bookmark = Bookmark.Entry(tab.url, tab.title, 0, Bookmark.Folder.Root)
@@ -2339,8 +2418,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
             }
         }
 
-        // 8. Sitio de escritorio
-        view.findViewById<View>(R.id.btn_via_desktop).setOnClickListener {
+        page1View.findViewById<View>(R.id.btn_via_desktop)?.setOnClickListener {
             dialog.dismiss()
             currentTab?.let { tab ->
                 tab.toggleDesktopUA()
@@ -2350,26 +2428,55 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
             }
         }
 
-        // 9. Herramientas
-        view.findViewById<View>(R.id.btn_via_tools).setOnClickListener {
+        page1View.findViewById<View>(R.id.btn_via_tools)?.setOnClickListener {
             dialog.dismiss()
             findInPage()
         }
 
-        // 10. Ajustes
-        view.findViewById<View>(R.id.btn_via_settings).setOnClickListener {
+        page1View.findViewById<View>(R.id.btn_via_settings)?.setOnClickListener {
             dialog.dismiss()
             startActivity(Intent(this, SettingsActivity::class.java))
         }
 
-        // Salir
-        view.findViewById<View>(R.id.btn_via_exit).setOnClickListener {
+        // Page 2 Actions
+        page2View.findViewById<View>(R.id.btn_via_refresh)?.setOnClickListener {
+            dialog.dismiss()
+            currentTab?.reload()
+        }
+
+        page2View.findViewById<View>(R.id.btn_via_source)?.setOnClickListener {
+            dialog.dismiss()
+            currentTab?.let { tab ->
+                presenter?.loadUrlInCurrentView("view-source:" + tab.url)
+            }
+        }
+
+        page2View.findViewById<View>(R.id.btn_via_print)?.setOnClickListener {
+            dialog.dismiss()
+            currentTab?.webView?.let { currentTab.createWebPagePrint(it) }
+        }
+
+        page2View.findViewById<View>(R.id.btn_via_adblock)?.setOnClickListener {
+            dialog.dismiss()
+            userPreferences.adBlockEnabled = !userPreferences.adBlockEnabled
+            Toast.makeText(this, if (userPreferences.adBlockEnabled) "Bloqueo de anuncios activado" else "Bloqueo de anuncios desactivado", Toast.LENGTH_SHORT).show()
+            currentTab?.reload()
+        }
+
+        page2View.findViewById<View>(R.id.btn_via_clear)?.setOnClickListener {
+            dialog.dismiss()
+            currentTab?.webView?.let { WebUtils.clearCache(it, applicationContext) }
+            WebUtils.clearCookies(this)
+            Toast.makeText(this, "Datos de navegación limpiados", Toast.LENGTH_SHORT).show()
+        }
+
+        // Bottom Bar buttons
+        view.findViewById<View>(R.id.btn_via_exit)?.setOnClickListener {
             dialog.dismiss()
             finish()
         }
 
-        // Cerrar menú
-        view.findViewById<View>(R.id.btn_via_close).setOnClickListener {
+        view.findViewById<View>(R.id.btn_via_close)?.setOnClickListener {
             dialog.dismiss()
         }
 

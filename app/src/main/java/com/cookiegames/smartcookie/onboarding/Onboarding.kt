@@ -79,10 +79,6 @@ class Onboarding : AppIntro2(){
 
         addSlide(SearchEngineFragment.newInstance())
 
-        addSlide(ThemeChoiceFragment.newInstance())
-
-        addSlide(NavbarChoiceFragment.newInstance())
-
         askForPermissions(
                 permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE),
                 slideNumber = 2,
