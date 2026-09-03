@@ -11,11 +11,9 @@ import com.cookiegames.smartcookie.utils.DrawableUtils
  * Creates the proper [Drawable] to represent the [SslState].
  */
 fun Context.createSslDrawableForState(sslState: SslState): Drawable? = when (sslState) {
-    is SslState.None -> {
-        ResourcesCompat.getDrawable(resources, R.drawable.ic_unsecured, theme)
-    }
-   is SslState.Valid -> {
-       ResourcesCompat.getDrawable(resources, R.drawable.ic_secured, theme)
+    is SslState.None -> null
+    is SslState.Valid -> {
+        ResourcesCompat.getDrawable(resources, R.drawable.ic_secured, theme)
     }
     is SslState.Invalid -> {
         ResourcesCompat.getDrawable(resources, R.drawable.ic_unsecured_severe, theme)

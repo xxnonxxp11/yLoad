@@ -15,6 +15,10 @@ class UBlockAdDefuser @Inject constructor() {
      * Evaluated natively by the browser's CSS rendering engine with GPU acceleration.
      */
     val cosmeticAdFilterCss: String = """
+        #cts_test,
+        #ad_ctd,
+        #s_test_ads,
+        #s_test_pagead,
         ins.adsbygoogle,
         [class*="google-auto-placed"],
         [id*="google_ads_"],
@@ -56,14 +60,15 @@ class UBlockAdDefuser @Inject constructor() {
     /**
      * JavaScript snippet that injects the cosmetic stylesheet into the DOM as early as possible.
      */
-    val cosmeticInjectionJs: String = """
+    val cosmeticInjectionJs: String
+        get() = """
         (function() {
             var cssId = 'yload-ublock-cosmetic';
             if (document.getElementById(cssId)) return;
             var style = document.createElement('style');
             style.id = cssId;
             style.type = 'text/css';
-            style.appendChild(document.createTextNode(''));
+            style.textContent = '$cosmeticAdFilterCss';
             var target = document.head || document.documentElement;
             if (target) {
                 target.appendChild(style);

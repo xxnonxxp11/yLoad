@@ -51,11 +51,37 @@ class BloomFilterAdBlocker @Inject constructor(
 
     private val bloomFilter: DelegatingBloomFilter<Host> = DelegatingBloomFilter()
     private val objectStore: ObjectStore<DefaultBloomFilter<Host>> = JvmObjectStore(application, MurmurHashStringAdapter())
+    private val fastHostSet = HashSet<String>(45000)
 
     private val compositeDisposable = CompositeDisposable()
 
     init {
+        loadFastHosts()
         populateAdBlockerFromDataSource(forceRefresh = false)
+    }
+
+    private fun loadFastHosts() {
+        Thread {
+            try {
+                application.assets.open("hosts.txt").bufferedReader().useLines { lines ->
+                    val temp = HashSet<String>(45000)
+                    for (line in lines) {
+                        val trimmed = line.trim()
+                        if (trimmed.isEmpty() || trimmed.startsWith("#")) continue
+                        val parts = trimmed.split(Regex("\\s+"))
+                        val host = if (parts.size >= 2) parts[1] else parts[0]
+                        temp.add(host.lowercase())
+                    }
+                    synchronized(fastHostSet) {
+                        fastHostSet.clear()
+                        fastHostSet.addAll(temp)
+                    }
+                    logger.log(TAG, "FastAdBlocker loaded ${temp.size} hosts into memory")
+                }
+            } catch (e: Exception) {
+                logger.log(TAG, "Failed loading fast hosts", e)
+            }
+        }.start()
     }
 
     /**
@@ -133,16 +159,14 @@ class BloomFilterAdBlocker @Inject constructor(
         val domain = try {
             getDomainName(url)
         } catch (exception: URISyntaxException) {
-            logger.log(TAG, "URL '$url' is invalid", exception)
             return false
         }
 
-        var current = domain.name
+        var current = domain.name.lowercase()
         while (current.isNotEmpty()) {
-            val host = Host(current)
-            if (bloomFilter.mightContain(host)) {
-                if (hostsRepository.containsHost(host)) {
-                    logger.log(TAG, "URL '$url' blocked by host rule: $current")
+            synchronized(fastHostSet) {
+                if (fastHostSet.contains(current)) {
+                    logger.log(TAG, "URL '$url' blocked by fast host rule: $current")
                     return true
                 }
             }

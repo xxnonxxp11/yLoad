@@ -149,12 +149,22 @@ class SmartCookieWebClient(
     private fun shouldRequestBeBlocked(pageUrl: String, requestUrl: String): Boolean {
         if (whitelistModel.isUrlAllowedAds(pageUrl)) return false
         if (adBlock.isAd(requestUrl)) return true
-        if (requestUrl.contains("youtube.com/api/stats/ads") ||
-            requestUrl.contains("youtube.com/pagead/") ||
-            requestUrl.contains("youtube.com/ptracking") ||
-            requestUrl.contains("youtube.com/get_midroll_") ||
-            requestUrl.contains("googleads.g.doubleclick.net") ||
-            requestUrl.contains("static.doubleclick.net")
+
+        val lower = requestUrl.lowercase()
+        if (lower.contains("/pagead/") ||
+            lower.contains("/ads.js") ||
+            lower.contains("/pagead.js") ||
+            lower.contains("/widget/ads.js") ||
+            lower.contains("youtube.com/api/stats/ads") ||
+            lower.contains("youtube.com/pagead/") ||
+            lower.contains("youtube.com/ptracking") ||
+            lower.contains("youtube.com/get_midroll_") ||
+            lower.contains("googleads") ||
+            lower.contains("doubleclick.net") ||
+            lower.contains("adnxs.com") ||
+            lower.contains("criteo.com") ||
+            lower.contains("taboola.com") ||
+            lower.contains("outbrain.com")
         ) {
             return true
         }
@@ -183,20 +193,30 @@ class SmartCookieWebClient(
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
-        if (shouldRequestBeBlocked(currentUrl, request.url.toString())) {
-            val empty = ByteArrayInputStream(emptyResponseByteArray)
-            if(request.isForMainFrame && request.url.host.toString() != lastBlockedDomain){
-                if(userPreferences.useTheme == AppTheme.LIGHT){
+        val requestUrl = request.url.toString()
+        if (shouldRequestBeBlocked(currentUrl, requestUrl)) {
+            if (request.isForMainFrame && request.url.host.toString() != lastBlockedDomain) {
+                if (userPreferences.useTheme == AppTheme.LIGHT) {
                     color = ""
                 }
                 lastBlockedDomain = request.url.host.toString()
-                return WebResourceResponse("text/html", "UTF-8", ByteArrayInputStream(Utils.buildBlockPage(activity, color, activity.resources.getString(R.string.page_blocked), activity.resources.getString(R.string.page_blocked_adblocker), request.url.toString(), true).toByteArray()))
-            }
-            else if(request.isForMainFrame){
+                return WebResourceResponse("text/html", "UTF-8", ByteArrayInputStream(Utils.buildBlockPage(activity, color, activity.resources.getString(R.string.page_blocked), activity.resources.getString(R.string.page_blocked_adblocker), requestUrl, true).toByteArray()))
+            } else if (request.isForMainFrame) {
                 return null
             }
 
-            return WebResourceResponse("text/plain", "utf-8", empty)
+            return WebResourceResponse(
+                "text/plain",
+                "utf-8",
+                403,
+                "Blocked by yLoad AdBlock",
+                mapOf("Access-Control-Allow-Origin" to "*"),
+                object : InputStream() {
+                    override fun read(): Int {
+                        throw IOException("Blocked by yLoad AdBlock")
+                    }
+                }
+            )
         }
         return super.shouldInterceptRequest(view, request)
     }
@@ -205,10 +225,17 @@ class SmartCookieWebClient(
     @TargetApi(Build.VERSION_CODES.KITKAT_WATCH)
     override fun shouldInterceptRequest(view: WebView, url: String): WebResourceResponse? {
         if (shouldRequestBeBlocked(currentUrl, url)) {
-            val empty = ByteArrayInputStream(emptyResponseByteArray)
-            return WebResourceResponse("text/plain", "utf-8", empty)
+            return WebResourceResponse(
+                "text/plain",
+                "utf-8",
+                object : InputStream() {
+                    override fun read(): Int {
+                        throw IOException("Blocked by yLoad AdBlock")
+                    }
+                }
+            )
         }
-        if(url.contains("detectPopBlock.js")){
+        if (url.contains("detectPopBlock.js")) {
             val empty = ByteArrayInputStream(emptyResponseByteArray)
             return WebResourceResponse("text/plain", "utf-8", empty)
         }
@@ -600,6 +627,9 @@ class SmartCookieWebClient(
 
     override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
         errored = true
+        badsslList.clear()
+        badsslErrors.clear()
+        sslState = if (URLUtil.isHttpsUrl(url)) SslState.Valid else SslState.None
         if(isPackageInstalled(activity.resources.getString(R.string.ytdl_package_name), activity.packageManager) && stringContainsItemFromList(url, knownUndetectedVideoUrls)){
             activity.findViewById<FrameLayout>(R.id.download_button).visibility = View.VISIBLE
         }
@@ -745,6 +775,10 @@ class SmartCookieWebClient(
             uiController.tabCloseClicked(0)
         }
 
+        if (userPreferences.adBlockEnabled) {
+            view.evaluateJavascript(uBlockAdDefuser.cosmeticInjectionJs, null)
+        }
+
         // Only set the SSL state if there isn't an error for the current URL.
         if (!badsslList.contains(url)) {
             sslState = if (URLUtil.isHttpsUrl(url)) {
@@ -852,6 +886,17 @@ class SmartCookieWebClient(
     }
 
     override fun onReceivedSslError(webView: WebView, handler: SslErrorHandler, error: SslError) {
+        val currentUrl = webView.url ?: ""
+        val errorUrl = error.url ?: ""
+        val currentHost = try { java.net.URI(currentUrl).host?.lowercase() } catch (e: Exception) { null } ?: ""
+        val errorHost = try { java.net.URI(errorUrl).host?.lowercase() } catch (e: Exception) { null } ?: ""
+
+        val isMainPage = currentHost.isNotEmpty() && (currentHost == errorHost || currentUrl == errorUrl)
+
+        if (!isMainPage) {
+            handler.cancel()
+            return
+        }
 
         badsslList.add(error.url)
         badsslErrors.add(error)

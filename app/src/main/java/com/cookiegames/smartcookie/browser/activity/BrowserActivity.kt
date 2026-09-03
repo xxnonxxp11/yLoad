@@ -1125,11 +1125,16 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 
     override fun updateSslState(sslState: SslState) {
         val currentTab = tabsManager.currentTab
-        val url = currentTab?.url
-        if(url!!.contains("http://") || url.contains("https://")){
-            search_ssl_status.setImageDrawable(createSslDrawableForState(sslState))
-        }
-        else{
+        val url = currentTab?.url ?: ""
+        if (url.startsWith("https://", ignoreCase = true)) {
+            if (sslState is SslState.Invalid) {
+                search_ssl_status.setImageDrawable(androidx.core.content.res.ResourcesCompat.getDrawable(resources, R.drawable.ic_unsecured_severe, theme))
+            } else {
+                search_ssl_status.setImageDrawable(androidx.core.content.res.ResourcesCompat.getDrawable(resources, R.drawable.ic_secured, theme))
+            }
+        } else if (url.startsWith("http://", ignoreCase = true)) {
+            search_ssl_status.setImageDrawable(androidx.core.content.res.ResourcesCompat.getDrawable(resources, R.drawable.ic_unsecured, theme))
+        } else {
             search_ssl_status.setImageDrawable(null)
         }
 
