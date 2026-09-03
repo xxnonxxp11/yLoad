@@ -173,7 +173,7 @@ dependencies {
     implementation 'com.anthonycr.bonsai:bonsai:1.1.0'
 
     // tor proxy
-    final def netCipherVersion = '2.0.0-alpha1'
+    final def netCipherVersion = '2.1.0'
     implementation "info.guardianproject.netcipher:netcipher:$netCipherVersion"
     implementation "info.guardianproject.netcipher:netcipher-webkit:$netCipherVersion"
 
