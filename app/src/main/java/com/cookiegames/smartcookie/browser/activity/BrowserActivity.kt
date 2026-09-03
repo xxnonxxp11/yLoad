@@ -12,6 +12,7 @@ import android.graphics.Point
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.Color
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
@@ -53,6 +54,7 @@ import com.cookiegames.smartcookie.AppTheme
 import com.cookiegames.smartcookie.IncognitoActivity
 import com.cookiegames.smartcookie.R
 import com.cookiegames.smartcookie.browser.*
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.cookiegames.smartcookie.browser.bookmarks.BookmarksDrawerView
 import com.cookiegames.smartcookie.browser.tabs.TabsDesktopView
 import com.cookiegames.smartcookie.browser.tabs.TabsDrawerView
@@ -825,7 +827,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
                         true
                     }
                     R.id.menu -> {
-                        ViaMenuBottomSheet(this).show()
+                        showViaMenu()
                         true
                     }
                     else -> false
@@ -2209,7 +2211,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
                 else -> currentTab.loadHomePage()
             }
             R.id.more_button -> {
-                ViaMenuBottomSheet(this).show()
+                showViaMenu()
             }
             R.id.download_button -> {
                 val sendIntent: Intent = Intent().apply {
@@ -2268,6 +2270,109 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
             } else {
                 false
             }
+
+    /**
+     * Show the bottom sheet menu modeled directly after Via Browser's 10-item quick action grid.
+     */
+    fun showViaMenu() {
+        val dialog = BottomSheetDialog(this)
+        val view = LayoutInflater.from(this).inflate(R.layout.dialog_via_menu, null)
+        dialog.setContentView(view)
+
+        try {
+            dialog.window?.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)?.background = ColorDrawable(Color.TRANSPARENT)
+        } catch (e: Exception) {}
+
+        val currentTab = tabsManager.currentTab
+
+        // 1. Modo nocturno
+        view.findViewById<View>(R.id.btn_via_night_mode).setOnClickListener {
+            dialog.dismiss()
+            userPreferences.invertColors = !userPreferences.invertColors
+            currentTab?.reload()
+        }
+
+        // 2. Marcadores
+        view.findViewById<View>(R.id.btn_via_bookmarks).setOnClickListener {
+            dialog.dismiss()
+            drawer_layout.openDrawer(getBookmarkDrawer())
+        }
+
+        // 3. Historial
+        view.findViewById<View>(R.id.btn_via_history).setOnClickListener {
+            dialog.dismiss()
+            startActivity(Intent(this, HistoryActivity::class.java))
+        }
+
+        // 4. Descargas
+        view.findViewById<View>(R.id.btn_via_downloads).setOnClickListener {
+            dialog.dismiss()
+            if (userPreferences.useNewDownloader) {
+                startActivity(Intent(this, DownloadActivity::class.java))
+            } else {
+                currentTab?.loadDownloadsPage()
+            }
+        }
+
+        // 5. Modo incógnito
+        view.findViewById<View>(R.id.btn_via_incognito).setOnClickListener {
+            dialog.dismiss()
+            startActivity(IncognitoActivity.createIntent(this, null))
+        }
+
+        // 6. Compartir
+        view.findViewById<View>(R.id.btn_via_share).setOnClickListener {
+            dialog.dismiss()
+            currentTab?.let { tab ->
+                IntentUtils(this).shareUrl(tab.url, tab.title)
+            }
+        }
+
+        // 7. Añadir marcador
+        view.findViewById<View>(R.id.btn_via_add_bookmark).setOnClickListener {
+            dialog.dismiss()
+            currentTab?.let { tab ->
+                val bookmark = Bookmark.Entry(tab.url, tab.title, 0, Bookmark.Folder.Root)
+                bookmarksDialogBuilder.showAddBookmarkDialog(this, this, bookmark)
+            }
+        }
+
+        // 8. Sitio de escritorio
+        view.findViewById<View>(R.id.btn_via_desktop).setOnClickListener {
+            dialog.dismiss()
+            currentTab?.let { tab ->
+                tab.toggleDesktopUA()
+                tab.reload()
+                val isDesktop = tab.toggleDesktop
+                Toast.makeText(this, if (isDesktop) "Sitio de escritorio activado" else "Sitio móvil activado", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // 9. Herramientas
+        view.findViewById<View>(R.id.btn_via_tools).setOnClickListener {
+            dialog.dismiss()
+            findInPage()
+        }
+
+        // 10. Ajustes
+        view.findViewById<View>(R.id.btn_via_settings).setOnClickListener {
+            dialog.dismiss()
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+
+        // Salir
+        view.findViewById<View>(R.id.btn_via_exit).setOnClickListener {
+            dialog.dismiss()
+            finish()
+        }
+
+        // Cerrar menú
+        view.findViewById<View>(R.id.btn_via_close).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
 
     companion object {
 
