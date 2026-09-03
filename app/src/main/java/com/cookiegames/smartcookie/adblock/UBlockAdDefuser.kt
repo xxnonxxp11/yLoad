@@ -77,6 +77,48 @@ class UBlockAdDefuser @Inject constructor() {
     """.trimIndent()
 
     /**
+     * Scriptlet that intercepts fetch & XHR to immediately reject ad and tracking requests.
+     */
+    val generalAdDefuserJs: String = """
+        (function() {
+            if (window.__yload_ad_defuser__) return;
+            window.__yload_ad_defuser__ = true;
+
+            var adPattern = /(?:doubleclick|googleads|adservice\.google|googlesyndication|google-analytics|criteo|taboola|outbrain|adnxs|pubmatic|rubiconproject|openx|scorecardresearch|chartbeat|hotjar|clarity\.ms|sentry\.io|bugsnag|luckyorange|mouseflow|fakepage\.html|\/pagead\/|\/ads?\.js|advert|tracking|analytics)/i;
+
+            if (window.fetch) {
+                var _fetch = window.fetch;
+                window.fetch = function(input, init) {
+                    var url = (typeof input === 'string') ? input : (input && input.url ? input.url : '');
+                    if (url && adPattern.test(url)) {
+                        return Promise.reject(new TypeError('Failed to fetch (Blocked by yLoad AdBlock)'));
+                    }
+                    return _fetch.apply(this, arguments);
+                };
+            }
+
+            if (window.XMLHttpRequest) {
+                var _open = XMLHttpRequest.prototype.open;
+                var _send = XMLHttpRequest.prototype.send;
+                XMLHttpRequest.prototype.open = function(method, url) {
+                    this.__blocked = (typeof url === 'string') && adPattern.test(url);
+                    return _open.apply(this, arguments);
+                };
+                XMLHttpRequest.prototype.send = function() {
+                    if (this.__blocked) {
+                        var self = this;
+                        setTimeout(function() {
+                            if (self.onerror) self.onerror(new ProgressEvent('error'));
+                        }, 1);
+                        return;
+                    }
+                    return _send.apply(this, arguments);
+                };
+            }
+        })();
+    """.trimIndent()
+
+    /**
      * uBlock Origin-style scriptlet defuser for YouTube.
      * 1. Prunes ad placements from ytInitialPlayerResponse.
      * 2. Intercepts fetch & XHR requests to /youtubei/v1/player.

@@ -62,27 +62,20 @@ class BloomFilterAdBlocker @Inject constructor(
     }
 
     private fun loadFastHosts() {
-        Thread {
-            try {
-                application.assets.open("hosts.txt").bufferedReader().useLines { lines ->
-                    val temp = HashSet<String>(45000)
-                    for (line in lines) {
-                        val trimmed = line.trim()
-                        if (trimmed.isEmpty() || trimmed.startsWith("#")) continue
-                        val parts = trimmed.split(Regex("\\s+"))
-                        val host = if (parts.size >= 2) parts[1] else parts[0]
-                        temp.add(host.toLowerCase(Locale.ROOT))
-                    }
-                    synchronized(fastHostSet) {
-                        fastHostSet.clear()
-                        fastHostSet.addAll(temp)
-                    }
-                    logger.log(TAG, "FastAdBlocker loaded ${temp.size} hosts into memory")
+        try {
+            application.assets.open("hosts.txt").bufferedReader().useLines { lines ->
+                for (line in lines) {
+                    val trimmed = line.trim()
+                    if (trimmed.isEmpty() || trimmed.startsWith("#")) continue
+                    val spaceIdx = trimmed.indexOf(' ')
+                    val host = if (spaceIdx != -1) trimmed.substring(spaceIdx + 1).trim() else trimmed
+                    fastHostSet.add(host.toLowerCase(Locale.ROOT))
                 }
-            } catch (e: Exception) {
-                logger.log(TAG, "Failed loading fast hosts", e)
+                logger.log(TAG, "FastAdBlocker loaded ${fastHostSet.size} hosts into memory")
             }
-        }.start()
+        } catch (e: Exception) {
+            logger.log(TAG, "Failed loading fast hosts", e)
+        }
     }
 
     /**

@@ -28,6 +28,7 @@ import java.io.FileWriter
 import java.net.URI
 import java.net.URL
 import java.net.URLConnection
+import java.util.Locale
 import javax.inject.Inject
 
 
@@ -58,7 +59,7 @@ class HomePageFactory @Inject constructor(
                     if(userPreferences.imageUrlString != ""){ tag("body") { attr("style", "background: url('" + userPreferences.imageUrlString + "') no-repeat scroll;") } }
 
                     // Set search engine icon
-                    id("search_input") { attr("style", "background: url('" + iconUrl + "') no-repeat scroll 7px 7px;background-size: 22px 22px;") }
+                    id("search_input") { attr("style", "background: url('$iconUrl') no-repeat scroll 14px center !important; background-size: 20px 20px !important; padding-left: 44px !important;") }
 
                     // Fill params in scripts
                     tag("script") {
@@ -104,10 +105,11 @@ class HomePageFactory @Inject constructor(
                                 return@forEachIndexed
                             }
 
-                            val url = URI(element.replaceFirst("www.", ""))
-                            val icon = createIconByName(url.host.first().toUpperCase())
-                            val encoded = bitmapToBase64(icon)
-                            id("link" + (index + 1)){ attr("src", "https://${URI(element).host}/favicon.ico")}
+                            val host = try { URI(element).host?.replaceFirst("www.", "")?.toLowerCase(Locale.ROOT) } catch(e: Exception) { null } ?: ""
+                            val fallbackLetter = if (host.isNotEmpty()) host.first().toUpperCase() else '?'
+                            val encoded = bitmapToBase64(createIconByName(fallbackLetter))
+                            val iconSrc = getCachedOrDownloadIcon(host)
+                            id("link" + (index + 1)){ attr("src", iconSrc)}
                             id("link" + (index + 1)){ attr("onerror", "this.src = 'data:image/png;base64,$encoded';")}
 
                         }
@@ -161,6 +163,51 @@ class HomePageFactory @Inject constructor(
         val byteArray: ByteArray = byteArrayOutputStream.toByteArray()
         val encoded: String = Base64.encodeToString(byteArray, Base64.NO_WRAP)
         return encoded
+    }
+
+    private fun getCachedOrDownloadIcon(host: String): String {
+        if (host.isEmpty()) return ""
+        val cleanHost = host.replaceFirst("www.", "").toLowerCase(Locale.ROOT)
+
+        // 1. Check local persistent disk cache
+        try {
+            val cacheDir = File(application.filesDir, "shortcut_cache").apply { mkdirs() }
+            val cacheFile = File(cacheDir, "$cleanHost.png")
+            if (cacheFile.exists() && cacheFile.length() > 0) {
+                val bytes = cacheFile.readBytes()
+                val encoded = Base64.encodeToString(bytes, Base64.NO_WRAP)
+                return "data:image/png;base64,$encoded"
+            }
+        } catch (e: Exception) {}
+
+        // 2. Check bundled assets in shortcut_favicons
+        try {
+            application.assets.open("shortcut_favicons/$cleanHost.png").use { stream ->
+                val bytes = stream.readBytes()
+                val encoded = Base64.encodeToString(bytes, Base64.NO_WRAP)
+                return "data:image/png;base64,$encoded"
+            }
+        } catch (e: Exception) {}
+
+        // 3. Download high-res 128px icon in background to persist in cache
+        Thread {
+            try {
+                val s2Url = "https://www.google.com/s2/favicons?domain=$cleanHost&sz=128"
+                val conn = URL(s2Url).openConnection()
+                conn.connectTimeout = 5000
+                conn.readTimeout = 5000
+                conn.getInputStream().use { input ->
+                    val bytes = input.readBytes()
+                    if (bytes.isNotEmpty()) {
+                        val cacheDir = File(application.filesDir, "shortcut_cache").apply { mkdirs() }
+                        val cacheFile = File(cacheDir, "$cleanHost.png")
+                        cacheFile.writeBytes(bytes)
+                    }
+                }
+            } catch (e: Exception) {}
+        }.start()
+
+        return "https://www.google.com/s2/favicons?domain=$cleanHost&sz=128"
     }
 
     companion object {

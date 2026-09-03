@@ -151,7 +151,8 @@ class SmartCookieWebClient(
         if (adBlock.isAd(requestUrl)) return true
 
         val lower = requestUrl.toLowerCase(Locale.ROOT)
-        if (lower.contains("/pagead/") ||
+        if (lower.contains("fakepage.html") ||
+            lower.contains("/pagead/") ||
             lower.contains("/ads.js") ||
             lower.contains("/pagead.js") ||
             lower.contains("/widget/ads.js") ||
@@ -164,7 +165,9 @@ class SmartCookieWebClient(
             lower.contains("adnxs.com") ||
             lower.contains("criteo.com") ||
             lower.contains("taboola.com") ||
-            lower.contains("outbrain.com")
+            lower.contains("outbrain.com") ||
+            lower.contains("adservice.google") ||
+            lower.contains("googlesyndication")
         ) {
             return true
         }
@@ -654,6 +657,7 @@ class SmartCookieWebClient(
 
         if (userPreferences.adBlockEnabled) {
             view.evaluateJavascript(uBlockAdDefuser.cosmeticInjectionJs, null)
+            view.evaluateJavascript(uBlockAdDefuser.generalAdDefuserJs, null)
             if (url.contains("youtube.com") || url.contains("youtu.be")) {
                 view.evaluateJavascript(uBlockAdDefuser.youtubeAdDefuserJs, null)
             }
@@ -777,6 +781,7 @@ class SmartCookieWebClient(
 
         if (userPreferences.adBlockEnabled) {
             view.evaluateJavascript(uBlockAdDefuser.cosmeticInjectionJs, null)
+            view.evaluateJavascript(uBlockAdDefuser.generalAdDefuserJs, null)
         }
 
         // Only set the SSL state if there isn't an error for the current URL.

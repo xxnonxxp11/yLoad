@@ -2376,6 +2376,42 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         })
 
         val currentTab = tabsManager.currentTab
+        val activeColor = 0xFF2196F3.toInt()
+
+        // Active State Indications (ON/OFF visual indicators)
+        if (userPreferences.invertColors) {
+            page1View.findViewById<androidx.appcompat.widget.AppCompatImageView>(R.id.icon_via_night_mode)?.setColorFilter(activeColor)
+            page1View.findViewById<TextView>(R.id.text_via_night_mode)?.setTextColor(activeColor)
+        }
+
+        if (currentTab?.toggleDesktop == true) {
+            page1View.findViewById<androidx.appcompat.widget.AppCompatImageView>(R.id.icon_via_desktop)?.setColorFilter(activeColor)
+            page1View.findViewById<TextView>(R.id.text_via_desktop)?.setTextColor(activeColor)
+        }
+
+        if (this is IncognitoActivity) {
+            page1View.findViewById<androidx.appcompat.widget.AppCompatImageView>(R.id.icon_via_incognito)?.setColorFilter(activeColor)
+            page1View.findViewById<TextView>(R.id.text_via_incognito)?.setTextColor(activeColor)
+        }
+
+        if (userPreferences.adBlockEnabled) {
+            page2View.findViewById<androidx.appcompat.widget.AppCompatImageView>(R.id.icon_via_adblock)?.setColorFilter(activeColor)
+            page2View.findViewById<TextView>(R.id.text_via_adblock)?.setTextColor(activeColor)
+        }
+
+        currentTab?.let { tab ->
+            if (tab.url.isNotEmpty()) {
+                bookmarkManager.isBookmark(tab.url)
+                    .subscribeOn(databaseScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribe { isBookmark ->
+                        if (isBookmark) {
+                            page1View.findViewById<androidx.appcompat.widget.AppCompatImageView>(R.id.icon_via_add_bookmark)?.setColorFilter(activeColor)
+                            page1View.findViewById<TextView>(R.id.text_via_add_bookmark)?.setTextColor(activeColor)
+                        }
+                    }
+            }
+        }
 
         // Page 1 Actions
         page1View.findViewById<View>(R.id.btn_via_night_mode)?.setOnClickListener {
