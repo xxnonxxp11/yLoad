@@ -1,15 +1,9 @@
 package com.cookiegames.smartcookie.utils;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.util.Log;
 
 import net.i2p.android.ui.I2PAndroidHelper;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -17,17 +11,12 @@ import javax.inject.Singleton;
 import com.cookiegames.smartcookie.BrowserApp;
 import com.cookiegames.smartcookie.R;
 import com.cookiegames.smartcookie.browser.ProxyChoice;
-import com.cookiegames.smartcookie.dialog.BrowserDialog;
 import com.cookiegames.smartcookie.extensions.ActivityExtensions;
-import com.cookiegames.smartcookie.extensions.AlertDialogExtensionsKt;
 import com.cookiegames.smartcookie.preference.DeveloperPreferences;
 import com.cookiegames.smartcookie.preference.UserPreferences;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import info.guardianproject.netcipher.proxy.OrbotHelper;
+
 import info.guardianproject.netcipher.webkit.WebkitProxy;
-import kotlin.Pair;
-import kotlin.Unit;
 
 @Singleton
 public final class ProxyUtils {
@@ -56,66 +45,7 @@ public final class ProxyUtils {
      * proxying for this session
      */
     public void checkForProxy(@NonNull final Activity activity) {
-        final ProxyChoice currentProxyChoice = userPreferences.getProxyChoice();
 
-        final boolean orbotInstalled = OrbotHelper.isOrbotInstalled(activity);
-        boolean orbotChecked = developerPreferences.getCheckedForTor();
-        boolean orbot = orbotInstalled && !orbotChecked;
-
-        boolean i2pInstalled = i2PAndroidHelper.isI2PAndroidInstalled();
-        boolean i2pChecked = developerPreferences.getCheckedForI2P();
-        boolean i2p = i2pInstalled && !i2pChecked;
-
-        // Do only once per install
-        if (currentProxyChoice != ProxyChoice.NONE && (orbot || i2p)) {
-            if (orbot) {
-                developerPreferences.setCheckedForTor(true);
-            }
-            if (i2p) {
-                developerPreferences.setCheckedForI2P(true);
-            }
-            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-
-            if (orbotInstalled && i2pInstalled) {
-                String[] proxyChoices = activity.getResources().getStringArray(R.array.proxy_choices_array);
-                final List<ProxyChoice> values = Arrays.asList(ProxyChoice.NONE, ProxyChoice.ORBOT, ProxyChoice.I2P);
-                final List<Pair<ProxyChoice, String>> list = new ArrayList<>();
-                for (ProxyChoice proxyChoice : values) {
-                    list.add(new Pair<>(proxyChoice, proxyChoices[proxyChoice.getValue()]));
-                }
-                builder.setTitle(activity.getResources().getString(R.string.http_proxy));
-                AlertDialogExtensionsKt.withSingleChoiceItems(builder, list, userPreferences.getProxyChoice(), newProxyChoice -> {
-                    userPreferences.setProxyChoice(newProxyChoice);
-                    return Unit.INSTANCE;
-                });
-                builder.setPositiveButton(activity.getResources().getString(R.string.action_ok),
-                        (dialog, which) -> {
-                            if (userPreferences.getProxyChoice() != ProxyChoice.NONE) {
-                                initializeProxy(activity);
-                            }
-                        });
-            } else {
-                DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-                    switch (which) {
-                        case DialogInterface.BUTTON_POSITIVE:
-                            userPreferences.setProxyChoice(orbotInstalled
-                                    ? ProxyChoice.ORBOT
-                                    : ProxyChoice.I2P);
-                            initializeProxy(activity);
-                            break;
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            userPreferences.setProxyChoice(ProxyChoice.NONE);
-                            break;
-                    }
-                };
-
-                builder.setMessage(orbotInstalled ? R.string.use_tor_prompt : R.string.use_i2p_prompt)
-                        .setPositiveButton(R.string.yes, dialogClickListener)
-                        .setNegativeButton(R.string.no, dialogClickListener);
-            }
-            Dialog dialog = builder.show();
-            BrowserDialog.setDialogSize(activity, dialog);
-        }
     }
 
     /*
@@ -130,9 +60,6 @@ public final class ProxyUtils {
                 // We shouldn't be here
                 return;
             case ORBOT:
-                if (!OrbotHelper.isOrbotRunning(activity)) {
-                    OrbotHelper.requestStartTor(activity);
-                }
                 host = "localhost";
                 port = 8118;
                 break;
@@ -156,7 +83,6 @@ public final class ProxyUtils {
         } catch (Exception e) {
             Log.d(TAG, "error enabling web proxying", e);
         }
-
     }
 
     public boolean isProxyReady(@NonNull Activity activity) {
@@ -206,10 +132,6 @@ public final class ProxyUtils {
     public static ProxyChoice sanitizeProxyChoice(ProxyChoice choice, @NonNull Activity activity) {
         switch (choice) {
             case ORBOT:
-                if (!OrbotHelper.isOrbotInstalled(activity)) {
-                    choice = ProxyChoice.NONE;
-                    ActivityExtensions.snackbar(activity, R.string.install_orbot);
-                }
                 break;
             case I2P:
                 I2PAndroidHelper ih = new I2PAndroidHelper(activity.getApplication());
