@@ -23,7 +23,7 @@ import javax.inject.Singleton
 @Singleton
 class UserPreferences @Inject constructor(
     private val application: Application,
-    @UserPrefs preferences: SharedPreferences,
+    @UserPrefs private val preferences: SharedPreferences,
     screenSize: ScreenSize
 ) {
     var siteBlockChoice by preferences.enumPreference(SITE_BLOCK, SiteBlockChoice.NONE)
