@@ -34,7 +34,7 @@ android {
             minifyEnabled false
             shrinkResources false
             proguardFiles 'proguard-project.txt'
-            testCoverageEnabled true
+            testCoverageEnabled false
         }
 
         release {
@@ -173,7 +173,7 @@ dependencies {
     implementation 'com.anthonycr.bonsai:bonsai:1.1.0'
 
     // tor proxy
-    implementation "info.guardianproject.netcipher:netcipher-webkit:2.1.0"
+    implementation files('libs/netcipher-webkit-clean.jar')
 
     implementation 'org.apache.httpcomponents:httpcore:4.4.11'
 
