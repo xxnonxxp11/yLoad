@@ -58,13 +58,16 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
+        app:itemIconSize="22dp"
+        app:itemPaddingTop="0dp"
+        app:itemPaddingBottom="0dp"
         app:itemIconTint="@drawable/toolbar_color"
         app:itemTextColor="?attr/iconColor"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         android:background="@color/white"
-        android:elevation="3dp"
+        android:elevation="1dp"
         app:labelVisibilityMode="unlabeled"
         app:menu="@menu/bottom_menu"
         />

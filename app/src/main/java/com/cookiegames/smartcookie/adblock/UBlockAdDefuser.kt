@@ -1,4 +1,4 @@
-﻿package com.cookiegames.smartcookie.adblock
+package com.cookiegames.smartcookie.adblock
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -161,23 +161,14 @@ class UBlockAdDefuser @Inject constructor() {
                 };
             }
 
-            // 4. Video ad auto-skipper fallback
+            // 4. Click skip button automatically when visible (uBlock Origin behavior)
             function autoSkip() {
-                var video = document.querySelector('video');
-                var adShowing = document.querySelector('.ad-showing, .ad-interrupting, .video-ads');
-                if (video && adShowing) {
-                    if (isFinite(video.duration) && video.duration > 0) {
-                        video.currentTime = video.duration;
-                    }
-                    video.playbackRate = 16.0;
-                    video.muted = true;
-                }
                 var skipBtn = document.querySelector('.ytp-ad-skip-button, .ytp-ad-skip-button-modern, .ytp-skip-ad-button, .videoAdUiSkipButton');
                 if (skipBtn) {
-                    skipBtn.click();
+                    try { skipBtn.click(); } catch(e) {}
                 }
             }
-            setInterval(autoSkip, 350);
+            setInterval(autoSkip, 1000);
         })();
     """.trimIndent()
 }

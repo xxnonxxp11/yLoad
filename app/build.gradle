@@ -197,9 +197,6 @@ dependencies {
     // onboarding
     implementation 'com.github.AppIntro:AppIntro:6.0.0'
 
-    // memory leak analysis
-    final def leakCanaryVersion = '2.8.1'
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
 
     // code editor
     implementation 'com.github.ahmadaghazadeh:CodeEditor:1.0.17'

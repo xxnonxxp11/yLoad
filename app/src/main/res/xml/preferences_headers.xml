@@ -39,12 +39,6 @@
         android:singleLineTitle="false"
         android:title="@string/settings_adblock"
         android:summary="@string/adblock_summary"/>
-    <androidx.preference.Preference
-        android:fragment="com.cookiegames.smartcookie.settings.fragment.ParentalControlSettingsFragment"
-        android:icon="@drawable/ic_settings_parental_controls_layers"
-        android:singleLineTitle="false"
-        android:title="@string/parental_controls"
-        android:summary="@string/settings_parents" />
    <androidx.preference.Preference
         android:fragment="com.cookiegames.smartcookie.settings.fragment.ExtensionsSettingsFragment"
         android:icon="@drawable/ic_settings_extensions_layers"

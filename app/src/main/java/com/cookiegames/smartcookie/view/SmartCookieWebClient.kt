@@ -146,8 +146,20 @@ class SmartCookieWebClient(
         activity.injector.provideNoOpAdBlocker()
     }
 
-    private fun shouldRequestBeBlocked(pageUrl: String, requestUrl: String) =
-        !whitelistModel.isUrlAllowedAds(pageUrl) && adBlock.isAd(requestUrl)
+    private fun shouldRequestBeBlocked(pageUrl: String, requestUrl: String): Boolean {
+        if (whitelistModel.isUrlAllowedAds(pageUrl)) return false
+        if (adBlock.isAd(requestUrl)) return true
+        if (requestUrl.contains("youtube.com/api/stats/ads") ||
+            requestUrl.contains("youtube.com/pagead/") ||
+            requestUrl.contains("youtube.com/ptracking") ||
+            requestUrl.contains("youtube.com/get_midroll_") ||
+            requestUrl.contains("googleads.g.doubleclick.net") ||
+            requestUrl.contains("static.doubleclick.net")
+        ) {
+            return true
+        }
+        return false
+    }
 
     fun exists(URLName: String): Boolean {
 

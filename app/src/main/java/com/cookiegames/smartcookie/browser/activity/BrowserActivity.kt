@@ -825,8 +825,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
                         true
                     }
                     R.id.menu -> {
-                        val anchor = extraBar.findViewById<View>(R.id.menu) ?: extraBar
-                        PopUpClass().showPopupWindow(anchor, this)
+                        ViaMenuBottomSheet(this).show()
                         true
                     }
                     else -> false
@@ -1145,11 +1144,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 
         currentTabView = null
 
-        // Use a delayed handler to make the transition smooth
-        // otherwise it will get caught up with the showTab code
-        // and cause a janky motion
-        mainHandler.postDelayed(drawer_layout::closeDrawers, 200)
-
+        drawer_layout.closeDrawers()
     }
     override fun setTabView(view: View) {
         if (currentTabView == view) {
@@ -1184,10 +1179,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 
         showActionBar()
 
-        // Use a delayed handler to make the transition smooth
-        // otherwise it will get caught up with the showTab code
-        // and cause a janky motion
-        mainHandler.postDelayed(drawer_layout::closeDrawers, 200)
+        drawer_layout.closeDrawers()
     }
 
     override fun showBlockedLocalFileDialog(onPositiveClick: Function0<Unit>) {
@@ -1276,8 +1268,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 
     override fun bookmarkItemClicked(entry: Bookmark.Entry) {
         presenter?.loadUrlInCurrentView(entry.url)
-        // keep any jank from happening when the drawer is closed after the URL starts to load
-        mainHandler.postDelayed({ closeDrawers(null) }, 150)
+        closeDrawers(null)
     }
 
     override fun handleHistoryChange() {
@@ -2211,7 +2202,6 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
      */
     override fun onClick(v: View) {
         val currentTab = tabsManager.currentTab ?: return
-        val popUpClass = PopUpClass()
         when (v.id) {
             R.id.home_button -> when {
                 searchView?.hasFocus() == true -> currentTab.requestFocus()
@@ -2219,7 +2209,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
                 else -> currentTab.loadHomePage()
             }
             R.id.more_button -> {
-                popUpClass.showPopupWindow(v, this)
+                ViaMenuBottomSheet(this).show()
             }
             R.id.download_button -> {
                 val sendIntent: Intent = Intent().apply {
