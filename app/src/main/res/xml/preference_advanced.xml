@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/settings_advanced">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="allow_new_window"
+            android:singleLineTitle="false"
+            android:summary="@string/recommended"
+            android:title="@string/window" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="block_intent"
+            android:singleLineTitle="false"
+            android:summary="@string/block_intent_summary"
+            android:title="@string/block_intent" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="allow_cookies"
+            android:singleLineTitle="false"
+            android:summary="@string/recommended"
+            android:title="@string/cookies" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="incognito_cookies"
+            android:singleLineTitle="false"
+            android:title="@string/incognito_cookies" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="restore_tabs"
+            android:singleLineTitle="false"
+            android:title="@string/restore" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="downloader"
+            android:singleLineTitle="false"
+            android:title="@string/legacy_download_manager"
+            android:summary="@string/legacy_download_manager_desc"/>
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="show_ssl"
+            android:singleLineTitle="false"
+            android:title="@string/show_ssl"
+            android:summary="@string/warn"/>
+        <Preference
+            android:key="text_encoding"
+            android:singleLineTitle="false"
+            android:title="@string/text_encoding" />
+        <Preference
+            android:key="rendering_mode"
+            android:singleLineTitle="false"
+            android:title="@string/rendering_mode" />
+        <Preference
+            android:key="url_contents"
+            android:singleLineTitle="false"
+            android:title="@string/url_contents" />
+        <Preference
+            android:key="translation_endpoint"
+            android:singleLineTitle="false"
+            android:title="@string/translation_endpoint" />
+        <Preference
+            android:key="news_endpoint"
+            android:singleLineTitle="false"
+            android:title="@string/news_endpoint" />
+    </PreferenceCategory>
+</PreferenceScreen>

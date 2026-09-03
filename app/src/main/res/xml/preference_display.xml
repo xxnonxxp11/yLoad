@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/app_elements">
+        <androidx.preference.Preference
+            android:fragment="com.cookiegames.smartcookie.settings.fragment.ThemeSettingsFragment"
+            android:icon="@drawable/ic_settings_theme_layers"
+            android:title="@string/theme_settings"
+            android:singleLineTitle="false"/>
+        <androidx.preference.Preference
+            android:fragment="com.cookiegames.smartcookie.settings.fragment.HomepageSettingsFragment"
+            android:icon="@drawable/ic_settings_homepage_layers"
+            android:title="@string/homepage_settings"
+            android:singleLineTitle="false"/>
+        <androidx.preference.Preference
+            android:fragment="com.cookiegames.smartcookie.settings.fragment.DrawerSettingsFragment"
+            android:icon="@drawable/ic_settings_drawers_layers"
+            android:title="@string/drawer_settings"
+            android:singleLineTitle="false"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_display">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:singleLineTitle="false"
+            android:key="second_bar"
+            android:title="@string/show_second_bar" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:singleLineTitle="false"
+            android:key="fullScreenOption"
+            android:title="@string/fullScreenOption"/>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:singleLineTitle="false"
+            android:key="fullscreen"
+            android:title="@string/fullscreen"/>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:singleLineTitle="false"
+            android:key="bottom_bar"
+            android:title="@string/bottom_navbar"/>
+        <SwitchPreference
+            android:defaultValue="true"
+            android:singleLineTitle="false"
+            android:key="wideViewPort"
+            android:summary="@string/recommended"
+            android:title="@string/wideViewPort"/>
+        <SwitchPreference
+            android:defaultValue="true"
+            android:singleLineTitle="false"
+            android:key="overViewMode"
+            android:summary="@string/recommended"
+            android:title="@string/overViewMode"/>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:singleLineTitle="false"
+            android:key="text_reflow"
+            android:title="@string/reflow"/>
+        <SwitchPreference
+            android:defaultValue="true"
+            android:singleLineTitle="false"
+            android:key="new_tabs_foreground"
+            android:title="@string/new_tab_foreground"
+            android:summary="@string/new_tab_foreground_summary"/>
+        <Preference
+            android:key="text_size"
+            android:singleLineTitle="false"
+            android:title="@string/title_text_size"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>
