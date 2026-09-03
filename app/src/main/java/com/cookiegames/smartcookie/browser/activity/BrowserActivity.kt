@@ -826,12 +826,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
                     }
                     R.id.menu -> {
                         val anchor = extraBar.findViewById<View>(R.id.menu) ?: extraBar
-                        popUpClass.showPopupWindow(anchor, this)
-                        true
-                    }
-                    R.id.bookmarks -> {
-                        drawer_layout.closeDrawer(getTabDrawer())
-                        toggleDrawer(drawer_layout, getBookmarkDrawer())
+                        PopUpClass().showPopupWindow(anchor, this)
                         true
                     }
                     else -> false
