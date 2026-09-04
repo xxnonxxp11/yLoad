@@ -280,7 +280,7 @@ class LightningDialogBuilder @Inject constructor(
         DialogItem(title = R.string.dialog_open_new_tab) {
             val i = Intent(Intent.ACTION_VIEW, url.toUri())
             i.setData(Uri.parse(url))
-            i.setPackage(DownloadProvider.context!!.packageName)
+            i.setPackage(activity.packageName)
             startActivity(activity as Context, i, null)
         },
         DialogItem(title = R.string.action_share) {

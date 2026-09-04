@@ -54,6 +54,7 @@ import butterknife.ButterKnife
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
 import android.graphics.drawable.Icon
+import com.anthonycr.grant.PermissionsManager
 import com.cookiegames.smartcookie.AppTheme
 import com.cookiegames.smartcookie.IncognitoActivity
 import com.cookiegames.smartcookie.reading.activity.ReadingActivity

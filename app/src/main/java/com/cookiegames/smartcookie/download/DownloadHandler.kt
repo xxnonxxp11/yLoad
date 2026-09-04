@@ -81,7 +81,7 @@ class DownloadHandler @Inject constructor(private val downloadsRepository: Downl
             Toast.makeText(context, "${context.getString(R.string.download_successful)}: $filename", Toast.LENGTH_SHORT).show()
         } catch (e: IOException) {
             Log.w(TAG, "Error writing data url file", e)
-            Toast.makeText(context, R.string.error_downloading, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, R.string.download_failed, Toast.LENGTH_SHORT).show()
         }
         return file.toString()
     }
