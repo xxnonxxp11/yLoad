@@ -91,11 +91,11 @@ class HistoryActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         list?.adapter = arrayAdapter
 
         list.addOnItemTouchListener(
-                RecyclerItemClickListener(context, list, object : RecyclerItemClickListener.OnItemClickListener {
+                RecyclerItemClickListener(this@HistoryActivity, list, object : RecyclerItemClickListener.OnItemClickListener {
                     override fun onItemClick(view: View?, position: Int) {
                         val i = Intent(ACTION_VIEW)
                         i.setData(Uri.parse((list.adapter as CustomAdapter).getItem(position).url))
-                        i.setPackage(context!!.packageName)
+                        i.setPackage(packageName)
                         startActivity(i, null)
                     }
 

@@ -117,9 +117,9 @@ class LightningDownloadListener(context: Activity) : DownloadListener {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             // Android 10+ uses Scoped Storage / DownloadManager directly without storage permission
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(mActivity, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 101)
+            if (Build.VERSION.SDK_INT >= 33) {
+                if (ContextCompat.checkSelfPermission(mActivity, "android.permission.POST_NOTIFICATIONS") != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(mActivity, arrayOf("android.permission.POST_NOTIFICATIONS"), 101)
                 }
             }
             startDownloadAction()
