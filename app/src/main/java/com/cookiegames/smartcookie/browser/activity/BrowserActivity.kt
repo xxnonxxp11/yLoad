@@ -57,6 +57,7 @@ import android.graphics.drawable.Icon
 import com.anthonycr.grant.PermissionsManager
 import com.cookiegames.smartcookie.AppTheme
 import com.cookiegames.smartcookie.IncognitoActivity
+import com.cookiegames.smartcookie.MainActivity
 import com.cookiegames.smartcookie.adblock.allowlist.AllowListModel
 import com.cookiegames.smartcookie.download.DownloadActivity
 import com.cookiegames.smartcookie.history.HistoryActivity
