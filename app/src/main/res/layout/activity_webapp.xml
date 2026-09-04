@@ -17,7 +17,6 @@
         android:layout_height="3dp"
         android:layout_gravity="top"
         android:max="100"
-        android:progressDrawable="@drawable/progress_bar"
         android:visibility="gone" />
 
     <FrameLayout
