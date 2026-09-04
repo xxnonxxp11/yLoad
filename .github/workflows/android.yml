@@ -24,13 +24,13 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Build Debug APK with Gradle
-      run: ./gradlew assembleDebug --no-daemon --stacktrace
+    - name: Build Release APK with Gradle
+      run: ./gradlew assembleStableRelease --no-daemon --stacktrace
 
-    - name: Upload Debug APK Artifact
+    - name: Upload Release APK Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: yLoad-debug-apk
-        path: app/build/outputs/apk/**/*.apk
-        if-no-files-found: warn
+        name: yLoad-release-apk
+        path: app/build/outputs/apk/stable/release/*.apk
+        if-no-files-found: error
     

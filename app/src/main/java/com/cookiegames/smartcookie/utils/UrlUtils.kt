@@ -82,8 +82,6 @@ fun String?.isSpecialUrl(): Boolean =
         || this.endsWith(HomePageFactory.FILENAME)
         || this.endsWith(OnboardingPageFactory.FILENAME)
         || this.endsWith(IncognitoPageFactory.FILENAME)
-        || this.contains("/saved_pages/")
-        || this.contains("/saved_offline_webs/")
         || this.endsWith(".html", ignoreCase = true)
         || this.endsWith(".htm", ignoreCase = true)
         || this.endsWith(".mht", ignoreCase = true)

@@ -57,8 +57,6 @@
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <include layout="@layout/layout_web_recorder" />
-
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"

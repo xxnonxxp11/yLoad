@@ -258,13 +258,6 @@ class SmartCookieWebClient(
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
-        if (!request.isForMainFrame) {
-            val offlineResponse = com.cookiegames.smartcookie.offline.OfflineWebRecorder.interceptRequest(request)
-            if (offlineResponse != null) {
-                return offlineResponse
-            }
-        }
-
         val requestUrl = request.url.toString()
         if (shouldRequestBeBlocked(currentUrl, requestUrl)) {
             if (request.isForMainFrame && request.url.host.toString() != lastBlockedDomain) {
@@ -468,10 +461,6 @@ class SmartCookieWebClient(
             uiController.setBackButtonEnabled(view.canGoBack())
             uiController.setForwardButtonEnabled(view.canGoForward())
             view.postInvalidate()
-        }
-
-        if (com.cookiegames.smartcookie.offline.OfflineWebRecorder.isRecording) {
-            com.cookiegames.smartcookie.offline.OfflineWebRecorder.onPageChanged(url, view.title)
         }
 
         if(userPreferences.forceZoom){

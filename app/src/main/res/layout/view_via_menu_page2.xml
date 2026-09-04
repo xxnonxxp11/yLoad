@@ -10,33 +10,7 @@
         android:layout_height="72dp"
         android:orientation="horizontal"
         android:baselineAligned="false"
-        android:weightSum="5">
-        <LinearLayout
-            android:id="@+id/btn_via_save"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/icon_via_save"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_file_download_black" />
-            <TextView
-                android:id="@+id/text_via_save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Guardar web"
-                android:textSize="11sp"
-                android:gravity="center"
-                android:maxLines="2"
-                android:ellipsize="end" />
-        </LinearLayout>
+        android:weightSum="4">
         <LinearLayout
             android:id="@+id/btn_via_clear_data"
             android:layout_width="0dp"
