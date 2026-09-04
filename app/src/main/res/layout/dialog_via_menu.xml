@@ -62,6 +62,14 @@
                 android:text="○"
                 android:textSize="13sp"
                 android:padding="4dp" />
+
+            <TextView
+                android:id="@+id/dot_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="○"
+                android:textSize="13sp"
+                android:padding="4dp" />
         </LinearLayout>
 
         <!-- Close Button (Right) -->

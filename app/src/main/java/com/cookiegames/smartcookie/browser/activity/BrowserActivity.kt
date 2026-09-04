@@ -30,6 +30,7 @@ import android.view.animation.Animation
 import android.view.animation.Transformation
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.webkit.CookieManager
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient.CustomViewCallback
 import android.widget.*
@@ -2298,16 +2299,18 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         val rootBg = if (isDark) R.drawable.dialog_via_menu_bg_dark else R.drawable.dialog_via_menu_bg_light
         view.findViewById<View>(R.id.via_menu_root)?.setBackgroundResource(rootBg)
 
-        val textColor = if (isDark) 0xFFE8EAED.toInt() else 0xFF202124.toInt()
-        val iconColor = if (isDark) 0xFFB0B3B8.toInt() else 0xFF5F6368.toInt()
+        val textColor = if (isDark) 0xFF8E929C.toInt() else 0xFF3C4043.toInt()
+        val iconColor = if (isDark) 0xFFA0A4AE.toInt() else 0xFF5F6368.toInt()
         val activeDotColor = if (isDark) 0xFFFFFFFF.toInt() else 0xFF202124.toInt()
         val inactiveDotColor = if (isDark) 0xFF505358.toInt() else 0xFFDADCE0.toInt()
+        val activeColor = 0xFF5C87F7.toInt()
 
         view.findViewById<androidx.appcompat.widget.AppCompatImageView>(R.id.btn_via_exit)?.setColorFilter(iconColor)
         view.findViewById<androidx.appcompat.widget.AppCompatImageView>(R.id.btn_via_close)?.setColorFilter(iconColor)
 
         val page1View = LayoutInflater.from(this).inflate(R.layout.view_via_menu_page1, null)
         val page2View = LayoutInflater.from(this).inflate(R.layout.view_via_menu_page2, null)
+        val page3View = LayoutInflater.from(this).inflate(R.layout.view_via_menu_page3, null)
 
         fun colorize(page: View) {
             if (page !is ViewGroup) return
@@ -2332,9 +2335,10 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         }
         colorize(page1View)
         colorize(page2View)
+        colorize(page3View)
 
         val viewPager = view.findViewById<ViewPager>(R.id.via_menu_view_pager)
-        val pages = listOf(page1View, page2View)
+        val pages = listOf(page1View, page2View, page3View)
         viewPager.adapter = object : PagerAdapter() {
             override fun getCount(): Int = pages.size
             override fun isViewFromObject(v: View, obj: Any): Boolean = v === obj
@@ -2349,20 +2353,20 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 
         val dot1 = view.findViewById<TextView>(R.id.dot_1)
         val dot2 = view.findViewById<TextView>(R.id.dot_2)
+        val dot3 = view.findViewById<TextView>(R.id.dot_3)
         fun updateDots(position: Int) {
-            if (position == 0) {
-                dot1.text = "●"
-                dot1.setTextColor(activeDotColor)
-                dot2.text = "○"
-                dot2.setTextColor(inactiveDotColor)
-            } else {
-                dot1.text = "○"
-                dot1.setTextColor(inactiveDotColor)
-                dot2.text = "●"
-                dot2.setTextColor(activeDotColor)
-            }
+            dot1?.text = if (position == 0) "●" else "○"
+            dot1?.setTextColor(if (position == 0) activeDotColor else inactiveDotColor)
+            dot2?.text = if (position == 1) "●" else "○"
+            dot2?.setTextColor(if (position == 1) activeDotColor else inactiveDotColor)
+            dot3?.text = if (position == 2) "●" else "○"
+            dot3?.setTextColor(if (position == 2) activeDotColor else inactiveDotColor)
         }
         updateDots(0)
+        dot1?.setOnClickListener { viewPager.currentItem = 0 }
+        dot2?.setOnClickListener { viewPager.currentItem = 1 }
+        dot3?.setOnClickListener { viewPager.currentItem = 2 }
+
         viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 updateDots(position)
@@ -2370,9 +2374,8 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         })
 
         val currentTab = tabsManager.currentTab
-        val activeColor = 0xFF2196F3.toInt()
 
-        // Active State Indications (ON/OFF visual indicators)
+        // Active State Indications (Tint active icon & text blue #5C87F7)
         if (userPreferences.invertColors) {
             page1View.findViewById<androidx.appcompat.widget.AppCompatImageView>(R.id.icon_via_night_mode)?.setColorFilter(activeColor)
             page1View.findViewById<TextView>(R.id.text_via_night_mode)?.setTextColor(activeColor)
@@ -2389,8 +2392,18 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         }
 
         if (userPreferences.adBlockEnabled) {
-            page2View.findViewById<androidx.appcompat.widget.AppCompatImageView>(R.id.icon_via_adblock)?.setColorFilter(activeColor)
-            page2View.findViewById<TextView>(R.id.text_via_adblock)?.setTextColor(activeColor)
+            page3View.findViewById<androidx.appcompat.widget.AppCompatImageView>(R.id.icon_via_adblock)?.setColorFilter(activeColor)
+            page3View.findViewById<TextView>(R.id.text_via_adblock)?.setTextColor(activeColor)
+        }
+
+        if (!userPreferences.loadImages) {
+            page2View.findViewById<androidx.appcompat.widget.AppCompatImageView>(R.id.icon_via_images)?.setColorFilter(activeColor)
+            page2View.findViewById<TextView>(R.id.text_via_images)?.setTextColor(activeColor)
+        }
+
+        if (isFullScreen) {
+            page2View.findViewById<androidx.appcompat.widget.AppCompatImageView>(R.id.icon_via_fullscreen)?.setColorFilter(activeColor)
+            page2View.findViewById<TextView>(R.id.text_via_fullscreen)?.setTextColor(activeColor)
         }
 
         currentTab?.let { tab ->
@@ -2407,7 +2420,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
             }
         }
 
-        // Page 1 Actions
+        // ================= PAGE 1 ACTIONS =================
         page1View.findViewById<View>(R.id.btn_via_night_mode)?.setOnClickListener {
             dialog.dismiss()
             userPreferences.invertColors = !userPreferences.invertColors
@@ -2438,13 +2451,6 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
             startActivity(IncognitoActivity.createIntent(this, null))
         }
 
-        page1View.findViewById<View>(R.id.btn_via_share)?.setOnClickListener {
-            dialog.dismiss()
-            currentTab?.let { tab ->
-                IntentUtils(this).shareUrl(tab.url, tab.title)
-            }
-        }
-
         page1View.findViewById<View>(R.id.btn_via_add_bookmark)?.setOnClickListener {
             dialog.dismiss()
             currentTab?.let { tab ->
@@ -2464,8 +2470,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         }
 
         page1View.findViewById<View>(R.id.btn_via_tools)?.setOnClickListener {
-            dialog.dismiss()
-            findInPage()
+            viewPager.currentItem = 1
         }
 
         page1View.findViewById<View>(R.id.btn_via_settings)?.setOnClickListener {
@@ -2473,39 +2478,193 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
             startActivity(Intent(this, SettingsActivity::class.java))
         }
 
-        // Page 2 Actions
-        page2View.findViewById<View>(R.id.btn_via_refresh)?.setOnClickListener {
+        page1View.findViewById<View>(R.id.btn_via_find)?.setOnClickListener {
             dialog.dismiss()
-            currentTab?.reload()
+            findInPage()
         }
 
-        page2View.findViewById<View>(R.id.btn_via_source)?.setOnClickListener {
+        // ================= PAGE 2 ACTIONS (HERRAMIENTAS) =================
+        page2View.findViewById<View>(R.id.btn_via_save)?.setOnClickListener {
+            dialog.dismiss()
+            currentTab?.webView?.let { currentTab.createWebPagePrint(it) }
+        }
+
+        page2View.findViewById<View>(R.id.btn_via_saved_pages)?.setOnClickListener {
+            dialog.dismiss()
+            currentTab?.let { tab ->
+                ReadingActivity.launch(this, tab.url, false)
+            }
+        }
+
+        page2View.findViewById<View>(R.id.btn_via_translate)?.setOnClickListener {
+            dialog.dismiss()
+            currentTab?.let { tab ->
+                if (tab.url.isNotBlank() && !tab.url.isSpecialUrl()) {
+                    val trUrl = "https://translate.google.com/translate?sl=auto&tl=es&u=" + java.net.URLEncoder.encode(tab.url, "UTF-8")
+                    presenter?.loadUrlInCurrentView(trUrl)
+                }
+            }
+        }
+
+        page2View.findViewById<View>(R.id.btn_via_view_source)?.setOnClickListener {
             dialog.dismiss()
             currentTab?.let { tab ->
                 presenter?.loadUrlInCurrentView("view-source:" + tab.url)
             }
         }
 
-        page2View.findViewById<View>(R.id.btn_via_print)?.setOnClickListener {
+        page2View.findViewById<View>(R.id.btn_via_fullscreen)?.setOnClickListener {
             dialog.dismiss()
-            currentTab?.webView?.let { currentTab.createWebPagePrint(it) }
+            userPreferences.fullScreenEnabled = !userPreferences.fullScreenEnabled
+            isFullScreen = userPreferences.fullScreenEnabled
+            if (isFullScreen) {
+                overlayToolbarOnWebView()
+            } else {
+                putToolbarInRoot()
+            }
+            Toast.makeText(this, if (isFullScreen) "Pantalla completa activada" else "Pantalla completa desactivada", Toast.LENGTH_SHORT).show()
         }
 
-        page2View.findViewById<View>(R.id.btn_via_adblock)?.setOnClickListener {
+        page2View.findViewById<View>(R.id.btn_via_images)?.setOnClickListener {
+            dialog.dismiss()
+            userPreferences.loadImages = !userPreferences.loadImages
+            Toast.makeText(this, if (userPreferences.loadImages) "Mostrar imágenes activado" else "Mostrar imágenes desactivado", Toast.LENGTH_SHORT).show()
+            currentTab?.reload()
+        }
+
+        page2View.findViewById<View>(R.id.btn_via_inspect)?.setOnClickListener {
+            dialog.dismiss()
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(R.string.inspect)
+            val dialogLayout = layoutInflater.inflate(R.layout.dialog_edit_text, null)
+            val editText = dialogLayout.findViewById<EditText>(R.id.dialog_edit_text)
+            builder.setView(dialogLayout)
+            builder.setPositiveButton("OK") { _, _ ->
+                currentTab?.loadUrl("javascript:(function() {" + editText.text.toString() + "})()")
+            }
+            builder.show()
+        }
+
+        page2View.findViewById<View>(R.id.btn_via_user_agent)?.setOnClickListener {
+            dialog.dismiss()
+            val uas = arrayOf("Por defecto", "Escritorio", "Móvil", "Personalizado")
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Agente de usuario")
+                .setItems(uas) { _, which ->
+                    when (which) {
+                        0 -> userPreferences.userAgentChoice = 1
+                        1 -> userPreferences.userAgentChoice = 2
+                        2 -> userPreferences.userAgentChoice = 3
+                        3 -> userPreferences.userAgentChoice = 4
+                    }
+                    currentTab?.reload()
+                    Toast.makeText(this, "Agente de usuario: " + uas[which], Toast.LENGTH_SHORT).show()
+                }
+                .show()
+        }
+
+        page2View.findViewById<View>(R.id.btn_via_cookies)?.setOnClickListener {
+            dialog.dismiss()
+            currentTab?.let { tab ->
+                val cookieManager = CookieManager.getInstance()
+                val cookies = cookieManager.getCookie(tab.url) ?: "Sin cookies para este sitio"
+                MaterialAlertDialogBuilder(this)
+                    .setTitle("Cookies / Registro")
+                    .setMessage(cookies)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show()
+            }
+        }
+
+        page2View.findViewById<View>(R.id.btn_via_share)?.setOnClickListener {
+            dialog.dismiss()
+            currentTab?.let { tab ->
+                IntentUtils(this).shareUrl(tab.url, tab.title)
+            }
+        }
+
+        // ================= PAGE 3 ACTIONS =================
+        page3View.findViewById<View>(R.id.btn_via_add_homescreen)?.setOnClickListener {
+            dialog.dismiss()
+            currentTab?.let { tab ->
+                if (tab.url.isNotBlank() && !tab.url.isSpecialUrl()) {
+                    val iconBmp = tab.favicon ?: webPageBitmap ?: Bitmap.createBitmap(48, 48, Bitmap.Config.ARGB_8888)
+                    Utils.createShortcut(this, HistoryEntry(tab.url, tab.title), iconBmp)
+                    Toast.makeText(this, "Acceso directo añadido a la pantalla de inicio", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        page3View.findViewById<View>(R.id.btn_via_orientation)?.setOnClickListener {
+            dialog.dismiss()
+            val current = requestedOrientation
+            requestedOrientation = if (current == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            } else {
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            }
+            Toast.makeText(this, "Orientación cambiada", Toast.LENGTH_SHORT).show()
+        }
+
+        page3View.findViewById<View>(R.id.btn_via_adblock)?.setOnClickListener {
             dialog.dismiss()
             userPreferences.adBlockEnabled = !userPreferences.adBlockEnabled
             Toast.makeText(this, if (userPreferences.adBlockEnabled) "Bloqueo de anuncios activado" else "Bloqueo de anuncios desactivado", Toast.LENGTH_SHORT).show()
             currentTab?.reload()
         }
 
-        page2View.findViewById<View>(R.id.btn_via_clear)?.setOnClickListener {
+        page3View.findViewById<View>(R.id.btn_via_mark_ad)?.setOnClickListener {
             dialog.dismiss()
-            currentTab?.webView?.let { WebUtils.clearCache(it, applicationContext) }
-            WebUtils.clearCookies(this)
-            Toast.makeText(this, "Datos de navegación limpiados", Toast.LENGTH_SHORT).show()
+            currentTab?.let { tab ->
+                val isAllowed = allowListModel.isUrlAllowedAds(tab.url)
+                if (isAllowed) {
+                    allowListModel.removeUrlFromAllowList(tab.url)
+                    Toast.makeText(this, "Anuncios bloqueados para este sitio", Toast.LENGTH_SHORT).show()
+                } else {
+                    allowListModel.addUrlToAllowList(tab.url)
+                    Toast.makeText(this, "Sitio añadido a la lista blanca de anuncios", Toast.LENGTH_SHORT).show()
+                }
+                tab.reload()
+            }
         }
 
-        // Bottom Bar buttons
+        page3View.findViewById<View>(R.id.btn_via_text_size)?.setOnClickListener {
+            dialog.dismiss()
+            val layout = layoutInflater.inflate(R.layout.dialog_seek_bar, null)
+            val seekBar = layout.findViewById<SeekBar>(R.id.text_size_seekbar)
+            seekBar?.progress = userPreferences.textSize
+            MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.title_text_size)
+                .setView(layout)
+                .setPositiveButton(android.R.string.ok) { _, _ ->
+                    seekBar?.progress?.let { p ->
+                        userPreferences.textSize = p
+                        currentTab?.reload()
+                    }
+                }
+                .show()
+        }
+
+        page3View.findViewById<View>(R.id.btn_via_clear_data)?.setOnClickListener {
+            dialog.dismiss()
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Borrar datos")
+                .setMessage("¿Deseas borrar la caché, historial y cookies de navegación?")
+                .setPositiveButton("Borrar") { _, _ ->
+                    currentTab?.webView?.let { WebUtils.clearCache(it, applicationContext) }
+                    WebUtils.clearCookies(this)
+                    Toast.makeText(this, "Datos de navegación borrados", Toast.LENGTH_SHORT).show()
+                }
+                .setNegativeButton("Cancelar", null)
+                .show()
+        }
+
+        page3View.findViewById<View>(R.id.btn_via_customize_menu)?.setOnClickListener {
+            dialog.dismiss()
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+
+        // ================= BOTTOM BAR ACTIONS =================
         view.findViewById<View>(R.id.btn_via_exit)?.setOnClickListener {
             dialog.dismiss()
             finish()
@@ -2517,6 +2676,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 
         dialog.show()
     }
+
 
     companion object {
 

@@ -64,17 +64,9 @@ class HomePageFactory @Inject constructor(
                     // Fill params in scripts
                     tag("script") {
                         html(
-                                if(userPreferences.homepageType == HomepageTypeChoice.INFORMATIVE){
-                                    html()
-                                            .replace("\${ENDPOINT}", userPreferences.newsEndpoint)
-                                            .replace("\${BASE_URL}", queryUrl)
-                                            .replace("&", "\\u0026")
-                                }
-                                else{
-                                    html()
-                                            .replace("\${BASE_URL}", queryUrl)
-                                            .replace("&", "\\u0026")
-                                }
+                            html()
+                                .replace("\${BASE_URL}", queryUrl)
+                                .replace("&", "\\u0026")
                         )
                     }
 
@@ -108,10 +100,9 @@ class HomePageFactory @Inject constructor(
                             val host = try { URI(element).host?.replaceFirst("www.", "")?.toLowerCase(Locale.ROOT) } catch(e: Exception) { null } ?: ""
                             val fallbackLetter = if (host.isNotEmpty()) host.first().toUpperCase() else '?'
                             val encoded = bitmapToBase64(createIconByName(fallbackLetter))
-                            val iconSrc = getCachedOrDownloadIcon(host)
+                            val iconSrc = getCachedOrDownloadIcon(host, fallbackLetter)
                             id("link" + (index + 1)){ attr("src", iconSrc)}
                             id("link" + (index + 1)){ attr("onerror", "this.src = 'data:image/png;base64,$encoded';")}
-
                         }
 
                         id("search_input"){ attr("placeholder", resources.getString(R.string.search_homepage))}
@@ -127,16 +118,13 @@ class HomePageFactory @Inject constructor(
         .doOnSuccess { (page, content) ->
             FileWriter(page, false).use {
                 if(userPreferences.startPageThemeEnabled && userPreferences.useTheme == AppTheme.LIGHT){
-                    it.write(content + "<style>body { background-color: #ffffff !important; } .text, .edit { color: #111111; fill: #111111; } .search_bar { background-color: #ffffff !important; border: 1px solid rgba(0,0,0,0.18) !important; border-radius: 24px !important; box-shadow: none !important; } #search_input { color: #111111 !important; }</style>")
+                    it.write(content + "<style>body { background-color: #F8F9FA !important; color: #202124 !important; } .search_bar { background-color: #FFFFFF !important; border: 1px solid rgba(0,0,0,0.12) !important; box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important; } #search_input { color: #202124 !important; } .link { background: #FFFFFF !important; border: 1px solid rgba(0,0,0,0.08) !important; } .modal-content { background: #FFFFFF !important; color: #202124 !important; } .modal-content input { background: #F1F3F4 !important; color: #202124 !important; border-color: rgba(0,0,0,0.1) !important; }</style>")
                 }
                 else if(userPreferences.startPageThemeEnabled && userPreferences.useTheme == AppTheme.BLACK){
-                    it.write(content + "<style>body { background-color: #000000 !important; } .text, .edit { color: #ffffff; fill: #ffffff; } .search_bar { background-color: #000000 !important; border: 1px solid rgba(255,255,255,0.22) !important; border-radius: 24px !important; box-shadow: none !important; } #search_input { color: #ffffff !important; }</style>")
-                }
-                else if(userPreferences.startPageThemeEnabled && userPreferences.useTheme == AppTheme.DARK){
-                    it.write(content + "<style>body { background-color: #121212 !important; } .text, .edit { color: #ffffff; fill: #ffffff; } .search_bar { background-color: #1a1a1a !important; border: 1px solid rgba(255,255,255,0.18) !important; border-radius: 24px !important; box-shadow: none !important; } #search_input { color: #ffffff !important; }</style>")
+                    it.write(content + "<style>body { background-color: #000000 !important; color: #ffffff !important; } .search_bar { background-color: #121316 !important; border: 1px solid rgba(255,255,255,0.14) !important; box-shadow: none !important; } #search_input { color: #ffffff !important; } .link { background: #121316 !important; border: 1px solid rgba(255,255,255,0.08) !important; }</style>")
                 }
                 else{
-                    it.write(content)
+                    it.write(content + "<style>body { background-color: #000000 !important; color: #ffffff !important; } .search_bar { background-color: #16171B !important; border: 1px solid rgba(255,255,255,0.12) !important; box-shadow: none !important; } #search_input { color: #ffffff !important; } .link { background: #16171B !important; border: 1px solid rgba(255,255,255,0.08) !important; }</style>")
                 }
             }
         }
@@ -165,7 +153,7 @@ class HomePageFactory @Inject constructor(
         return encoded
     }
 
-    private fun getCachedOrDownloadIcon(host: String): String {
+    private fun getCachedOrDownloadIcon(host: String, fallbackLetter: Char = '?'): String {
         if (host.isEmpty()) return ""
         val cleanHost = host.replaceFirst("www.", "").toLowerCase(Locale.ROOT)
 
@@ -189,13 +177,13 @@ class HomePageFactory @Inject constructor(
             }
         } catch (e: Exception) {}
 
-        // 3. Download high-res 128px icon in background to persist in cache
+        // 3. Download high-res 128px icon in background to persist in cache for next load
         Thread {
             try {
                 val s2Url = "https://www.google.com/s2/favicons?domain=$cleanHost&sz=128"
                 val conn = URL(s2Url).openConnection()
-                conn.connectTimeout = 5000
-                conn.readTimeout = 5000
+                conn.connectTimeout = 4000
+                conn.readTimeout = 4000
                 conn.getInputStream().use { input ->
                     val bytes = input.readBytes()
                     if (bytes.isNotEmpty()) {
@@ -207,7 +195,8 @@ class HomePageFactory @Inject constructor(
             } catch (e: Exception) {}
         }.start()
 
-        return "https://www.google.com/s2/favicons?domain=$cleanHost&sz=128"
+        // Return local vector/letter avatar immediately so WebView finishes rendering in 0ms!
+        return "data:image/png;base64," + bitmapToBase64(createIconByName(fallbackLetter))
     }
 
     companion object {
