@@ -223,7 +223,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Agente de usuario"
+                android:text="Useragent"
                 android:textSize="11sp"
                 android:gravity="center"
                 android:maxLines="2"

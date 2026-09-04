@@ -2,8 +2,14 @@
 <resources>
     <string-array name="user_agent">
         <item>@string/agent_default</item>
+        <item>@string/agent_android_phone</item>
+        <item>@string/agent_android_tablet</item>
         <item>@string/agent_desktop</item>
-        <item>@string/agent_mobile</item>
+        <item>@string/agent_ie11</item>
+        <item>@string/agent_macos</item>
+        <item>@string/agent_iphone</item>
+        <item>@string/agent_ipad</item>
+        <item>@string/agent_symbian</item>
         <item>@string/agent_custom</item>
     </string-array>
 

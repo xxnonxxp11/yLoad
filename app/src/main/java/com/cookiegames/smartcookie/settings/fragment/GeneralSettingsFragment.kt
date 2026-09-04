@@ -258,24 +258,28 @@ class GeneralSettingsFragment : AbstractSettingsFragment() {
 
     private fun choiceToUserAgent(index: Int) = when (index) {
         1 -> resources.getString(R.string.agent_default)
-        2 -> resources.getString(R.string.agent_desktop)
-        3 -> resources.getString(R.string.agent_mobile)
-        4 -> resources.getString(R.string.agent_custom)
+        2 -> resources.getString(R.string.agent_android_phone)
+        3 -> resources.getString(R.string.agent_android_tablet)
+        4 -> resources.getString(R.string.agent_desktop)
+        5 -> resources.getString(R.string.agent_ie11)
+        6 -> resources.getString(R.string.agent_macos)
+        7 -> resources.getString(R.string.agent_iphone)
+        8 -> resources.getString(R.string.agent_ipad)
+        9 -> resources.getString(R.string.agent_symbian)
+        10 -> resources.getString(R.string.agent_custom)
         else -> resources.getString(R.string.agent_default)
     }
 
     private fun showUserAgentChooserDialog(summaryUpdater: SummaryUpdater) {
         BrowserDialog.showCustomDialog(activity) {
             setTitle(resources.getString(R.string.title_user_agent))
-            setSingleChoiceItems(R.array.user_agent, userPreferences.userAgentChoice - 1) { _, which ->
+            val checked = (userPreferences.userAgentChoice - 1).coerceIn(0, 9)
+            setSingleChoiceItems(R.array.user_agent, checked) { _, which ->
                 userPreferences.userAgentChoice = which + 1
                 summaryUpdater.updateSummary(choiceToUserAgent(userPreferences.userAgentChoice))
-                when (which) {
-                    in 0..2 -> Unit
-                    3 -> {
-                        summaryUpdater.updateSummary(resources.getString(R.string.agent_custom))
-                        showCustomUserAgentPicker(summaryUpdater)
-                    }
+                if (which == 9) {
+                    summaryUpdater.updateSummary(resources.getString(R.string.agent_custom))
+                    showCustomUserAgentPicker(summaryUpdater)
                 }
             }
             setPositiveButton(resources.getString(R.string.action_ok), null)

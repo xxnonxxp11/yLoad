@@ -59,7 +59,14 @@
     <string name="action_delete">Delete</string>
     <string name="action_blank">Blank page</string>
     <string name="agent_default">Default</string>
-    <string name="agent_desktop">Desktop</string>
+    <string name="agent_android_phone">Android (Phone)</string>
+    <string name="agent_android_tablet">Android (Tablet)</string>
+    <string name="agent_desktop">Windows (Chrome)</string>
+    <string name="agent_ie11">Windows (IE 11)</string>
+    <string name="agent_macos">macOS</string>
+    <string name="agent_iphone">iPhone</string>
+    <string name="agent_ipad">iPad</string>
+    <string name="agent_symbian">Symbian</string>
     <string name="agent_mobile">Mobile</string>
     <string name="agent_custom">Custom</string>
     <string name="title_search_engine">Search engine</string>
@@ -69,7 +76,7 @@
     <string name="action_cancel">Cancel</string>
     <string name="title_warning">Warning</string>
     <string name="dialog_adobe_not_installed">Adobe Flash Player is not installed.\nPlease install Flash Player.</string>
-    <string name="title_user_agent">User agent</string>
+    <string name="title_user_agent">Useragent</string>
     <string name="title_download_location">Download location</string>
     <string name="download_failed">Download failed with error:</string>
     <string name="download_successful">Download successful</string>

@@ -2480,7 +2480,9 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 
         page1View.findViewById<View>(R.id.btn_via_settings)?.setOnClickListener {
             dialog.dismiss()
-            startActivity(Intent(this, SettingsActivity::class.java))
+            startActivity(Intent(this, SettingsActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            })
         }
 
         page1View.findViewById<View>(R.id.btn_via_find)?.setOnClickListener {
@@ -2552,19 +2554,47 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 
         page2View.findViewById<View>(R.id.btn_via_user_agent)?.setOnClickListener {
             dialog.dismiss()
-            val uas = arrayOf("Por defecto", "Escritorio", "Móvil", "Personalizado")
+            val uaOptions = arrayOf(
+                "Predeterminado",
+                "Android (Phone)",
+                "Android (Tablet)",
+                "Windows (Chrome)",
+                "Windows (IE 11)",
+                "macOS",
+                "iPhone",
+                "iPad",
+                "Symbian",
+                "Personalizado"
+            )
+            val checkedItem = (userPreferences.userAgentChoice - 1).coerceIn(0, uaOptions.size - 1)
             MaterialAlertDialogBuilder(this)
-                .setTitle("Agente de usuario")
-                .setItems(uas) { _, which ->
-                    when (which) {
-                        0 -> userPreferences.userAgentChoice = 1
-                        1 -> userPreferences.userAgentChoice = 2
-                        2 -> userPreferences.userAgentChoice = 3
-                        3 -> userPreferences.userAgentChoice = 4
+                .setTitle("Useragent")
+                .setSingleChoiceItems(uaOptions, checkedItem) { d, which ->
+                    d.dismiss()
+                    if (which == 9) {
+                        val dialogLayout = layoutInflater.inflate(R.layout.dialog_edit_text, null)
+                        val editText = dialogLayout.findViewById<EditText>(R.id.dialog_edit_text)
+                        editText.setText(userPreferences.userAgentString)
+                        editText.hint = "Ingresa tu User-Agent personalizado"
+                        MaterialAlertDialogBuilder(this)
+                            .setTitle("Useragent personalizado")
+                            .setView(dialogLayout)
+                            .setPositiveButton(android.R.string.ok) { _, _ ->
+                                val customUa = editText.text.toString().trim()
+                                userPreferences.userAgentString = customUa
+                                userPreferences.userAgentChoice = 10
+                                currentTab?.reload()
+                                Toast.makeText(this, "Useragent: Personalizado", Toast.LENGTH_SHORT).show()
+                            }
+                            .setNegativeButton(android.R.string.cancel, null)
+                            .show()
+                    } else {
+                        userPreferences.userAgentChoice = which + 1
+                        currentTab?.reload()
+                        Toast.makeText(this, "Useragent: " + uaOptions[which], Toast.LENGTH_SHORT).show()
                     }
-                    currentTab?.reload()
-                    Toast.makeText(this, "Agente de usuario: " + uas[which], Toast.LENGTH_SHORT).show()
                 }
+                .setNegativeButton(android.R.string.cancel, null)
                 .show()
         }
 
@@ -2666,7 +2696,9 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 
         page3View.findViewById<View>(R.id.btn_via_customize_menu)?.setOnClickListener {
             dialog.dismiss()
-            startActivity(Intent(this, SettingsActivity::class.java))
+            startActivity(Intent(this, SettingsActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            })
         }
 
         // ================= BOTTOM BAR ACTIONS =================

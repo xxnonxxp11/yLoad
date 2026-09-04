@@ -52,8 +52,15 @@
     <string name="dialog_bookmark">¿Qué te gustaría hacer con este marcador?</string>
     <string name="action_delete">Eliminar</string>
     <string name="action_blank">Página en blanco</string>
-    <string name="agent_default">Defecto</string>
-    <string name="agent_desktop">Escritorio</string>
+    <string name="agent_default">Predeterminado</string>
+    <string name="agent_android_phone">Android (Teléfono)</string>
+    <string name="agent_android_tablet">Android (Tableta)</string>
+    <string name="agent_desktop">Windows (Chrome)</string>
+    <string name="agent_ie11">Windows (IE 11)</string>
+    <string name="agent_macos">macOS</string>
+    <string name="agent_iphone">iPhone</string>
+    <string name="agent_ipad">iPad</string>
+    <string name="agent_symbian">Symbian</string>
     <string name="agent_mobile">Móvil</string>
     <string name="agent_custom">Personalizado</string>
     <string name="title_search_engine">Buscador</string>
@@ -63,7 +70,7 @@
     <string name="action_cancel">Cancelar</string>
     <string name="title_warning">Advertencia</string>
     <string name="dialog_adobe_not_installed">Adobe Flash Player no está instalado. \ NInstale Flash Player.</string>
-    <string name="title_user_agent">Agente de usuario</string>
+    <string name="title_user_agent">Useragent</string>
     <string name="title_download_location">Ubicación de la descarga</string>
     <string name="download_failed">Descarga fallida, error:</string>
     <string name="download_successful">Descarga completa</string>
