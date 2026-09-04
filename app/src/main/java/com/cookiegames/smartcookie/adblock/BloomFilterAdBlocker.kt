@@ -180,7 +180,7 @@ class BloomFilterAdBlocker @Inject constructor(
             if (fastHostSet.contains(current)) {
                 return true
             }
-            if (bloomFilter.delegate?.contains(Host(current)) == true) {
+            if (bloomFilter.mightContain(Host(current))) {
                 return true
             }
             val dotIndex = current.indexOf('.')
