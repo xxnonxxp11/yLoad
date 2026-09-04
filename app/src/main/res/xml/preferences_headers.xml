@@ -51,17 +51,4 @@
         android:singleLineTitle="false"
         android:summary="@string/settings_about_explain"
         android:title="@string/settings_about"/>
-    <androidx.preference.Preference
-        android:icon="@drawable/ic_settings_faq_layers"
-        android:summary="@string/faq_description"
-        android:singleLineTitle="false"
-        android:title="@string/faq">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:data="https://github.com/xxnonxxp11/yLoad#readme">
-            <extra
-                android:name="SOURCE"
-                android:value="SELF"/>
-        </intent>
-    </androidx.preference.Preference>
 </androidx.preference.PreferenceScreen>

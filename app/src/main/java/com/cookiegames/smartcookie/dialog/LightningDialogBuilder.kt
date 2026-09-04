@@ -34,7 +34,6 @@ import com.cookiegames.smartcookie.preference.UserPreferences
 import com.cookiegames.smartcookie.utils.IntentUtils
 import com.cookiegames.smartcookie.utils.isBookmarkUrl
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.huxq17.download.DownloadProvider
 import dagger.Reusable
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.subscribeBy

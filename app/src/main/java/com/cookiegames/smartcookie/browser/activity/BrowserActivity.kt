@@ -51,13 +51,16 @@ import androidx.palette.graphics.Palette
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import butterknife.ButterKnife
-import com.anthonycr.grant.PermissionsManager
+import android.content.pm.ShortcutInfo
+import android.content.pm.ShortcutManager
+import android.graphics.drawable.Icon
 import com.cookiegames.smartcookie.AppTheme
 import com.cookiegames.smartcookie.IncognitoActivity
 import com.cookiegames.smartcookie.reading.activity.ReadingActivity
 import com.cookiegames.smartcookie.adblock.allowlist.AllowListModel
 import com.cookiegames.smartcookie.download.DownloadActivity
 import com.cookiegames.smartcookie.history.HistoryActivity
+import com.cookiegames.smartcookie.webapp.WebappActivity
 import com.cookiegames.smartcookie.settings.activity.SettingsActivity
 import com.cookiegames.smartcookie.R
 import com.cookiegames.smartcookie.browser.*
@@ -2444,11 +2447,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 
         page1View.findViewById<View>(R.id.btn_via_downloads)?.setOnClickListener {
             dialog.dismiss()
-            if (userPreferences.useNewDownloader) {
-                startActivity(Intent(this, DownloadActivity::class.java))
-            } else {
-                currentTab?.loadDownloadsPage()
-            }
+            startActivity(Intent(this, DownloadActivity::class.java))
         }
 
         page1View.findViewById<View>(R.id.btn_via_incognito)?.setOnClickListener {
@@ -2602,11 +2601,17 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
             dialog.dismiss()
             currentTab?.let { tab ->
                 val cookieManager = CookieManager.getInstance()
-                val cookies = cookieManager.getCookie(tab.url) ?: "Sin cookies para este sitio"
+                val cookies = cookieManager.getCookie(tab.url)?.takeIf { it.isNotBlank() } ?: "Sin cookies para este sitio"
                 MaterialAlertDialogBuilder(this)
-                    .setTitle("Cookies / Registro")
+                    .setTitle("Cookies")
                     .setMessage(cookies)
-                    .setPositiveButton(android.R.string.ok, null)
+                    .setPositiveButton("Copiar") { _, _ ->
+                        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                        val clip = ClipData.newPlainText("Cookies", cookies)
+                        clipboard.setPrimaryClip(clip)
+                        Toast.makeText(this, "Cookies copiadas al portapapeles", Toast.LENGTH_SHORT).show()
+                    }
+                    .setNegativeButton("Cerrar", null)
                     .show()
             }
         }
@@ -2624,8 +2629,9 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
             currentTab?.let { tab ->
                 if (tab.url.isNotBlank() && !tab.url.isSpecialUrl()) {
                     val iconBmp = tab.favicon ?: webPageBitmap ?: Bitmap.createBitmap(48, 48, Bitmap.Config.ARGB_8888)
-                    Utils.createShortcut(this, HistoryEntry(tab.url, tab.title), iconBmp)
-                    Toast.makeText(this, "Acceso directo añadido a la pantalla de inicio", Toast.LENGTH_SHORT).show()
+                    showInstallAppDialog(tab.url, tab.title, iconBmp)
+                } else {
+                    Toast.makeText(this, "Esta página no se puede instalar", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -2714,6 +2720,66 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         dialog.show()
     }
 
+    private fun showInstallAppDialog(url: String, pageTitle: String, iconBmp: Bitmap) {
+        val defaultTitle = if (pageTitle.isNotBlank()) pageTitle else (Uri.parse(url).host ?: "App")
+        val input = EditText(this).apply {
+            setText(defaultTitle)
+            setSelection(text.length)
+            isSingleLine = true
+        }
+
+        val container = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            val pad = (16 * resources.displayMetrics.density).toInt()
+            setPadding(pad, pad / 2, pad, 0)
+            addView(input)
+        }
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Instalar app")
+            .setMessage("¿Deseas instalar esta aplicación en tu pantalla de inicio?")
+            .setView(container)
+            .setPositiveButton("Instalar") { _, _ ->
+                val chosenTitle = input.text.toString().trim().ifBlank { defaultTitle }
+                installWebAppShortcut(url, chosenTitle, iconBmp)
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun installWebAppShortcut(url: String, title: String, icon: Bitmap) {
+        val webappIntent = Intent(this, WebappActivity::class.java).apply {
+            action = "com.yload.browser.webapp.ACTION_OPEN_WEBAPP"
+            data = Uri.parse(url)
+            putExtra(WebappActivity.EXTRA_URL, url)
+            putExtra(WebappActivity.EXTRA_TITLE, title)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val shortcutManager = getSystemService(ShortcutManager::class.java)
+            if (shortcutManager != null && shortcutManager.isRequestPinShortcutSupported) {
+                val pinShortcutInfo = ShortcutInfo.Builder(this, "webapp-" + url.hashCode())
+                    .setIntent(webappIntent)
+                    .setIcon(Icon.createWithBitmap(icon))
+                    .setShortLabel(title)
+                    .build()
+                shortcutManager.requestPinShortcut(pinShortcutInfo, null)
+                Toast.makeText(this, "Aplicación instalada en la pantalla de inicio", Toast.LENGTH_SHORT).show()
+                return
+            }
+        }
+
+        // Fallback for Android < O
+        val addIntent = Intent().apply {
+            putExtra(Intent.EXTRA_SHORTCUT_INTENT, webappIntent)
+            putExtra(Intent.EXTRA_SHORTCUT_NAME, title)
+            putExtra(Intent.EXTRA_SHORTCUT_ICON, icon)
+            action = "com.android.launcher.action.INSTALL_SHORTCUT"
+        }
+        sendBroadcast(addIntent)
+        Toast.makeText(this, "Aplicación instalada en la pantalla de inicio", Toast.LENGTH_SHORT).show()
+    }
 
     companion object {
 

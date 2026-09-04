@@ -55,6 +55,16 @@
         <activity
             android:theme="@style/Theme.SettingsTheme"
             android:name=".history.HistoryActivity" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
         <!--
          <receiver android:name=".widget.SearchWidget" >
             <intent-filter>
@@ -205,6 +215,22 @@
                 <action android:name="android.intent.action.READING" />
 
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".webapp.WebappActivity"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|keyboard"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.yload.webapp"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="com.yload.browser.webapp.ACTION_OPEN_WEBAPP" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
             </intent-filter>
         </activity>
 

@@ -249,7 +249,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Registro de red"
+                android:text="Cookies"
                 android:textSize="11sp"
                 android:gravity="center"
                 android:maxLines="2"

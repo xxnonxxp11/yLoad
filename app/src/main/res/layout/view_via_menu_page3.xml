@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Añadir a pantalla de ..."
+                android:text="Instalar app"
                 android:textSize="11sp"
                 android:gravity="center"
                 android:maxLines="2"

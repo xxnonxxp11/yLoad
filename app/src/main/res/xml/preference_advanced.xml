@@ -58,9 +58,5 @@
             android:key="translation_endpoint"
             android:singleLineTitle="false"
             android:title="@string/translation_endpoint" />
-        <Preference
-            android:key="news_endpoint"
-            android:singleLineTitle="false"
-            android:title="@string/news_endpoint" />
     </PreferenceCategory>
 </PreferenceScreen>

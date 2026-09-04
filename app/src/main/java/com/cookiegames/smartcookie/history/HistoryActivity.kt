@@ -31,8 +31,6 @@ import com.cookiegames.smartcookie.dialog.LightningDialogBuilder
 import com.cookiegames.smartcookie.preference.UserPreferences
 import com.cookiegames.smartcookie.utils.RecyclerItemClickListener
 import com.cookiegames.smartcookie.utils.ThemeUtils
-import com.huxq17.download.DownloadProvider.context
-import com.huxq17.download.core.DownloadInfo
 import java.text.DateFormat
 import java.util.*
 import javax.inject.Inject

@@ -5,76 +5,83 @@
 
 package com.cookiegames.smartcookie.download
 
+import android.app.DownloadManager
+import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.*
 import android.webkit.MimeTypeMap
-import android.widget.Filter
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.FileProvider
-import androidx.core.net.toUri
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import butterknife.ButterKnife
 import com.cookiegames.smartcookie.AppTheme
 import com.cookiegames.smartcookie.BuildConfig
 import com.cookiegames.smartcookie.R
+import com.cookiegames.smartcookie.database.downloads.DownloadsRepository
 import com.cookiegames.smartcookie.di.injector
 import com.cookiegames.smartcookie.preference.UserPreferences
 import com.cookiegames.smartcookie.utils.ThemeUtils
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.huxq17.download.Pump
-import com.huxq17.download.core.DownloadInfo
-import com.huxq17.download.core.DownloadListener
-import com.huxq17.download.utils.LogUtil
-import kotlinx.android.synthetic.main.download_item.view.*
 import java.io.File
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.HashMap
 
+data class DownloadItem(
+    val id: Long = -1L,
+    val title: String,
+    val filePath: String,
+    val uri: Uri?,
+    val totalSize: Long,
+    val downloadedBytes: Long,
+    val status: Int,
+    val mimeType: String?,
+    val timestamp: Long
+)
 
 class DownloadActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
+
     @JvmField
     @Inject
     var mUserPreferences: UserPreferences? = null
 
-    private var downloadObserver: DownloadListener = object : DownloadListener() {
-        override fun onProgress(progress: Int) {
-            val downloadInfo = downloadInfo
-            val viewHolder = downloadInfo.extraData as DownloadViewHolder?
-            val tag = map[viewHolder]
-            if (tag != null && tag.id == downloadInfo.id) {
-                viewHolder?.bindData(downloadInfo, status)
+    @Inject
+    lateinit var downloadManager: DownloadManager
+
+    @Inject
+    lateinit var downloadsRepository: DownloadsRepository
+
+    private var downloadAdapter: DownloadAdapter? = null
+    private val handler = Handler(Looper.getMainLooper())
+    private var isPolling = false
+
+    private val pollRunnable = object : Runnable {
+        override fun run() {
+            loadDownloads()
+            if (isPolling) {
+                handler.postDelayed(this, 1000)
             }
         }
-
-        override fun onFailed() {
-            super.onFailed()
-            LogUtil.e("onFailed code=" + downloadInfo.errorCode)
-        }
     }
-
-    private val map = HashMap<DownloadViewHolder, DownloadInfo>()
-    private var downloadAdapter: DownloadAdapter? = null
-    private lateinit var downloadInfoList: MutableList<DownloadInfo>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         this.injector.inject(this)
 
         val color: Int
-        if (mUserPreferences!!.useTheme === AppTheme.LIGHT) {
+        if (mUserPreferences?.useTheme === AppTheme.LIGHT) {
             setTheme(R.style.Theme_SettingsTheme)
             color = ThemeUtils.getColorBackground(this)
             window.setBackgroundDrawable(ColorDrawable(color))
-        } else if (mUserPreferences!!.useTheme === AppTheme.DARK) {
+        } else if (mUserPreferences?.useTheme === AppTheme.DARK) {
             setTheme(R.style.Theme_SettingsTheme_Dark)
             color = ThemeUtils.getColorBackground(this)
             window.setBackgroundDrawable(ColorDrawable(color))
@@ -86,236 +93,388 @@ class DownloadActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_download)
-        ButterKnife.bind(this)
+
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        if (supportActionBar != null) supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val downloadInfoList  = Pump.getAllDownloadList()
         val list = findViewById<RecyclerView>(R.id.downloads)
-        val linearLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        list.layoutManager = LinearLayoutManager(this)
 
-        //Sort download list if need.
-        Collections.sort(downloadInfoList) { o1, o2 -> (o1.createTime - o2.createTime).toInt() }
-        list.layoutManager = linearLayoutManager
-        downloadAdapter = DownloadAdapter(map, downloadInfoList)
+        downloadAdapter = DownloadAdapter(
+            onOpen = { item -> openFile(this, item.filePath, item.mimeType) },
+            onCancel = { item -> cancelDownload(item) },
+            onDelete = { item -> deleteItem(item) },
+            onShare = { item -> shareFile(this, item.filePath, item.mimeType) }
+        )
         list.adapter = downloadAdapter
-        downloadObserver.enable()
+    }
 
-        //downloadAdapter!!.notifyDataSetChanged()
+    override fun onResume() {
+        super.onResume()
+        isPolling = true
+        loadDownloads()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        isPolling = false
+        handler.removeCallbacks(pollRunnable)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        isPolling = false
+        handler.removeCallbacks(pollRunnable)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            else -> finish()
+        if (item.itemId == android.R.id.home) {
+            finish()
+            return true
         }
         return super.onOptionsItemSelected(item)
     }
 
+    fun loadDownloads() {
+        val items = mutableListOf<DownloadItem>()
+        val seenPaths = HashSet<String>()
+        var hasActiveDownloads = false
 
-    override fun onDestroy() {
-        super.onDestroy()
-        downloadObserver.disable()
-        /*for (downloadInfo in downloadInfoList) {
-            Pump.stop(downloadInfo.id)
+        // 1. Query DownloadManager
+        try {
+            val query = DownloadManager.Query()
+            downloadManager.query(query)?.use { cursor ->
+                val idCol = cursor.getColumnIndex(DownloadManager.COLUMN_ID)
+                val titleCol = cursor.getColumnIndex(DownloadManager.COLUMN_TITLE)
+                val uriCol = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)
+                val statusCol = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
+                val bytesCol = cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)
+                val totalCol = cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)
+                val mimeCol = cursor.getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE)
+                val lastModCol = cursor.getColumnIndex(DownloadManager.COLUMN_LAST_MODIFIED_TIMESTAMP)
+
+                while (cursor.moveToNext()) {
+                    val id = if (idCol != -1) cursor.getLong(idCol) else -1L
+                    val title = if (titleCol != -1) cursor.getString(titleCol) ?: "download" else "download"
+                    val uriStr = if (uriCol != -1) cursor.getString(uriCol) else null
+                    val status = if (statusCol != -1) cursor.getInt(statusCol) else DownloadManager.STATUS_SUCCESSFUL
+                    val bytes = if (bytesCol != -1) cursor.getLong(bytesCol) else 0L
+                    val total = if (totalCol != -1) cursor.getLong(totalCol) else 0L
+                    val mime = if (mimeCol != -1) cursor.getString(mimeCol) else null
+                    val lastMod = if (lastModCol != -1) cursor.getLong(lastModCol) else 0L
+
+                    var path = ""
+                    var fileUri: Uri? = null
+                    if (!uriStr.isNullOrEmpty()) {
+                        fileUri = Uri.parse(uriStr)
+                        path = fileUri.path ?: ""
+                    }
+                    if (path.isEmpty()) {
+                        val publicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                        path = File(publicDir, title).absolutePath
+                    }
+
+                    if (status == DownloadManager.STATUS_RUNNING || status == DownloadManager.STATUS_PENDING || status == DownloadManager.STATUS_PAUSED) {
+                        hasActiveDownloads = true
+                    }
+
+                    seenPaths.add(path)
+                    items.add(DownloadItem(id, title, path, fileUri, total, bytes, status, mime, lastMod))
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("DownloadActivity", "Error querying DownloadManager", e)
         }
-        Pump.shutdown()*/
+
+        // 2. Scan Downloads directory for existing files
+        try {
+            val downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            if (downloadDir.exists() && downloadDir.isDirectory) {
+                val files = downloadDir.listFiles()
+                if (files != null) {
+                    for (file in files) {
+                        if (file.isFile && !file.name.startsWith(".") && !seenPaths.contains(file.absolutePath)) {
+                            val ext = file.extension.toLowerCase(Locale.ROOT)
+                            val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
+                            items.add(
+                                DownloadItem(
+                                    id = -1L,
+                                    title = file.name,
+                                    filePath = file.absolutePath,
+                                    uri = Uri.fromFile(file),
+                                    totalSize = file.length(),
+                                    downloadedBytes = file.length(),
+                                    status = DownloadManager.STATUS_SUCCESSFUL,
+                                    mimeType = mime,
+                                    timestamp = file.lastModified()
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("DownloadActivity", "Error scanning Downloads folder", e)
+        }
+
+        items.sortByDescending { it.timestamp }
+        downloadAdapter?.updateList(items)
+
+        // Adjust polling if downloads are running
+        handler.removeCallbacks(pollRunnable)
+        if (hasActiveDownloads && isPolling) {
+            handler.postDelayed(pollRunnable, 1000)
+        }
     }
 
-    class DownloadAdapter(var map: HashMap<DownloadViewHolder, DownloadInfo>, var downloadInfoList: MutableList<DownloadInfo>) : androidx.recyclerview.widget.RecyclerView.Adapter<DownloadViewHolder>() {
+    private fun cancelDownload(item: DownloadItem) {
+        if (item.id != -1L) {
+            try {
+                downloadManager.remove(item.id)
+            } catch (e: Exception) {
+                Log.e("DownloadActivity", "Error cancelling download", e)
+            }
+        }
+        loadDownloads()
+    }
 
-        lateinit var filtered: MutableList<DownloadInfo>
-        lateinit var oldList: MutableList<DownloadInfo>
+    private fun deleteItem(item: DownloadItem) {
+        if (item.id != -1L) {
+            try {
+                downloadManager.remove(item.id)
+            } catch (e: Exception) {
+                Log.e("DownloadActivity", "Error removing download", e)
+            }
+        }
+        try {
+            val file = File(item.filePath)
+            if (file.exists()) {
+                file.delete()
+            }
+        } catch (e: Exception) {
+            Log.e("DownloadActivity", "Error deleting file", e)
+        }
+        loadDownloads()
+    }
 
-        fun getFilter(): Filter? {
-            return object : Filter() {
-                override fun performFiltering(charSequence: CharSequence): FilterResults? {
-                    val charString = charSequence.toString()
-                    if (charString.isEmpty()) {
-                        filtered = oldList
-                    } else {
-                        val filteredList: MutableList<DownloadInfo> = ArrayList()
-                        for (row in oldList) {
-                            if (row.getName().toLowerCase().contains(charString.toLowerCase())) {
-                                filteredList.add(row)
+    private fun openFile(context: Context, filePath: String, mimeType: String?) {
+        val file = File(filePath)
+        if (!file.exists()) {
+            Toast.makeText(context, R.string.cannot_download, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val contentUri = try {
+            FileProvider.getUriForFile(
+                context,
+                "${BuildConfig.APPLICATION_ID}.fileprovider",
+                file
+            )
+        } catch (e: Exception) {
+            Log.e("DownloadActivity", "FileProvider error", e)
+            Uri.fromFile(file)
+        }
+
+        val ext = file.extension.toLowerCase(Locale.ROOT)
+        val effectiveMime = mimeType ?: MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext) ?: "*/*"
+
+        if (ext == "apk") {
+            val install = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(contentUri, "application/vnd.android.package-archive")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true)
+            }
+            try {
+                context.startActivity(install)
+            } catch (e: Exception) {
+                Toast.makeText(context, R.string.title_error, Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            val viewIntent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(contentUri, effectiveMime)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            try {
+                context.startActivity(Intent.createChooser(viewIntent, file.name))
+            } catch (e: Exception) {
+                Toast.makeText(context, R.string.title_error, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun shareFile(context: Context, filePath: String, mimeType: String?) {
+        val file = File(filePath)
+        if (!file.exists()) return
+
+        val contentUri = try {
+            FileProvider.getUriForFile(
+                context,
+                "${BuildConfig.APPLICATION_ID}.fileprovider",
+                file
+            )
+        } catch (e: Exception) {
+            Uri.fromFile(file)
+        }
+
+        val ext = file.extension.toLowerCase(Locale.ROOT)
+        val effectiveMime = mimeType ?: MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext) ?: "*/*"
+
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = effectiveMime
+            putExtra(Intent.EXTRA_STREAM, contentUri)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        try {
+            context.startActivity(Intent.createChooser(shareIntent, file.name))
+        } catch (e: Exception) {
+            Toast.makeText(context, R.string.title_error, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    class DownloadAdapter(
+        private val onOpen: (DownloadItem) -> Unit,
+        private val onCancel: (DownloadItem) -> Unit,
+        private val onDelete: (DownloadItem) -> Unit,
+        private val onShare: (DownloadItem) -> Unit
+    ) : RecyclerView.Adapter<DownloadViewHolder>() {
+
+        private var allItems: MutableList<DownloadItem> = mutableListOf()
+        private var displayedItems: MutableList<DownloadItem> = mutableListOf()
+        private var currentQuery: String = ""
+
+        fun updateList(newList: List<DownloadItem>) {
+            allItems.clear()
+            allItems.addAll(newList)
+            applyFilter()
+        }
+
+        fun filter(query: String) {
+            currentQuery = query
+            applyFilter()
+        }
+
+        private fun applyFilter() {
+            displayedItems.clear()
+            if (currentQuery.isBlank()) {
+                displayedItems.addAll(allItems)
+            } else {
+                val q = currentQuery.toLowerCase(Locale.ROOT)
+                for (item in allItems) {
+                    if (item.title.toLowerCase(Locale.ROOT).contains(q)) {
+                        displayedItems.add(item)
+                    }
+                }
+            }
+            notifyDataSetChanged()
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DownloadViewHolder {
+            val v = LayoutInflater.from(parent.context).inflate(R.layout.download_item, parent, false)
+            return DownloadViewHolder(v, onOpen, onCancel, onDelete, onShare)
+        }
+
+        override fun onBindViewHolder(holder: DownloadViewHolder, position: Int) {
+            holder.bind(displayedItems[position])
+        }
+
+        override fun getItemCount(): Int = displayedItems.size
+    }
+
+    class DownloadViewHolder(
+        itemView: View,
+        private val onOpen: (DownloadItem) -> Unit,
+        private val onCancel: (DownloadItem) -> Unit,
+        private val onDelete: (DownloadItem) -> Unit,
+        private val onShare: (DownloadItem) -> Unit
+    ) : RecyclerView.ViewHolder(itemView) {
+
+        private val dlIcon: ImageView = itemView.findViewById(R.id.dl_icon)
+        private val dlName: TextView = itemView.findViewById(R.id.dl_name)
+        private val dlProgress: ProgressBar = itemView.findViewById(R.id.dl_progress)
+        private val dlSpeed: TextView = itemView.findViewById(R.id.dl_speed)
+        private val dlDownload: TextView = itemView.findViewById(R.id.dl_download)
+        private val dlStatus: Button = itemView.findViewById(R.id.dl_status)
+
+        fun bind(item: DownloadItem) {
+            dlName.text = item.title
+            dlName.isSelected = true
+
+            // Set icon by extension
+            val ext = item.filePath.substringAfterLast('.', "").toLowerCase(Locale.ROOT)
+            when (ext) {
+                "pdf" -> dlIcon.setImageResource(R.drawable.icon_pdf)
+                "zip", "rar", "7z", "tar", "gz" -> dlIcon.setImageResource(R.drawable.icon_zip)
+                "apk" -> dlIcon.setImageResource(R.drawable.icon_apk)
+                "txt", "doc", "docx", "xls", "xlsx", "ppt", "pptx" -> dlIcon.setImageResource(R.drawable.icon_txt)
+                "jpg", "jpeg", "gif", "png", "webp", "bmp" -> dlIcon.setImageResource(R.drawable.icon_img)
+                else -> dlIcon.setImageResource(R.drawable.ic_file_download_black)
+            }
+
+            val isRunning = item.status == DownloadManager.STATUS_RUNNING || item.status == DownloadManager.STATUS_PENDING
+            val isPaused = item.status == DownloadManager.STATUS_PAUSED
+            val isFailed = item.status == DownloadManager.STATUS_FAILED
+
+            if (isRunning || isPaused) {
+                dlProgress.visibility = View.VISIBLE
+                val progress = if (item.totalSize > 0) {
+                    ((item.downloadedBytes * 100) / item.totalSize).toInt()
+                } else 0
+                dlProgress.progress = progress
+                dlSpeed.text = "$progress%"
+                dlDownload.text = "${DownloadUtil.getDataSize(item.downloadedBytes)} / ${DownloadUtil.getDataSize(item.totalSize)}"
+                dlStatus.text = itemView.context.getString(android.R.string.cancel)
+                dlStatus.setOnClickListener { onCancel(item) }
+            } else if (isFailed) {
+                dlProgress.visibility = View.GONE
+                dlSpeed.text = "Error"
+                dlDownload.text = ""
+                dlStatus.text = itemView.context.getString(R.string.action_delete)
+                dlStatus.setOnClickListener { onDelete(item) }
+            } else {
+                // Successful or local file
+                dlProgress.visibility = View.GONE
+                dlSpeed.text = ""
+                val sizeToDisplay = if (item.totalSize > 0) item.totalSize else File(item.filePath).length()
+                dlDownload.text = DownloadUtil.getDataSize(sizeToDisplay)
+                dlStatus.text = itemView.context.getString(R.string.action_open)
+                dlStatus.setOnClickListener { onOpen(item) }
+            }
+
+            itemView.setOnClickListener {
+                if (!isRunning && !isPaused && !isFailed) {
+                    onOpen(item)
+                }
+            }
+
+            itemView.setOnLongClickListener {
+                val context = itemView.context
+                val options = arrayOf(
+                    context.getString(R.string.action_open),
+                    context.getString(R.string.action_share),
+                    context.getString(R.string.action_delete)
+                )
+                MaterialAlertDialogBuilder(context)
+                    .setTitle(item.title)
+                    .setItems(options) { _, which ->
+                        when (which) {
+                            0 -> onOpen(item)
+                            1 -> onShare(item)
+                            2 -> {
+                                MaterialAlertDialogBuilder(context)
+                                    .setTitle(R.string.confirm_delete)
+                                    .setPositiveButton(R.string.yes) { _, _ -> onDelete(item) }
+                                    .setNegativeButton(R.string.no, null)
+                                    .show()
                             }
                         }
-                        filtered = filteredList
                     }
-                    val filterResults = FilterResults()
-                    filterResults.values = filtered
-                    return filterResults
-                }
-
-                override fun publishResults(charSequence: CharSequence?, filterResults: FilterResults) {
-                    if(filterResults.values != null){
-                        downloadInfoList = filterResults.values as MutableList<DownloadInfo>
-
-                        notifyDataSetChanged()
-                    }
-                }
+                    .show()
+                true
             }
-        }
-
-        override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): DownloadViewHolder {
-            val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.download_item, viewGroup, false)
-            oldList = downloadInfoList
-            return DownloadViewHolder(v, this)
-        }
-
-        override fun onBindViewHolder(viewHolder: DownloadViewHolder, i: Int) {
-            val downloadInfo = downloadInfoList[i]
-            viewHolder.bindData(downloadInfo, downloadInfo.status)
-
-            downloadInfo.extraData = viewHolder
-            map[viewHolder] = downloadInfo
-        }
-
-        fun delete(viewHolder: DownloadViewHolder) {
-            val position = viewHolder.adapterPosition
-            downloadInfoList.removeAt(position)
-            notifyItemRemoved(position)
-            map.remove(viewHolder)
-        }
-
-        override fun getItemCount(): Int {
-            return downloadInfoList.size
-        }
-    }
-
-    class DownloadViewHolder(itemView: View, adapter: DownloadAdapter) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView), View.OnClickListener, View.OnLongClickListener {
-        lateinit var downloadInfo: DownloadInfo
-        lateinit var status: DownloadInfo.Status
-        private var totalSizeString: String? = null
-        var totalSize: Long = 0
-        var dialog: AlertDialog
-
-        init {
-            itemView.dl_status.setOnClickListener(this)
-            itemView.setOnLongClickListener(this)
-            dialog = MaterialAlertDialogBuilder(itemView.context)
-                    .setTitle(itemView.context.resources.getString(R.string.confirm_delete))
-                    .setPositiveButton(itemView.context.resources.getString(R.string.yes)) { _, _ ->
-                        adapter.delete(this@DownloadViewHolder)
-                        Pump.deleteById(downloadInfo.id)
-                    }
-                    .setNegativeButton(itemView.context.resources.getString(R.string.no)) { _, _ -> }
-                    .create()
-        }
-
-        fun bindData(downloadInfo: DownloadInfo, status: DownloadInfo.Status) {
-            this.downloadInfo = downloadInfo
-            this.status = status
-            itemView.dl_name.text = downloadInfo.name
-            itemView.dl_name.isSelected = true
-            var speed = ""
-            val progress = downloadInfo.progress
-            itemView.dl_progress.progress = progress
-            when (status) {
-                DownloadInfo.Status.STOPPED -> itemView.dl_status.text = itemView.context.getString(R.string.start_download)
-                DownloadInfo.Status.PAUSING -> itemView.dl_status.text = itemView.context.getString(R.string.pausing_download)
-                DownloadInfo.Status.PAUSED -> itemView.dl_status.text = itemView.context.getString(R.string.continue_download)
-                DownloadInfo.Status.WAIT -> itemView.dl_status.text = itemView.context.getString(R.string.waiting_download)
-                DownloadInfo.Status.RUNNING -> {
-                    itemView.dl_status.text = itemView.context.getString(R.string.pause_download)
-                    speed = downloadInfo.speed
-                }
-                DownloadInfo.Status.FINISHED -> itemView.dl_status.text = itemView.context.getString(R.string.action_open)
-                else -> itemView.dl_status.text = itemView.context.getString(R.string.title_error)
-            }
-            itemView.dl_speed.text = speed
-            val completedSize = downloadInfo.completedSize
-            if (totalSize == 0L) {
-                val totalSize = downloadInfo.contentLength
-                totalSizeString = "/" + DownloadUtil.getDataSize(totalSize)
-            }
-            itemView.dl_download.text = DownloadUtil.getDataSize(completedSize) + totalSizeString!!
-            when(File(downloadInfo.filePath).extension){
-                "pdf" -> itemView.dl_icon.setImageResource(R.drawable.icon_pdf)
-                "zip" -> itemView.dl_icon.setImageResource(R.drawable.icon_zip)
-                "apk" -> itemView.dl_icon.setImageResource(R.drawable.icon_apk)
-                "txt", "doc", "docx" -> itemView.dl_icon.setImageResource(R.drawable.icon_txt)
-                "jpg", "jpeg", "gif", "png" -> itemView.dl_icon.setImageResource(R.drawable.icon_img)
-                "bin" -> itemView.dl_icon.setImageResource(R.drawable.icon_bin)
-            }
-
-        }
-
-        fun openFile(filePath: String, v: View){
-            val intent = Intent()
-            intent.action = Intent.ACTION_VIEW
-            val fileURI = filePath.toUri()
-            if(getFileExtension(filePath) != "apk"){
-                val finalUri = FileProvider.getUriForFile(v.context, BuildConfig.APPLICATION_ID + ".fileprovider", File(filePath))
-                intent.setDataAndType(finalUri, MimeTypeMap.getSingleton().getMimeTypeFromExtension(getFileExtension(filePath)))
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                if (intent.resolveActivity(v.context.packageManager) != null) {
-                    v.context.startActivity(intent)
-                } else {
-                    Toast.makeText(v.context, v.context.resources.getString(R.string.title_error), Toast.LENGTH_LONG).show()
-                }
-            }
-            else{
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    val contentUri = FileProvider.getUriForFile(
-                            v.context,
-                            BuildConfig.APPLICATION_ID + ".fileprovider",
-                            File(filePath)
-                    )
-                    val install = Intent(Intent.ACTION_VIEW)
-                    install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    install.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    install.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true)
-                    install.data = contentUri
-                    v.context.startActivity(install)
-                } else {
-                    val install = Intent(Intent.ACTION_VIEW)
-                    install.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    install.setDataAndType(
-                            fileURI,
-                            "\"application/vnd.android.package-archive\""
-                    )
-                    v.context.startActivity(install)
-                }
-            }
-        }
-
-        fun getFileExtension(filename: String?): String? {
-            if (filename == null) {
-                return null
-            }
-            val lastUnixPos = filename.lastIndexOf('/')
-            val lastWindowsPos = filename.lastIndexOf('\\')
-            val indexOfLastSeparator = Math.max(lastUnixPos, lastWindowsPos)
-            val extensionPos = filename.lastIndexOf('.')
-            val indexOfExtension = if (indexOfLastSeparator > extensionPos) -1 else extensionPos
-            return if (indexOfExtension == -1) {
-                null
-            } else {
-                filename.substring(indexOfExtension + 1).toLowerCase()
-            }
-        }
-
-        override fun onClick(v: View) {
-            if (v === itemView.dl_status) {
-                when (status) {
-                    DownloadInfo.Status.STOPPED -> Pump.newRequest(downloadInfo.url, downloadInfo.filePath)
-                            .setId(downloadInfo.id)
-                            .submit()
-                    DownloadInfo.Status.PAUSED -> Pump.resume(downloadInfo.id)
-                    DownloadInfo.Status.WAIT -> {
-                    }
-                    DownloadInfo.Status.RUNNING -> Pump.pause(downloadInfo.id)
-                    DownloadInfo.Status.FINISHED -> openFile(downloadInfo.filePath, v)
-                    else -> Pump.resume(downloadInfo.id)
-                }
-            }
-
-        }
-
-        override fun onLongClick(v: View): Boolean {
-            dialog.show()
-            return true
         }
     }
 
@@ -323,14 +482,14 @@ class DownloadActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         menuInflater.inflate(R.menu.download, menu)
 
         val searchItem: MenuItem = menu.findItem(R.id.action_search)
-        val searchView: SearchView = searchItem.getActionView() as SearchView
+        val searchView: SearchView = searchItem.actionView as SearchView
         searchView.setOnQueryTextListener(this)
 
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onQueryTextChange(query: String?): Boolean {
-        downloadAdapter?.getFilter()?.filter(query)
+        downloadAdapter?.filter(query.orEmpty())
         return false
     }
 
