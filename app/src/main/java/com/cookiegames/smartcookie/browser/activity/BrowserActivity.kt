@@ -1632,12 +1632,14 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         }
     }
 
-    private fun getSearchBarColor(requestedColor: Int, defaultColor: Int): Int =
-            if (requestedColor == defaultColor) {
-                if (isDarkTheme) DrawableUtils.mixColor(0.25f, defaultColor, Color.WHITE) else Color.WHITE
-            } else {
-                DrawableUtils.mixColor(0.25f, requestedColor, Color.WHITE)
-            }
+    private fun getSearchBarColor(requestedColor: Int, defaultColor: Int): Int {
+        val targetSurface = if (isDarkTheme) 0xFF22242B.toInt() else 0xFFF1F3F4.toInt()
+        return if (requestedColor == defaultColor) {
+            targetSurface
+        } else {
+            DrawableUtils.mixColor(0.20f, requestedColor, targetSurface)
+        }
+    }
 
     @ColorInt
     override fun getUiColor(): Int = currentUiColor
@@ -2567,7 +2569,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         page2View.findViewById<View>(R.id.btn_via_inspect)?.setOnClickListener {
             dialog.dismiss()
             val builder = AlertDialog.Builder(this)
-            builder.setTitle(R.string.inspect)
+            builder.setTitle("Inyectar script")
             val dialogLayout = layoutInflater.inflate(R.layout.dialog_edit_text, null)
             val editText = dialogLayout.findViewById<EditText>(R.id.dialog_edit_text)
             builder.setView(dialogLayout)

@@ -29,13 +29,13 @@
     </style>
 
     <style name="Theme.DarkTheme" parent="Theme.BaseDarkTheme">
-        <item name="searchBackground">@drawable/card_bg_elevate</item>
+        <item name="searchBackground">@drawable/search_bg_dark</item>
         <item name="listBackground">@drawable/list_bg</item>
         <item name="progressBackgroundColor">@color/cookie_dark</item>
     </style>
 
     <style name="Theme.BlackTheme" parent="Theme.BaseBlackTheme">
-        <item name="searchBackground">@drawable/card_bg_elevate</item>
+        <item name="searchBackground">@drawable/search_bg_black</item>
         <item name="listBackground">@drawable/list_bg</item>
         <item name="progressBackgroundColor">@color/black</item>
     </style>

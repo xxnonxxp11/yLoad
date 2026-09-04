@@ -20,31 +20,23 @@ class UBlockAdDefuser @Inject constructor() {
         #s_test_ads,
         #s_test_pagead,
         ins.adsbygoogle,
-        [class*="google-auto-placed"],
-        [id*="google_ads_"],
-        [class*="banner-ad"],
-        [class*="ad-banner"],
-        [class*="ad-container"],
-        [class*="ads-wrapper"],
-        [class*="ad-slot"],
-        [class*="ad_slot"],
+        .banner-ad,
+        .ad-banner,
+        .ad-container,
+        .ads-wrapper,
+        .ad-slot,
+        .ad_slot,
         [id*="taboola-"],
         [id*="outbrain-"],
         [class*="outbrain_"],
-        [class*="rc-ad"],
-        [data-ad-unit],
-        [data-ad-slot],
-        [data-ad-client],
+        .rc-ad,
         .sponsored-post,
         .ad-header,
         .ad-footer,
         .ad-sidebar,
-        [aria-label="advertisement" i],
-        [aria-label="sponsored" i],
         #yandex_rtb_R-A-491776-1,
         [id*="yandex_rtb_"],
         [class*="yandex-rtb"],
-        [data-ads],
         .includeWrapper,
         ytd-ad-slot-renderer,
         ytd-banner-promo-renderer,
@@ -92,7 +84,11 @@ class UBlockAdDefuser @Inject constructor() {
             if (window.__yload_ad_defuser__) return;
             window.__yload_ad_defuser__ = true;
 
-            var adPattern = /(?:doubleclick|googleads|adservice\.google|googlesyndication|google-analytics|criteo|taboola|outbrain|adnxs|pubmatic|rubiconproject|openx|scorecardresearch|chartbeat|hotjar|clarity\.ms|sentry\.io|bugsnag|luckyorange|mouseflow|fakepage\.html|\/pagead\/|\/ads?\.js|advert|tracking|analytics)/i;
+            // Never interfere with Google search engine internal hydration and thumbnail fetches
+            var host = window.location.hostname || '';
+            if (host.indexOf('google.') !== -1) return;
+
+            var adPattern = /(?:doubleclick\.net|googleads|adservice\.google|googlesyndication|google-analytics\.com|criteo\.com|taboola\.com|outbrain\.com|adnxs\.com|pubmatic\.com|rubiconproject\.com|openx\.net|scorecardresearch\.com|chartbeat\.com|hotjar\.com|clarity\.ms|sentry\.io|bugsnag\.com|luckyorange\.com|mouseflow\.com|fakepage\.html|\/pagead\/)/i;
 
             if (window.fetch) {
                 var _fetch = window.fetch;

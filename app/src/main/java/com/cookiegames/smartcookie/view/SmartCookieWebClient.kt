@@ -180,10 +180,15 @@ class SmartCookieWebClient(
         if (whitelistModel.isUrlAllowedAds(pageUrl)) return false
 
         val lower = requestUrl.toLowerCase(Locale.ROOT)
-        // Never block actual YouTube video streams or player core scripts
+        // Never block actual YouTube video streams, player core scripts or legitimate video/image thumbnails
         if (lower.contains("googlevideo.com") ||
             lower.contains("youtube.com/s/player/") ||
-            lower.contains("youtube.com/yts/")) {
+            lower.contains("youtube.com/yts/") ||
+            lower.contains("ytimg.com") ||
+            lower.contains("gstatic.com") ||
+            lower.contains("googleusercontent.com") ||
+            lower.contains("ggpht.com") ||
+            requestUrl.startsWith("data:image/")) {
             return false
         }
 
