@@ -54,3 +54,7 @@ out
 # https://gitlab.com/fdroid/fdroidclient/raw/master/.gitignore
 
 *.iml
+
+# Backups
+backups/
+*.zip
