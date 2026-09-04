@@ -244,8 +244,11 @@ class SmartCookieView(
             .observeOn(mainScheduler)
             .subscribe(::setNetworkAvailable)
 
-        if(WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK) && userPreferences.darkModeExtension) {
-            WebSettingsCompat.setForceDark(webView!!.getSettings(), WebSettingsCompat.FORCE_DARK_ON)
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK) && userPreferences.darkModeExtension) {
+            WebSettingsCompat.setForceDark(webView!!.settings, WebSettingsCompat.FORCE_DARK_ON)
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK_STRATEGY)) {
+                WebSettingsCompat.setForceDarkStrategy(webView!!.settings, WebSettingsCompat.DARK_STRATEGY_PREFER_WEB_THEME_OVER_USER_AGENT_DARKENING)
+            }
         }
 
         if(userPreferences.firstLaunch){

@@ -87,6 +87,7 @@ import com.cookiegames.smartcookie.html.homepage.HomePageFactory
 import com.cookiegames.smartcookie.html.incognito.IncognitoPageFactory
 import com.cookiegames.smartcookie.html.onboarding.OnboardingPageFactory
 import com.cookiegames.smartcookie.icon.TabCountView
+import com.cookiegames.smartcookie.icon.TabCountDrawable
 import com.cookiegames.smartcookie.interpolator.BezierDecelerateInterpolator
 import com.cookiegames.smartcookie.log.Logger
 import com.cookiegames.smartcookie.notifications.IncognitoNotification
@@ -790,7 +791,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         val extraBar = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
         if(userPreferences.navbar){
-            extraBar.setBackgroundColor(if(isDarkTheme) resources.getColor(R.color.black) else resources.getColor(R.color.white))
+            extraBar.setBackgroundColor(if(isDarkTheme) 0xFF000000.toInt() else 0xFFFFFFFF.toInt())
         }
 
         webPageBitmap?.let { webBitmap ->
@@ -820,28 +821,35 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         }
         else{
             extraBar.visibility = VISIBLE
+            try {
+                extraBar.menu.setGroupCheckable(0, false, false)
+                for (i in 0 until extraBar.menu.size()) {
+                    extraBar.menu.getItem(i).isCheckable = false
+                }
+            } catch (ignored: Exception) {
+            }
             extraBar.setOnNavigationItemSelectedListener { item ->
                 when(item.itemId) {
                     R.id.back -> {
                         tabsManager.currentTab?.goBack()
-                        true
+                        false
                     }
                     R.id.forward -> {
                         tabsManager.currentTab?.goForward()
-                        true
+                        false
                     }
                     R.id.home -> {
                         tabsManager.currentTab?.loadHomePage()
-                        true
+                        false
                     }
                     R.id.tabs -> {
                         drawer_layout.closeDrawer(getBookmarkDrawer())
                         toggleDrawer(drawer_layout, getTabDrawer())
-                        true
+                        false
                     }
                     R.id.menu -> {
                         showViaMenu()
-                        true
+                        false
                     }
                     else -> false
                 }
@@ -1659,6 +1667,8 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         searchView?.setText(searchBoxModel.getDisplayContent(url, currentTitle, isLoading))
     }
 
+    private var bottomNavTabDrawable: TabCountDrawable? = null
+
     override fun updateTabNumber(number: Int) {
         if (shouldShowTabsInDrawer && !isIncognito()) {
             tabCountView?.setIsIncognito(false)
@@ -1667,17 +1677,15 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         val extraBar = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         extraBar?.let { nav ->
             try {
-                val badge = nav.getOrCreateBadge(R.id.tabs)
-                if (number > 0) {
-                    badge.isVisible = true
-                    if (number > 99) {
-                        badge.maxCharacterCount = 2
-                        badge.number = 99
+                nav.removeBadge(R.id.tabs)
+                val item = nav.menu.findItem(R.id.tabs)
+                if (item != null) {
+                    if (bottomNavTabDrawable == null) {
+                        bottomNavTabDrawable = TabCountDrawable(this, number, isIncognito())
                     } else {
-                        badge.number = number
+                        bottomNavTabDrawable?.updateCount(number, isIncognito())
                     }
-                } else {
-                    badge.isVisible = false
+                    item.icon = bottomNavTabDrawable
                 }
             } catch (ignored: Exception) {
             }

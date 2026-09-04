@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?><!-- before was  6dp top/bottom -->
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/search_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="4dp"
-    android:layout_marginTop="6dp"
-    android:layout_marginRight="4dp"
-    android:layout_marginBottom="6dp"
+    android:layout_marginLeft="6dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginRight="6dp"
+    android:layout_marginBottom="4dp"
     android:layout_weight="1"
     android:background="?attr/searchBackground"
     android:clipChildren="false"
@@ -20,10 +20,12 @@
 
     <ImageView
         android:id="@+id/search_ssl_status"
-        android:layout_width="@dimen/material_grid_touch_small"
+        android:layout_width="38dp"
         android:layout_height="match_parent"
         android:background="?selectableItemBackgroundBorderless"
         android:padding="8dp"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,22 +43,28 @@
         android:importantForAutofill="no"
         android:inputType="textUri"
         android:maxLines="1"
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp"
         android:selectAllOnFocus="true"
         android:textColor="?attr/autoCompleteTitleColor"
         android:textColorHint="?attr/autoCompleteUrlColor"
         android:textCursorDrawable="@null"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/search_refresh"
         app:layout_constraintStart_toEndOf="@+id/search_ssl_status"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_goneMarginLeft="8dp"
-        android:textSize="15.5sp"/>
+        app:layout_goneMarginLeft="10dp" />
 
     <ImageView
         android:id="@+id/search_refresh"
-        android:layout_width="@dimen/material_grid_touch_small"
+        android:layout_width="44dp"
         android:layout_height="match_parent"
         android:background="?selectableItemBackgroundBorderless"
-        android:padding="6dp"
+        android:contentDescription="@string/action_refresh"
+        android:padding="9dp"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

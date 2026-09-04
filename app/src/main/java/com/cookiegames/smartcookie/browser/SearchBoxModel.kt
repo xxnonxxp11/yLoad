@@ -34,21 +34,26 @@ class SearchBoxModel @Inject constructor(
      * @param isLoading whether the page is currently loading or not.
      * @return the string that should be displayed by the search box.
      */
-    fun getDisplayContent(url: String, title: String?, isLoading: Boolean): String =
-        when {
-            url.isSpecialUrl() -> ""
-            isLoading -> url
-            else -> when (userPreferences.urlBoxContentChoice) {
-                SearchBoxDisplayChoice.URL -> url
-                SearchBoxDisplayChoice.DOMAIN -> safeDomain(url)
-                SearchBoxDisplayChoice.TITLE ->
-                    if (title?.isEmpty() == false) {
-                        title
-                    } else {
-                        untitledTitle
-                    }
+    fun getDisplayContent(url: String, title: String?, isLoading: Boolean): String {
+        if (url.isSpecialUrl()) return ""
+        val domain = safeDomain(url)
+        val cleanDomain = if (domain.isNotBlank()) domain else url
+        val cleanTitle = if (!title.isNullOrBlank() && title != url) title else cleanDomain
+
+        return when (userPreferences.urlBoxContentChoice) {
+            SearchBoxDisplayChoice.TITLE -> {
+                if (isLoading) {
+                    if (!title.isNullOrBlank() && title != url) cleanTitle else cleanDomain
+                } else {
+                    cleanTitle
+                }
+            }
+            SearchBoxDisplayChoice.DOMAIN -> cleanDomain
+            SearchBoxDisplayChoice.URL -> {
+                if (isLoading) cleanDomain else url
             }
         }
+    }
 
     private fun safeDomain(url: String) = Utils.getDomainName(url)
 
