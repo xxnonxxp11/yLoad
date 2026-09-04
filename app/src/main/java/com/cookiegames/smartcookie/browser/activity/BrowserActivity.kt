@@ -54,6 +54,8 @@ import butterknife.ButterKnife
 import com.anthonycr.grant.PermissionsManager
 import com.cookiegames.smartcookie.AppTheme
 import com.cookiegames.smartcookie.IncognitoActivity
+import com.cookiegames.smartcookie.reading.activity.ReadingActivity
+import com.cookiegames.smartcookie.adblock.allowlist.AllowListModel
 import com.cookiegames.smartcookie.download.DownloadActivity
 import com.cookiegames.smartcookie.history.HistoryActivity
 import com.cookiegames.smartcookie.settings.activity.SettingsActivity
@@ -239,6 +241,9 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 
     @Inject
     lateinit var bookmarksDialogBuilder: LightningDialogBuilder
+
+    @Inject
+    lateinit var allowListModel: AllowListModel
 
     // Image
     var webPageBitmap: Bitmap? = null
@@ -2396,7 +2401,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
             page3View.findViewById<TextView>(R.id.text_via_adblock)?.setTextColor(activeColor)
         }
 
-        if (!userPreferences.loadImages) {
+        if (userPreferences.blockImagesEnabled) {
             page2View.findViewById<androidx.appcompat.widget.AppCompatImageView>(R.id.icon_via_images)?.setColorFilter(activeColor)
             page2View.findViewById<TextView>(R.id.text_via_images)?.setTextColor(activeColor)
         }
@@ -2527,8 +2532,8 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 
         page2View.findViewById<View>(R.id.btn_via_images)?.setOnClickListener {
             dialog.dismiss()
-            userPreferences.loadImages = !userPreferences.loadImages
-            Toast.makeText(this, if (userPreferences.loadImages) "Mostrar imágenes activado" else "Mostrar imágenes desactivado", Toast.LENGTH_SHORT).show()
+            userPreferences.blockImagesEnabled = !userPreferences.blockImagesEnabled
+            Toast.makeText(this, if (!userPreferences.blockImagesEnabled) "Mostrar imágenes activado" else "Bloqueo de imágenes activado", Toast.LENGTH_SHORT).show()
             currentTab?.reload()
         }
 
