@@ -273,7 +273,13 @@
             var input = document.getElementById("search_input");
             var query = input.value.trim();
             if (query !== "") {
-                window.location.href = "${BASE_URL}" + encodeURIComponent(query).replace(/%20/g, "+");
+                if (/^(https?:\/\/|about:|file:)/i.test(query)) {
+                    window.location.href = query;
+                } else if (!query.includes(" ") && /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$/i.test(query)) {
+                    window.location.href = "https://" + query;
+                } else {
+                    window.location.href = "${BASE_URL}" + encodeURIComponent(query).replace(/%20/g, "+");
+                }
                 input.value = "";
             }
             return false;
@@ -306,12 +312,12 @@
         };
         if (saveBtn) {
             saveBtn.onclick = function() {
-                localStorage.setItem("link1", document.getElementById("link1inp").value);
-                localStorage.setItem("link2", document.getElementById("link2inp").value);
-                localStorage.setItem("link3", document.getElementById("link3inp").value);
-                localStorage.setItem("link4", document.getElementById("link4inp").value);
+                var l1 = encodeURIComponent(document.getElementById("link1inp").value.trim());
+                var l2 = encodeURIComponent(document.getElementById("link2inp").value.trim());
+                var l3 = encodeURIComponent(document.getElementById("link3inp").value.trim());
+                var l4 = encodeURIComponent(document.getElementById("link4inp").value.trim());
                 modal.style.display = "none";
-                location.reload();
+                window.location.href = "yload://save_shortcuts?link1=" + l1 + "&link2=" + l2 + "&link3=" + l3 + "&link4=" + l4;
             };
         }
     </script>

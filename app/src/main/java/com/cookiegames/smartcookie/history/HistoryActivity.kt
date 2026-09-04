@@ -31,6 +31,8 @@ import com.cookiegames.smartcookie.dialog.LightningDialogBuilder
 import com.cookiegames.smartcookie.preference.UserPreferences
 import com.cookiegames.smartcookie.utils.RecyclerItemClickListener
 import com.cookiegames.smartcookie.utils.ThemeUtils
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.text.DateFormat
 import java.util.*
 import javax.inject.Inject
@@ -47,7 +49,7 @@ class HistoryActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
     lateinit var list: RecyclerView
     lateinit var arrayAdapter: CustomAdapter
-    lateinit var historyList: List<HistoryEntry>
+    var historyList: List<HistoryEntry> = emptyList()
 
 
     @Inject internal lateinit var historyRepository: HistoryRepository
@@ -79,16 +81,20 @@ class HistoryActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
         list = findViewById(R.id.history)
         val linearLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        list.layoutManager = linearLayoutManager
+        arrayAdapter = CustomAdapter(historyList)
+        list.adapter = arrayAdapter
 
         historyRepository
                 .lastHundredVisitedHistoryEntries()
-                .subscribe { list ->
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ list ->
                     historyList = list
-                }
-
-        arrayAdapter = CustomAdapter(historyList)
-        list.layoutManager = linearLayoutManager
-        list?.adapter = arrayAdapter
+                    arrayAdapter.updateData(list)
+                }, { e ->
+                    Log.e("HistoryActivity", "Error loading history", e)
+                })
 
         list.addOnItemTouchListener(
                 RecyclerItemClickListener(this@HistoryActivity, list, object : RecyclerItemClickListener.OnItemClickListener {
@@ -100,7 +106,8 @@ class HistoryActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                     }
 
                     override fun onLongItemClick(view: View?, position: Int) {
-                        dialogBuilder!!.showLongPressedHistoryLinkDialog(this@HistoryActivity, historyList[position].url)
+                        val item = (list.adapter as CustomAdapter).getItem(position)
+                        dialogBuilder?.showLongPressedHistoryLinkDialog(this@HistoryActivity, item.url)
                     }
                 })
         )
@@ -116,19 +123,28 @@ class HistoryActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     fun dataChanged() {
         historyRepository
                 .lastHundredVisitedHistoryEntries()
-                .subscribe { list ->
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ list ->
                     historyList = list
-                }
-        arrayAdapter = CustomAdapter(historyList)
-        list?.adapter = arrayAdapter
-        arrayAdapter.notifyDataSetChanged()
+                    arrayAdapter.updateData(list)
+                }, { e ->
+                    Log.e("HistoryActivity", "Error reloading history", e)
+                })
     }
 
     class CustomAdapter(private var dataSet: List<HistoryEntry>) :
             RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
 
-        lateinit var filtered: MutableList<HistoryEntry>
-        lateinit var oldList: MutableList<HistoryEntry>
+        private var filtered: MutableList<HistoryEntry> = dataSet.toMutableList()
+        private var oldList: MutableList<HistoryEntry> = dataSet.toMutableList()
+
+        fun updateData(newList: List<HistoryEntry>) {
+            dataSet = newList
+            oldList = newList.toMutableList()
+            filtered = newList.toMutableList()
+            notifyDataSetChanged()
+        }
 
         fun getFilter(): Filter? {
             return object : Filter() {

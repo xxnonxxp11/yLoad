@@ -9,109 +9,146 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/dividerColor"
+        android:layout_height="44dp"
+        android:background="@android:color/transparent"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
 
         <ImageView
             android:id="@+id/tab_header_button"
-            android:layout_width="@dimen/material_grid_small_icon"
-            android:layout_marginStart="@dimen/material_grid_margin"
-            android:layout_height="match_parent"
-            android:background="?attr/actionBarItemBackground"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/tabs"
-            android:scaleType="center"
-            app:srcCompat="@drawable/ic_action_tabs" />
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_action_tabs"
+            app:tint="?attr/iconColor" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/material_grid_margin"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"
             android:layout_toEndOf="@id/tab_header_button"
-            android:clickable="true"
-            android:focusable="true"
-            android:fontFamily="sans-serif"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:minHeight="?android:attr/listPreferredItemHeight"
+            android:fontFamily="sans-serif-medium"
             android:text="@string/tabs"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="?attr/autoCompleteTitleColor"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/dividerColor" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tabs_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:clipToPadding="false"
         android:divider="@null"
         android:dividerHeight="0dp"
-        android:overScrollMode="ifContentScrolls" />
+        android:overScrollMode="ifContentScrolls"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/dividerColor" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/dividerColor"
+        android:layout_height="44dp"
+        android:background="@android:color/transparent"
         android:baselineAligned="false"
-        android:orientation="horizontal"
-        android:weightSum="4">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-        <ImageButton
+        <LinearLayout
             android:id="@+id/new_tab"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/material_grid_margin"
-            android:layout_marginRight="@dimen/material_grid_margin"
-            android:background="@android:color/transparent"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="?attr/selectableItemBackground"
             android:clickable="true"
-            app:srcCompat="@drawable/ic_round_add"
             android:focusable="true"
-            android:fontFamily="sans-serif"
-            android:gravity="bottom|center"
-            android:maxLines="1"
-            android:visibility="gone" />
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_round_add"
+                app:tint="?attr/iconColor" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/action_new_tab"
+                android:textColor="?attr/autoCompleteTitleColor"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/action_back"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/action_back"
-            android:scaleType="center"
-            app:srcCompat="@drawable/ic_action_back" />
+            android:padding="12dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_action_back"
+            app:tint="?attr/iconColor" />
 
         <ImageView
             android:id="@+id/action_home"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/action_homepage"
-            android:scaleType="center"
-            app:srcCompat="@drawable/ic_action_home" />
+            android:padding="12dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_action_home"
+            app:tint="?attr/iconColor" />
 
         <ImageView
             android:id="@+id/action_forward"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/action_forward"
-            android:scaleType="center"
-            app:srcCompat="@drawable/ic_action_forward" />
+            android:padding="12dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_action_forward"
+            app:tint="?attr/iconColor" />
 
         <ImageView
             android:id="@+id/new_tab_button"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/action_new_tab"
-            android:scaleType="center"
-            app:srcCompat="@drawable/ic_round_add" />
+            android:padding="12dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_round_add"
+            app:tint="?attr/iconColor" />
     </LinearLayout>
 
 </merge>

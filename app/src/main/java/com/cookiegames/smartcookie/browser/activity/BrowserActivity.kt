@@ -1671,13 +1671,19 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
     }
 
     protected fun addItemToHistory(title: String?, url: String) {
-        if (url.isSpecialUrl()) {
+        if (url.isBlank()
+            || url.isSpecialUrl()
+            || url == "about:blank"
+            || url.startsWith("data:")
+            || url.startsWith("javascript:")
+            || url.startsWith("blob:")
+            || url.length > 2048) {
             return
         }
 
         historyModel.visitHistoryEntry(url, title)
                 .subscribeOn(databaseScheduler)
-                .subscribe()
+                .subscribe({}, { e -> Log.e(TAG, "Error updating history", e) })
     }
 
     /**

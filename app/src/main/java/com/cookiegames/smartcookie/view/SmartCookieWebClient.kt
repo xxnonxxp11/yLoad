@@ -89,7 +89,7 @@ class SmartCookieWebClient(
     private var errored = false
     private var initScale = 0f
 
-    private var color = "<style>body{background-color:#424242 !important;} h1{color:#ffffff !important;} .error-code{color:#e6e6e6 !important;}</style>"
+    private var color = "<style>body{background-color:#121212 !important;} h1{color:#ffffff !important;} .error-code{color:#e6e6e6 !important;}</style>"
 
     @Inject internal lateinit var proxyUtils: ProxyUtils
     @Inject internal lateinit var userPreferences: UserPreferences
@@ -1002,6 +1002,18 @@ class SmartCookieWebClient(
         shouldOverrideLoading(view, url) || super.shouldOverrideUrlLoading(view, url)
 
     private fun shouldOverrideLoading(view: WebView, url: String): Boolean {
+        if (url.startsWith("yload://save_shortcuts")) {
+            val uri = Uri.parse(url)
+            uri.getQueryParameter("link1")?.let { if (it.isNotBlank()) userPreferences.link1 = it }
+            uri.getQueryParameter("link2")?.let { if (it.isNotBlank()) userPreferences.link2 = it }
+            uri.getQueryParameter("link3")?.let { if (it.isNotBlank()) userPreferences.link3 = it }
+            uri.getQueryParameter("link4")?.let { if (it.isNotBlank()) userPreferences.link4 = it }
+            activity.runOnUiThread {
+                smartCookieView.loadHomePage()
+            }
+            return true
+        }
+
         // Check if configured proxy is available
         if (!proxyUtils.isProxyReady(activity)) {
             // User has been notified

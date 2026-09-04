@@ -168,7 +168,10 @@ abstract class HtmlPageFactoryInitializer(
             .buildPage()
             .subscribeOn(diskScheduler)
             .observeOn(foregroundScheduler)
-            .subscribeBy(onSuccess = { webView.loadUrl(it, headers) })
+            .subscribeBy(
+                onSuccess = { webView.loadUrl(it, headers) },
+                onError = { e -> Log.e("TabInitializer", "Failed to build HTML page", e) }
+            )
     }
 
 }

@@ -85,7 +85,16 @@ class HomePageFactory @Inject constructor(
                         id("link3click"){ attr("href", shortcuts[2])}
                         id("link4click"){ attr("href", shortcuts[3])}
 
-                        shortcuts.forEachIndexed { index, element ->
+                        shortcuts.forEachIndexed { index, rawElement ->
+                            val element = if (rawElement.isNotBlank() && !rawElement.startsWith("http://") && !rawElement.startsWith("https://")) {
+                                "https://$rawElement"
+                            } else {
+                                rawElement
+                            }
+
+                            id("link" + (index + 1) + "click") { attr("href", element) }
+                            id("link" + (index + 1) + "inp") { attr("value", element) }
+
                             if(!URLUtil.isValidUrl(element)){
                                 val icon = createIconByName('?')
                                 val encoded = bitmapToBase64(icon)

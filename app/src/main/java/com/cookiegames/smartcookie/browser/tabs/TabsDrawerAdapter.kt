@@ -83,12 +83,15 @@ class TabsDrawerAdapter(
     }
 
     private fun updateViewHolderAppearance(viewHolder: TabViewHolder, favicon: Bitmap?, isForeground: Boolean) {
+        val isDark = userPreferences.useTheme != com.cookiegames.smartcookie.AppTheme.LIGHT
         if (isForeground) {
             TextViewCompat.setTextAppearance(viewHolder.txtTitle, R.style.boldText)
+            viewHolder.txtTitle.setTextColor(if (isDark) 0xFF5C87F7.toInt() else 0xFF386BF6.toInt())
             uiController.changeToolbarBackground(favicon, null)
             uiController.changeToolbarColor(null)
         } else {
             TextViewCompat.setTextAppearance(viewHolder.txtTitle, R.style.normalText)
+            viewHolder.txtTitle.setTextColor(if (isDark) 0xFFA0A4AE.toInt() else 0xFF5F6368.toInt())
         }
     }
 

@@ -3,8 +3,8 @@ package com.cookiegames.smartcookie.view
 import com.cookiegames.smartcookie.R
 import com.cookiegames.smartcookie.utils.ThemeUtils
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.TransitionDrawable
 import androidx.core.content.ContextCompat
 
@@ -16,8 +16,16 @@ class BackgroundDrawable(
     context: Context
 ) : TransitionDrawable(
     arrayOf<Drawable>(
-        ColorDrawable(ContextCompat.getColor(context, R.color.transparent)),
-        ColorDrawable(ThemeUtils.getColor(context, R.attr.selectedBackground))
+        GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = 8f * context.resources.displayMetrics.density
+            setColor(ContextCompat.getColor(context, R.color.transparent))
+        },
+        GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = 8f * context.resources.displayMetrics.density
+            setColor(ThemeUtils.getColor(context, R.attr.selectedBackground))
+        }
     )
 ) {
 
