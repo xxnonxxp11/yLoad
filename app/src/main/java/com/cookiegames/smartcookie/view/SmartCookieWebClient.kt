@@ -578,6 +578,15 @@ class SmartCookieWebClient(
         }
 
     override fun onPageCommitVisible(view: WebView?, url: String?) {
+        if (userPreferences.adBlockEnabled && view != null) {
+            view.evaluateJavascript(uBlockAdDefuser.cosmeticInjectionJs, null)
+            view.evaluateJavascript(uBlockAdDefuser.generalAdDefuserJs, null)
+            val currentU = url ?: view.url.orEmpty()
+            if (currentU.contains("youtube.com") || currentU.contains("youtu.be")) {
+                view.evaluateJavascript(uBlockAdDefuser.youtubeAdDefuserJs, null)
+            }
+        }
+
         var jsList = emptyList<JavaScriptDatabase.JavaScriptEntry>()
         javascriptRepository.lastHundredVisitedJavaScriptEntries()
             .subscribe { list ->
@@ -819,17 +828,6 @@ class SmartCookieWebClient(
             uiController.showActionBar()
         }
         uiController.tabChanged(smartCookieView)
-    }
-
-    override fun onPageCommitVisible(view: WebView, url: String) {
-        super.onPageCommitVisible(view, url)
-        if (userPreferences.adBlockEnabled) {
-            view.evaluateJavascript(uBlockAdDefuser.cosmeticInjectionJs, null)
-            view.evaluateJavascript(uBlockAdDefuser.generalAdDefuserJs, null)
-            if (url.contains("youtube.com") || url.contains("youtu.be")) {
-                view.evaluateJavascript(uBlockAdDefuser.youtubeAdDefuserJs, null)
-            }
-        }
     }
 
     override fun onReceivedHttpAuthRequest(
