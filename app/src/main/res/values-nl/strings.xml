@@ -266,9 +266,9 @@
     <string name="flash_not_supported">Uw apparaat ondersteunt geen Flash Player</string>
     <string name="message_open_download_fail">Dit bestand bestaat niet meer</string>
     <string name="this_project">Dit project</string>
-    <string name="scw">SmartCookieWeb-broncode</string>
+    <string name="scw">yLoad-broncode</string>
     <string name="action_home">Huis</string>
-    <string name="description">Meer informatie over SmartCookieWeb</string>
+    <string name="description">Meer informatie over yLoad</string>
     <string name="faq">FAQ</string>
     <string name="faq_description">Veel Gestelde Vragen</string>
     <string name="block_source_default">Standaard hosts</string>
@@ -333,7 +333,7 @@
     <string name="search_engine_searx">SearX.be</string>
     <string name="search_engine_searx_cookiejarapps">CookieJarApps SearX</string>
     <string name="privacy">Bekijk privacybeleid</string>
-    <string name="privacy_info">Lees het SmartCookieWeb privacybeleid</string>
+    <string name="privacy_info">Lees het yLoad privacybeleid</string>
     <string name="block_malware">Blokkeer kwaadaardige sites</string>
     <string name="block_sites">Aangepast siteblok (bèta)</string>
     <string name="block_sites_title">Aangepast siteblok (afzonderlijke sites met een komma)</string>
@@ -420,7 +420,7 @@
     <string name="unlisted_javascript">JavaScript voor vermelde websites blokkeren</string>
     <string name="listed_javascript">Alleen JavaScript toestaan voor vermelde websites</string>
     <string name="confirm">Opnieuw instellen bevestigen</string>
-    <string name="clear">Dit wist alle gegevens die zijn opgeslagen door SmartCookieWeb op uw apparaat</string>
+    <string name="clear">Dit wist alle gegevens die zijn opgeslagen door yLoad op uw apparaat</string>
     <string name="only_clear">Alleen wissen op browser sessie einde</string>
     <string name="only_clear_summary">Bovenstaande opties alleen wissen als alle tabs van de browser gesloten zijn, in plaats van wanneer de app afgesloten wordt</string>
     <string name="enable_in_settings">AutoFill moet ingesteld worden in de Android-instellingen om deze optie effectief te maken</string>
@@ -438,7 +438,7 @@
     <string name="download_description">Information about download progress</string>
     <string name="download_to_sd">Download naar SD kaart</string>
     <string name="legacy_download_manager">Gebruik geïntegreerde downloadmanager</string>
-    <string name="legacy_download_manager_desc">Download files using the SmartCookieWeb download manager, instead of the system one</string>
+    <string name="legacy_download_manager_desc">Download files using the yLoad download manager, instead of the system one</string>
     <string name="onboarding_one">Access settings, bookmarks (or swipe from the right edge) and more in the overflow menu.</string>
     <string name="onboarding_two">Click the tab number or swipe from the left edge to open the tab drawer.</string>
     <string name="onboarding_three">Use page tools in the bookmark drawer to temporarily turn off ad block, open the desktop version of a site and more.</string>

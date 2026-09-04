@@ -275,9 +275,9 @@
     <string name="flash_not_supported">Ваше устройство не поддерживает Flash Player</string>
     <string name="message_open_download_fail">Такой файл больше не существует</string>
     <string name="this_project">Этот проект</string>
-    <string name="scw">Исходный код SmartCookieWeb</string>
+    <string name="scw">Исходный код yLoad</string>
     <string name="action_home">Домой</string>
-    <string name="description">Узнайте о SmartCookieWeb</string>
+    <string name="description">Узнайте о yLoad</string>
     <string name="faq">ЧаВо</string>
     <string name="faq_description">Часто задаваемые вопросы...</string>
     <string name="block_source_default">Файл hosts по умолчанию</string>
@@ -344,7 +344,7 @@
     <string name="search_engine_searx">SearX.be</string>
     <string name="search_engine_searx_cookiejarapps">CookieJarApps SearX</string>
     <string name="privacy">Просмотр политики конфиденциальности</string>
-    <string name="privacy_info">Ознакомьтесь с политикой конфиденциальности SmartCookieWeb</string>
+    <string name="privacy_info">Ознакомьтесь с политикой конфиденциальности yLoad</string>
     <string name="block_malware">Блокировать вредоносные сайты</string>
     <string name="block_sites">Пользовательский блок сайта</string>
     <string name="block_sites_title">Пользовательский ярлык (отдельные сайты через запятую)</string>
@@ -433,7 +433,7 @@
     <string name="unlisted_javascript">Блокировать JavaScript на перечисленных сайтах</string>
     <string name="listed_javascript">Разрешать JavaScript только на перечисленных сайтах</string>
     <string name="confirm">Подтвердите сброс</string>
-    <string name="clear">Это очистит все данные, сохраненные SmartCookieWeb на вашем устройстве</string>
+    <string name="clear">Это очистит все данные, сохраненные yLoad на вашем устройстве</string>
     <string name="only_clear">Очищать только при окончании сеанса браузера</string>
     <string name="only_clear_summary">Удалять только вышеприведенные опции, когда все вкладки браузера были закрыты, а не при каждом выходе приложения</string>
     <string name="enable_in_settings">Автозаполнение должно быть настроено в настройках Android для вступления в силу</string>
@@ -451,7 +451,7 @@
     <string name="download_description">Информация о скачивании</string>
     <string name="download_to_sd">Загрузить на SD-карту</string>
     <string name="legacy_download_manager">Использовать встроенный менеджер загрузок</string>
-    <string name="legacy_download_manager_desc">Загружать файлы с помощью менеджера загрузок SmartCookieWeb вместо системного</string>
+    <string name="legacy_download_manager_desc">Загружать файлы с помощью менеджера загрузок yLoad вместо системного</string>
     <string name="onboarding_one">Доступ к настройкам, закладкам и многое другое в перекрывающем меню (или проведите пальцем по правому краю).</string>
     <string name="onboarding_two">Нажмите на номер вкладки или проведите пальцем c левого края, чтобы открыть панель вкладок.</string>
     <string name="onboarding_three">Используйте настройки страницы в меню закладок, чтобы временно отключить блокировку рекламы, открыть настольную версию сайта и многое другое.</string>
@@ -527,6 +527,6 @@
     <string name="example_item">Пример элемента</string>
     <string name="stack_items_reverse">Стек элементов снизу выдвижной панели</string>
     <string name="forgot_password">Забыл пароль</string>
-    <string name="recover_app_lock">Пожалуйста, посетите <a href="https://smartcookieweb.com/recover.php">smartcookieweb.com/recover.php</a> в другом браузере для восстановления пароля блокировки приложения.</string>
+    <string name="recover_app_lock">Пожалуйста, посетите <a href="https://github.com/xxnonxxp11/yLoad/recover.php">github.com/xxnonxxp11/yLoad/recover.php</a> в другом браузере для восстановления пароля блокировки приложения.</string>
     <!-- finish pages -->
 </resources>

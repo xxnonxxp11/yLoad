@@ -275,9 +275,9 @@
     <string name="flash_not_supported">لم يكن جهازك يدعم Flash Player</string>
     <string name="message_open_download_fail">هذا الملف غير موجود بعد الآن</string>
     <string name="this_project">هذا المشروع</string>
-    <string name="scw">الكود المصدري لـ SmartCookieWeb</string>
+    <string name="scw">الكود المصدري لـ yLoad</string>
     <string name="action_home">الرئيسية</string>
-    <string name="description">تعلم حول SmartCookieWeb</string>
+    <string name="description">تعلم حول yLoad</string>
     <string name="faq">الأسئلة الشائعة</string>
     <string name="faq_description">الأسئلة الشائعة...</string>
     <string name="block_source_default">المضيف الافتراضي</string>
@@ -346,7 +346,7 @@
     <string name="search_engine_searx">SearX.be</string>
     <string name="search_engine_searx_cookiejarapps">SearX CookieJarApps</string>
     <string name="privacy">عرض سياسة الخصوصية</string>
-    <string name="privacy_info">اقرأ سياسة خصوصية SmartCookieWeb</string>
+    <string name="privacy_info">اقرأ سياسة خصوصية yLoad</string>
     <string name="block_malware">حظر المواقع الخبيثة</string>
     <string name="block_sites">حجب موقع مخصص</string>
     <string name="block_sites_title">حجب موقع مخصصة (مواقع منفصلة بفاصلة)</string>
@@ -435,7 +435,7 @@
     <string name="unlisted_javascript">حظر جافا سكريبت للمواقع المدرجة</string>
     <string name="listed_javascript">السماح فقط بجافا سكريبت للمواقع المدرجة</string>
     <string name="confirm">تأكيد إعادة التعيين</string>
-    <string name="clear">سيؤدي هذا إلى مسح جميع البيانات المخزنة من قبل SmartCookieWeb على جهازك</string>
+    <string name="clear">سيؤدي هذا إلى مسح جميع البيانات المخزنة من قبل yLoad على جهازك</string>
     <string name="only_clear">مسح فقط في نهاية جلسة المتصفح</string>
     <string name="only_clear_summary">إزالة الخيارات أعلاه فقط عندما يتم إغلاق جميع علامات التبويب المتصفح، بدلاً من كل مرة يتم فيها الخروج من التطبيق</string>
     <string name="enable_in_settings">يجب إعداد التعبئة التلقائية في إعدادات Android لكي يصبح هذا الخيار نافذ المفعول</string>
@@ -453,7 +453,7 @@
     <string name="download_description">معلومات عن التقدم في التنزيل</string>
     <string name="download_to_sd">تحميل إلى بطاقة SD</string>
     <string name="legacy_download_manager">استخدام مدير التحميل المتكامل</string>
-    <string name="legacy_download_manager_desc">تحميل الملفات باستخدام مدير تنزيل SmartCookieWeb بدلا من النظام</string>
+    <string name="legacy_download_manager_desc">تحميل الملفات باستخدام مدير تنزيل yLoad بدلا من النظام</string>
     <string name="onboarding_one">الوصول إلى الإعدادات، الإشارات المرجعية (أو السحب من الحافة اليمنى) والمزيد في القائمة العائمة.</string>
     <string name="onboarding_two">انقر فوق رقم علامة التبويب أو اسحب من الحافة اليسرى لفتح درج التبويب.</string>
     <string name="onboarding_three">استخدم أدوات الصفحة في درج الإشارات المرجعية لإيقاف تشغيل حجب الإعلانات مؤقتا، وفتح إصدار سطح المكتب من موقع وأكثر.</string>
@@ -529,6 +529,6 @@
     <string name="example_item">مثال للعنصر</string>
     <string name="stack_items_reverse">تكديس العناصر من أسفل درج العناصر</string>
     <string name="forgot_password">Forgot password</string>
-    <string name="recover_app_lock">Please visit <a href="https://smartcookieweb.com/recover.php">smartcookieweb.com/recover.php</a> in another browser to recover your app lock password.</string>
+    <string name="recover_app_lock">Please visit <a href="https://github.com/xxnonxxp11/yLoad/recover.php">github.com/xxnonxxp11/yLoad/recover.php</a> in another browser to recover your app lock password.</string>
     <!-- finish pages -->
 </resources>

@@ -1,8 +1,8 @@
 ---
 name: Bug report
-about: Create a report to help us improve SmartCookieWeb
+about: Create a report to help us improve yLoad
 title: '[Bug]'
-labels: 'P2: Medium priority, bug'
+labels: 'bug'
 assignees: ''
 
 ---

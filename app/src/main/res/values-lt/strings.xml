@@ -267,9 +267,9 @@
     <string name="flash_not_supported">Jūsų įrenginys nepalaiko „Flash Player“</string>
     <string name="message_open_download_fail">Šis failas neegzistuoja</string>
     <string name="this_project">Šis projektas</string>
-    <string name="scw">„SmartCookieWeb“ šaltinio kodas</string>
+    <string name="scw">„yLoad“ šaltinio kodas</string>
     <string name="action_home">Namai</string>
-    <string name="description">Sužinokite apie „SmartCookieWeb“</string>
+    <string name="description">Sužinokite apie „yLoad“</string>
     <string name="faq">DUK</string>
     <string name="faq_description">Dažnai užduodami klausimai</string>
     <string name="block_source_default">Numatytieji kompiuteriai</string>
@@ -336,7 +336,7 @@
     <string name="search_engine_searx">„SearX.be“</string>
     <string name="search_engine_searx_cookiejarapps">„CookieJarApps SearX“</string>
     <string name="privacy">Peržiūrėkite Privatumo politiką</string>
-    <string name="privacy_info">Perskaitykite „SmartCookieWeb“ privatumo politiką</string>
+    <string name="privacy_info">Perskaitykite „yLoad“ privatumo politiką</string>
     <string name="block_malware">Blokuokite kenksmingas svetaines</string>
     <string name="block_sites">Individualizuotos svetainės blokas (beta versija)</string>
     <string name="block_sites_title">Tinkintas svetainių blokas (atskiros svetainės su kableliu)</string>
@@ -424,7 +424,7 @@
     <string name="unlisted_javascript">Block JavaScript for listed sites</string>
     <string name="listed_javascript">Only allow JavaScript for listed sites</string>
     <string name="confirm">Confirm reset</string>
-    <string name="clear">This will clear all the data stored by SmartCookieWeb on your device</string>
+    <string name="clear">This will clear all the data stored by yLoad on your device</string>
     <string name="only_clear">Only clear on browser session end</string>
     <string name="only_clear_summary">Only clear above options when all browser tabs have been closed, instead of whenever the app is exited</string>
     <string name="enable_in_settings">AutoFill needs to be set up in Android settings for this option to take effect</string>
@@ -442,7 +442,7 @@
     <string name="download_description">Information about download progress</string>
     <string name="download_to_sd">Download to SD card</string>
     <string name="legacy_download_manager">Use integrated download manager</string>
-    <string name="legacy_download_manager_desc">Download files using the SmartCookieWeb download manager, instead of the system one</string>
+    <string name="legacy_download_manager_desc">Download files using the yLoad download manager, instead of the system one</string>
     <string name="onboarding_one">Access settings, bookmarks (or swipe from the right edge) and more in the overflow menu.</string>
     <string name="onboarding_two">Click the tab number or swipe from the left edge to open the tab drawer.</string>
     <string name="onboarding_three">Use page tools in the bookmark drawer to temporarily turn off ad block, open the desktop version of a site and more.</string>

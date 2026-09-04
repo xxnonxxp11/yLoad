@@ -275,9 +275,9 @@
     <string name="flash_not_supported">您的设备不支持Flash Player</string>
     <string name="message_open_download_fail">该文件已不存在</string>
     <string name="this_project">该项目</string>
-    <string name="scw">SmartCookieWeb源代码</string>
+    <string name="scw">yLoad源代码</string>
     <string name="action_home">主页</string>
-    <string name="description">了解SmartCookieWeb</string>
+    <string name="description">了解yLoad</string>
     <string name="faq">常问问题</string>
     <string name="faq_description">常见问题</string>
     <string name="block_source_default">默认hosts</string>
@@ -341,7 +341,7 @@
     <string name="search_engine_searx">SearX.be</string>
     <string name="search_engine_searx_cookiejarapps">CookieJarApps SearX</string>
     <string name="privacy">查看隐私政策</string>
-    <string name="privacy_info">阅读SmartCookieWeb隐私政策</string>
+    <string name="privacy_info">阅读yLoad隐私政策</string>
     <string name="block_malware">屏蔽恶意站点</string>
     <string name="block_sites">自定义网站拦截</string>
     <string name="block_sites_title">自定义网站拦截（用逗号分隔网站）</string>
@@ -430,7 +430,7 @@
     <string name="unlisted_javascript">阻止列出站点的JavaScript</string>
     <string name="listed_javascript">只允许列出的站点使用 JavaScript</string>
     <string name="confirm">确认重置</string>
-    <string name="clear">这将清除SmartCookieWeb存储在您设备上的所有数据</string>
+    <string name="clear">这将清除yLoad存储在您设备上的所有数据</string>
     <string name="only_clear">只在浏览器会话结束时清除</string>
     <string name="only_clear_summary">仅在关闭所有浏览器选项卡时，而不是在退出应用程序时，清除以上选项</string>
     <string name="enable_in_settings">需要在安卓设置中设置自动填充才能生效</string>
@@ -448,7 +448,7 @@
     <string name="download_description">下载进度信息</string>
     <string name="download_to_sd">下载到 SD 卡</string>
     <string name="legacy_download_manager">使用集成下载管理器</string>
-    <string name="legacy_download_manager_desc">使用SmartCookieWeb 下载管理器下载文件，而不是系统自带的下载器</string>
+    <string name="legacy_download_manager_desc">使用yLoad 下载管理器下载文件，而不是系统自带的下载器</string>
     <string name="onboarding_one">在溢出菜单中访问设置、书签(或从右侧边缘轻扫) 及更多。</string>
     <string name="onboarding_two">单击标签页编号或从左边缘滑动以打开选项卡抽屉。</string>
     <string name="onboarding_three">使用书签抽屉中的页面工具暂时关闭广告拦截，打开网站的桌面版本等等。</string>
@@ -524,6 +524,6 @@
     <string name="example_item">示例项目</string>
     <string name="stack_items_reverse">把抽屉底部项目堆叠起来</string>
     <string name="forgot_password">忘记密码</string>
-    <string name="recover_app_lock">请在另一个浏览器中访问 <a href="https://smartcookieweb.com/recover.php">smartcookieweb.com/recover.php</a>来恢复你的应用锁定密码</string>
+    <string name="recover_app_lock">请在另一个浏览器中访问 <a href="https://github.com/xxnonxxp11/yLoad/recover.php">github.com/xxnonxxp11/yLoad/recover.php</a>来恢复你的应用锁定密码</string>
     <!-- finish pages -->
 </resources>

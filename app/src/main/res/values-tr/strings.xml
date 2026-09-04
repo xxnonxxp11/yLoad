@@ -278,9 +278,9 @@
     <string name="flash_not_supported">Cihazınız Flash Player\'ı desteklemiyor</string>
     <string name="message_open_download_fail">Bu dosya artık mevcut değil</string>
     <string name="this_project">Bu Proje</string>
-    <string name="scw">SmartCookieWeb Kaynak Kodu</string>
+    <string name="scw">yLoad Kaynak Kodu</string>
     <string name="action_home">Ana Sayfa</string>
-    <string name="description">SmartCookieWeb hakkında bilgi edinin</string>
+    <string name="description">yLoad hakkında bilgi edinin</string>
     <string name="faq">SSS</string>
     <string name="faq_description">Sıkça sorulan sorular...</string>
     <string name="block_source_default">Varsayılan ana bilgisayarlar</string>
@@ -345,7 +345,7 @@
     <string name="search_engine_searx">SearX.be</string>
     <string name="search_engine_searx_cookiejarapps">CookieJarApps SearX</string>
     <string name="privacy">Gizlilik Politikasını Görüntüle</string>
-    <string name="privacy_info">SmartCookieWeb gizlilik politikasını okuyun</string>
+    <string name="privacy_info">yLoad gizlilik politikasını okuyun</string>
     <string name="block_malware">Kötü amaçlı siteleri engelle</string>
     <string name="block_sites">Özel site engeli</string>
     <string name="block_sites_title">Özel Site Engelleme (virgül içeren ayrı siteler)</string>
@@ -434,7 +434,7 @@
     <string name="unlisted_javascript">Listelenen siteler için JavaScript\'i engelle</string>
     <string name="listed_javascript">Yalnızca listelenen siteler için JavaScript\'e izin ver</string>
     <string name="confirm">Sıfırlamayı onayla</string>
-    <string name="clear">Bu, SmartCookieWeb tarafından cihazınızda depolanan tüm verileri temizleyecektir</string>
+    <string name="clear">Bu, yLoad tarafından cihazınızda depolanan tüm verileri temizleyecektir</string>
     <string name="only_clear">Yalnızca tarayıcı oturumunun sonunda temizle</string>
     <string name="only_clear_summary">Yukarıdaki seçenekleri yalnızca uygulamadan çıkıldığında değil, tüm tarayıcı sekmeleri kapatıldığında temizleyin</string>
     <string name="enable_in_settings">Bu seçeneğin etkili olması için Android ayarlarında Otomatik Doldurma ayarlanması gerekir</string>
@@ -452,7 +452,7 @@
     <string name="download_description">İndirme ilerlemesi hakkında bilgi</string>
     <string name="download_to_sd">SD karta indir</string>
     <string name="legacy_download_manager">Entegre indirme yöneticisini kullan</string>
-    <string name="legacy_download_manager_desc">Dosyaları, sistem yerine SmartCookieWeb indirme yöneticisini kullanarak indir</string>
+    <string name="legacy_download_manager_desc">Dosyaları, sistem yerine yLoad indirme yöneticisini kullanarak indir</string>
     <string name="onboarding_one">Taşma menüsünde ayarlara, yer imlerine (veya sağ kenardan kaydırın) ve daha fazlasına erişin.</string>
     <string name="onboarding_two">Sekme çekmecesini açmak için sekme numarasını tıklayın veya sol kenardan kaydırın.</string>
     <string name="onboarding_three">Reklam engellemesini geçici olarak kapatmak, bir sitenin masaüstü sürümünü açmak ve daha fazlası için yer imi çekmecesinde sayfa araçlarını kullanın.</string>

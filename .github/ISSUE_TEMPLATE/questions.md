@@ -1,22 +1,16 @@
 ---
 name: General questions & Feedback
-about: These should be submitted to one of our chatrooms or GitHub discussions
-title: '(Mandatory) Please read what is in the issue'
-labels: ''
+about: Ask questions or share feedback about yLoad
+title: '[Question] '
+labels: 'question'
 assignees: ''
 
 ---
 
-STOP!!! STOP!!! STOP!!!
+### Questions & Feedback
 
-Don't use issues to ask questions.
-First of all visit our help page (this can solve several of your doubts about SmartCookieWeb): https://smartcookieweb.com/help
-But if you still have any questions, want to say something, give feedback, etc. you can:
+Have a question about yLoad or want to share feedback? Feel free to describe it below:
 
-- Start a new discussion in the discussion section: https://github.com/CookieJarApps/SmartCookieWeb/discussions
+- **Topic**:
+- **Details**:
 
-- Enter the Telegram chat: https://t.me/scwgroup
-
-- Enter the Matrix chat: https://matrix.to/#/#smartcookieweb:matrix.org
-
-STOP!!! STOP!!! STOP!!!

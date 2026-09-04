@@ -419,7 +419,7 @@
     <string name="unlisted_javascript">Block JavaScript for listed sites</string>
     <string name="listed_javascript">Only allow JavaScript for listed sites</string>
     <string name="confirm">Confirm reset</string>
-    <string name="clear">This will clear all the data stored by SmartCookieWeb on your device</string>
+    <string name="clear">This will clear all the data stored by yLoad on your device</string>
     <string name="only_clear">Only clear on browser session end</string>
     <string name="only_clear_summary">Only clear above options when all browser tabs have been closed, instead of whenever the app is exited</string>
     <string name="enable_in_settings">AutoFill needs to be set up in Android settings for this option to take effect</string>
@@ -437,6 +437,6 @@
     <string name="download_description">Information about download progress</string>
     <string name="download_to_sd">Download to SD card</string>
     <string name="legacy_download_manager">Use integrated download manager</string>
-    <string name="legacy_download_manager_desc">Download files using the SmartCookieWeb download manager, instead of the system one</string>
+    <string name="legacy_download_manager_desc">Download files using the yLoad download manager, instead of the system one</string>
     <!-- finish pages -->
 </resources>

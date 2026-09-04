@@ -273,9 +273,9 @@
     <string name="flash_not_supported">Il tuo dispositivo non supporta Flash Player</string>
     <string name="message_open_download_fail">Questo file non esiste più</string>
     <string name="this_project">Questo progetto</string>
-    <string name="scw">Codice sorgente SmartCookieWeb</string>
+    <string name="scw">Codice sorgente yLoad</string>
     <string name="action_home">Inizio</string>
-    <string name="description">Informati riguardo SmartCookieWeb</string>
+    <string name="description">Informati riguardo yLoad</string>
     <string name="faq">FAQ</string>
     <string name="faq_description">Domande frequenti&#8230;</string>
     <string name="block_source_default">Host predefiniti</string>
@@ -340,7 +340,7 @@
     <string name="search_engine_searx">SearX.be</string>
     <string name="search_engine_searx_cookiejarapps">CookieJarApps SearX</string>
     <string name="privacy">Visualizza Informativa sulla riservatezza</string>
-    <string name="privacy_info">Leggi Informativa sulla riservatezza di SmartCookieWeb</string>
+    <string name="privacy_info">Leggi Informativa sulla riservatezza di yLoad</string>
     <string name="block_malware">Blocca siti dannosi</string>
     <string name="block_sites">Blocco siti personalizzato</string>
     <string name="block_sites_title">Blocco siti personalizzato (separa siti con una virgola)</string>
@@ -421,7 +421,7 @@
     <string name="close_on_last_tab">Chiudi navigatore chiudendo l\'ultima scheda</string>
     <string name="more">Ulteriori informazioni</string>
     <string name="no_search_suggestions">Nessun suggerimento di ricerca</string>
-    <string name="search_suggestions_4">Sfortunatamente, i suggerimenti di ricerca in SmartCookieWeb non sono più disponibili sui dispositivi al di sotto di Android 5.0. Premi il pulsante qui sotto per saperne di più.</string>
+    <string name="search_suggestions_4">Sfortunatamente, i suggerimenti di ricerca in yLoad non sono più disponibili sui dispositivi al di sotto di Android 5.0. Premi il pulsante qui sotto per saperne di più.</string>
     <string name="block_intent">Gestisci tutti i collegamenti cliccati all\'interno di questo browser</string>
     <string name="block_intent_summary">Blocca richiesta di aprire il collegamento in applicazioni esterne</string>
     <string name="block_javascript">Blocca JavaScript per i siti</string>
@@ -429,7 +429,7 @@
     <string name="unlisted_javascript">Blocca JavaScript per siti elencati</string>
     <string name="listed_javascript">Permetti JavaScript solo per siti elencati</string>
     <string name="confirm">Conferma ripristino</string>
-    <string name="clear">Ciò sgombrerà tutti i dati memorizzati da SmartCookieWeb sul tuo dispositivo</string>
+    <string name="clear">Ciò sgombrerà tutti i dati memorizzati da yLoad sul tuo dispositivo</string>
     <string name="only_clear">Pulisci solo a fine sessione di navigazione</string>
     <string name="only_clear_summary">Pulisci opzioni di cui sopra solo quando tutte le schede del navigatore sono state chiuse, invece di ogni volta che si esce dall\'applicazione</string>
     <string name="enable_in_settings">La Compilazione automatica deve essere impostata nelle impostazioni di Android affinché questa opzione abbia effetto</string>
@@ -447,7 +447,7 @@
     <string name="download_description">Informazioni sull\'avanzamento del trasferimento</string>
     <string name="download_to_sd">Scarica su scheda SD</string>
     <string name="legacy_download_manager">Utilizza gestore trasferimenti integrato</string>
-    <string name="legacy_download_manager_desc">Scaricare i file utilizzando il gestore trasferimenti di SmartCookieWeb, invece che quello di sistema</string>
+    <string name="legacy_download_manager_desc">Scaricare i file utilizzando il gestore trasferimenti di yLoad, invece che quello di sistema</string>
     <string name="onboarding_one">Impostazioni di accesso, segnalibri (o scorri dal bordo destro) e altro nel menù extra.</string>
     <string name="onboarding_two">Cliccare sul numero di scheda o scorrere dal bordo sinistro per aprire il cassetto schede.</string>
     <string name="onboarding_three">Usare gli strumenti di pagina del cassetto segnalibri per disattivare temporaneamente il blocco annunci, aprire la versione desktop di un sito e altro ancora.</string>

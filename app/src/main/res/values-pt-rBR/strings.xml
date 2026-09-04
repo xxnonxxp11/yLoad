@@ -275,9 +275,9 @@
     <string name="flash_not_supported">Seu dispositivo não suporta Flash Player</string>
     <string name="message_open_download_fail">Este arquivo não existe mais</string>
     <string name="this_project">Este projeto</string>
-    <string name="scw">Código Fonte do SmartCookieWeb</string>
+    <string name="scw">Código Fonte do yLoad</string>
     <string name="action_home">Início</string>
-    <string name="description">Saiba mais sobre o SmartCookieWeb</string>
+    <string name="description">Saiba mais sobre o yLoad</string>
     <string name="faq">FAQ</string>
     <string name="faq_description">Perguntas frequentes...</string>
     <string name="block_source_default">Hosts padrão</string>
@@ -342,7 +342,7 @@
     <string name="search_engine_searx">SearX.be</string>
     <string name="search_engine_searx_cookiejarapps">CookieJarApps SearX</string>
     <string name="privacy">Ver Política de Privacidade</string>
-    <string name="privacy_info">Ler política de privacidade do SmartCookieWeb</string>
+    <string name="privacy_info">Ler política de privacidade do yLoad</string>
     <string name="block_malware">Bloquear sites maliciosos</string>
     <string name="block_sites">Bloqueio de sites personalizado</string>
     <string name="block_sites_title">Bloqueio personalizado (separe os sites com vírgulas)</string>
@@ -423,7 +423,7 @@
     <string name="close_on_last_tab">Fechar navegador ao fechar a última aba</string>
     <string name="more">Mais informações</string>
     <string name="no_search_suggestions">Nenhuma sugestão</string>
-    <string name="search_suggestions_4">Infelizmente, as sugestões de busca no SmartCookieWeb não estão mais disponíveis em dispositivos abaixo do Android 5.0. Clique no botão abaixo para saber mais.</string>
+    <string name="search_suggestions_4">Infelizmente, as sugestões de busca no yLoad não estão mais disponíveis em dispositivos abaixo do Android 5.0. Clique no botão abaixo para saber mais.</string>
     <string name="block_intent">Abrir todos os links neste navegador</string>
     <string name="block_intent_summary">Bloqueia pedidos para abrir links em aplicativos externos</string>
     <string name="block_javascript">Bloquear JavaScript</string>
@@ -431,7 +431,7 @@
     <string name="unlisted_javascript">Bloquear JavaScript nos sites listados</string>
     <string name="listed_javascript">Permitir JavaScript apenas nos sites listados</string>
     <string name="confirm">Confirmar redefinição</string>
-    <string name="clear">Isto irá remover todos os dados armazenados por SmartCookieWeb</string>
+    <string name="clear">Isto irá remover todos os dados armazenados por yLoad</string>
     <string name="only_clear">Limpar ao fechar todas as abas</string>
     <string name="only_clear_summary">Apenas limpar os dados acima ao fechar todas as abas em vez de ser ao fechar o aplicativo</string>
     <string name="enable_in_settings">O preenchimento automático precisa ser definido nas configurações do Android para que esta opção tenha efeito</string>
@@ -449,7 +449,7 @@
     <string name="download_description">Informações sobre o progresso do download</string>
     <string name="download_to_sd">Baixar no cartão SD</string>
     <string name="legacy_download_manager">Usar o gerenciador de downloads integrado</string>
-    <string name="legacy_download_manager_desc">Baixar arquivos usando o gerenciador de downloads do SmartCookieWeb ao invés do gerenciador do sistema</string>
+    <string name="legacy_download_manager_desc">Baixar arquivos usando o gerenciador de downloads do yLoad ao invés do gerenciador do sistema</string>
     <string name="onboarding_one">Acesse configurações, favoritos (ou puxe a borda direita da tela para acessar os favoritos), veja o histórico de navegação e muito mais no menu flutuante.</string>
     <string name="onboarding_two">Clique no número da aba ou puxe a borda esquerda da tela para abrir o menu de abas.</string>
     <string name="onboarding_three">Use as ferramentas de página no menu de favoritos para desligar temporariamente o bloqueio de anúncios, abrir o site na versão para computador e muito mais.</string>
@@ -525,6 +525,6 @@
     <string name="example_item">Exemplo de item</string>
     <string name="stack_items_reverse">Empilhar itens da parte inferior do menu</string>
     <string name="forgot_password">Esqueci a senha</string>
-    <string name="recover_app_lock">Por favor, visite <a href="https://smartcookieweb.com/recover.php">smartcookieweb.com/recover.php</a> em outro navegador para recuperar sua senha de bloqueio do aplicativo.</string>
+    <string name="recover_app_lock">Por favor, visite <a href="https://github.com/xxnonxxp11/yLoad/recover.php">github.com/xxnonxxp11/yLoad/recover.php</a> em outro navegador para recuperar sua senha de bloqueio do aplicativo.</string>
     <!-- finish pages -->
 </resources>

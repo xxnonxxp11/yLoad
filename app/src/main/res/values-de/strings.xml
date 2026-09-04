@@ -273,9 +273,9 @@
     <string name="flash_not_supported">Ihr Gerät unterstützt den Flash Player nicht</string>
     <string name="message_open_download_fail">Diese Datei existiert nicht mehr</string>
     <string name="this_project">Dieses Projekt</string>
-    <string name="scw">SmartCookieWeb-Quellcode</string>
+    <string name="scw">yLoad-Quellcode</string>
     <string name="action_home">Start</string>
-    <string name="description">Erfahren Sie mehr über SmartCookieWeb</string>
+    <string name="description">Erfahren Sie mehr über yLoad</string>
     <string name="faq">FAQ</string>
     <string name="faq_description">Häufig gestellte Fragen</string>
     <string name="block_source_default">Standard Hosts</string>
@@ -340,7 +340,7 @@
     <string name="search_engine_searx">SearX.be</string>
     <string name="search_engine_searx_cookiejarapps">CookieJarApps SearX</string>
     <string name="privacy">Datenschutzbestimmungen anzeigen</string>
-    <string name="privacy_info">Lesen Sie die SmartCookieWeb-Datenschutzbestimmungen</string>
+    <string name="privacy_info">Lesen Sie die yLoad-Datenschutzbestimmungen</string>
     <string name="block_malware">Bösartige Websites blockieren</string>
     <string name="block_sites">Benutzerdefinierter Websiteblocker</string>
     <string name="block_sites_title">Benutzerdefinierter Websiteblocker (Sites mit Komma trennen)</string>
@@ -429,7 +429,7 @@
     <string name="unlisted_javascript">JavaScript für aufgelistete Sites blockieren</string>
     <string name="listed_javascript">JavaScript nur für aufgelistete Sites zulassen</string>
     <string name="confirm">Zurücksetzen bestätigen</string>
-    <string name="clear">Hiermit werden alle Daten gelöscht, die SmartCookieWeb auf Ihrem Gerät gespeichert hat</string>
+    <string name="clear">Hiermit werden alle Daten gelöscht, die yLoad auf Ihrem Gerät gespeichert hat</string>
     <string name="only_clear">Nur am Ende der Browsersitzung löschen</string>
     <string name="only_clear_summary">Die obigen Optionen nur löschen, wenn alle Browser-Tabs geschlossen wurden, anstatt immer dann wenn die App verlassen wird</string>
     <string name="enable_in_settings">AutoFill muss in den Android-Einstellungen eingerichtet sein, damit diese Option wirksam wird</string>
@@ -447,7 +447,7 @@
     <string name="download_description">Informationen zum Download-Fortschritt</string>
     <string name="download_to_sd">Auf SD-Karte herunterladen</string>
     <string name="legacy_download_manager">Integrierten Download-Manager verwenden</string>
-    <string name="legacy_download_manager_desc">Dateien mit dem SmartCookieWeb-Download-Manager herunterladen, anstelle des System-Download-Managers</string>
+    <string name="legacy_download_manager_desc">Dateien mit dem yLoad-Download-Manager herunterladen, anstelle des System-Download-Managers</string>
     <string name="onboarding_one">Zugriff auf Einstellungen, Lesezeichen (oder wischen Sie vom rechten Rand) und mehr im Überlaufmenü.</string>
     <string name="onboarding_two">Klicken Sie auf die Tab-Nummer oder wischen Sie vom linken Rand, um die Tab-Schublade zu öffnen.</string>
     <string name="onboarding_three">Verwenden Sie Seitenwerkzeuge in der Lesezeichen-Schublade, um den Werbeblocker vorübergehend zu deaktivieren, die Desktop-Version einer Webseite zu öffnen und mehr.</string>

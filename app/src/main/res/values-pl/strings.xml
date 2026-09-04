@@ -273,9 +273,9 @@
     <string name="flash_not_supported">Twoje urządzenie nie obsługuje Flash Playera</string>
     <string name="message_open_download_fail">Ten plik już nie istnieje</string>
     <string name="this_project">Ten projekt</string>
-    <string name="scw">Kod źródłowy SmartCookieWeb</string>
+    <string name="scw">Kod źródłowy yLoad</string>
     <string name="action_home">Dom</string>
-    <string name="description">Dowiedz się więcej o SmartCookieWeb</string>
+    <string name="description">Dowiedz się więcej o yLoad</string>
     <string name="faq">FAQ</string>
     <string name="faq_description">Często Zadawane Pytania</string>
     <string name="block_source_default">Domyślny host</string>
@@ -342,7 +342,7 @@
     <string name="search_engine_searx">SearX.be</string>
     <string name="search_engine_searx_cookiejarapps">CookieJarApps SearX</string>
     <string name="privacy">Zobacz politykę prywatności</string>
-    <string name="privacy_info">Przeczytaj politykę prywatności SmartCookieWeb</string>
+    <string name="privacy_info">Przeczytaj politykę prywatności yLoad</string>
     <string name="block_malware">Blokuj złośliwe strony</string>
     <string name="block_sites">Niestandardowy blok witryny (beta)</string>
     <string name="block_sites_title">Niestandardowy blok witryn (oddzielne witryny przecinkami)</string>
@@ -431,7 +431,7 @@
     <string name="unlisted_javascript">Zablokuj JavaScript dla witryn na liście</string>
     <string name="listed_javascript">Zezwalaj tylko na obsługę JavaScript dla stron wymienionych na liście</string>
     <string name="confirm">Potwierdź resetowanie</string>
-    <string name="clear">To spowoduje wyczyszczenie wszystkich danych przechowywanych przez SmartCookieWeb na Twoim urządzeniu</string>
+    <string name="clear">To spowoduje wyczyszczenie wszystkich danych przechowywanych przez yLoad na Twoim urządzeniu</string>
     <string name="only_clear">Wyczyść tylko po zakończeniu sesji przeglądarki</string>
     <string name="only_clear_summary">Wyczyść powyższe opcje tylko po zamknięciu wszystkich kart przeglądarki, zamiast zawsze gdy aplikacja zostanie zamknięta</string>
     <string name="enable_in_settings">Automatyczne wypełnianie musi być skonfigurowane w ustawieniach Androida, aby ta opcja stała się skuteczna</string>
@@ -449,7 +449,7 @@
     <string name="download_description">Informacje o postępie pobierania</string>
     <string name="download_to_sd">Pobierz na kartę SD</string>
     <string name="legacy_download_manager">Używaj domyślnego menadżera pobierania Android</string>
-    <string name="legacy_download_manager_desc">Pobierz pliki za pomocą menedżera pobierania SmartCookieWeb zamiast systemu</string>
+    <string name="legacy_download_manager_desc">Pobierz pliki za pomocą menedżera pobierania yLoad zamiast systemu</string>
     <string name="onboarding_one">Dostęp do ustawień, zakładek (lub przesuń palcem od prawej krawędzi) i więcej w menu przeciągnięcia.</string>
     <string name="onboarding_two">Kliknij numer karty lub przesuń palcem od lewej krawędzi aby otworzyć szufladę karty.</string>
     <string name="onboarding_three">Użyj narzędzi stron w liście zakładek, aby tymczasowo wyłączyć blok reklam, otwórz wersję pulpitową witryny i więcej.</string>

@@ -255,9 +255,9 @@
     <string name="flash_not_supported">Az Ön készüléke nem támogatja a Flash Player alkalmazást</string>
     <string name="message_open_download_fail">Ez a fájl már nem létezik</string>
     <string name="this_project">Ez a projekt</string>
-    <string name="scw">SmartCookieWeb forráskód</string>
+    <string name="scw">yLoad forráskód</string>
     <string name="action_home">itthon</string>
-    <string name="description">Tudjon meg többet a SmartCookieWebről</string>
+    <string name="description">Tudjon meg többet a yLoadről</string>
     <string name="faq">GYIK</string>
     <string name="faq_description">Gyakran Ismételt Kérdések</string>
     <string name="block_source_default">Alapértelmezett gazdagépek</string>
@@ -325,7 +325,7 @@
     <string name="search_engine_baidu">Baidu</string>
     <string name="search_engine_yandex">Yandex</string>
     <string name="privacy">Tekintse meg az Adatvédelmi irányelveket</string>
-    <string name="privacy_info">Olvassa el a SmartCookieWeb adatvédelmi irányelveit</string>
+    <string name="privacy_info">Olvassa el a yLoad adatvédelmi irányelveit</string>
     <string name="block_malware">Blokkolja a rosszindulatú webhelyeket</string>
     <string name="block_sites">Egyéni webhelyblokk (béta)</string>
     <string name="block_sites_title">Egyéni webhelyek blokkolása (külön webhely vesszővel)</string>
@@ -408,7 +408,7 @@
     <string name="unlisted_javascript">Block JavaScript for listed sites</string>
     <string name="listed_javascript">Only allow JavaScript for listed sites</string>
     <string name="confirm">Confirm reset</string>
-    <string name="clear">This will clear all the data stored by SmartCookieWeb on your device</string>
+    <string name="clear">This will clear all the data stored by yLoad on your device</string>
     <string name="only_clear">Only clear on browser session end</string>
     <string name="only_clear_summary">Only clear above options when all browser tabs have been closed, instead of whenever the app is exited</string>
     <string name="enable_in_settings">AutoFill needs to be set up in Android settings for this option to take effect</string>

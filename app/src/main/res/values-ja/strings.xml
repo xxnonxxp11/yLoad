@@ -255,9 +255,9 @@
     <string name="flash_not_supported">お使いのデバイスはFlash Playerをサポートしていません</string>
     <string name="message_open_download_fail">このファイルはもう存在しません</string>
     <string name="this_project">このプロジェクト</string>
-    <string name="scw">SmartCookieWebソースコード</string>
+    <string name="scw">yLoadソースコード</string>
     <string name="action_home">ホーム</string>
-    <string name="description">SmartCookieWebについて学ぶ</string>
+    <string name="description">yLoadについて学ぶ</string>
     <string name="faq">よくある質問</string>
     <string name="faq_description">よくある質問</string>
     <string name="block_source_default">デフォルトのホスト</string>
@@ -324,7 +324,7 @@
     <string name="search_engine_baidu">バイドゥ</string>
     <string name="search_engine_yandex">ヤンデックス</string>
     <string name="privacy">プライバシーポリシーを見る</string>
-    <string name="privacy_info">SmartCookieWebプライバシーポリシーを読む</string>
+    <string name="privacy_info">yLoadプライバシーポリシーを読む</string>
     <string name="block_malware">悪意のあるサイトをブロックする</string>
     <string name="block_sites">カスタムサイトブロック（ベータ版）</string>
     <string name="block_sites_title">カスタムサイトブロック（コンマで区切られたサイト）</string>
@@ -407,7 +407,7 @@
     <string name="unlisted_javascript">リストされたサイトの JavaScript をブロック</string>
     <string name="listed_javascript">リストされたサイトの JavaScript のみを許可する</string>
     <string name="confirm">リセットを確認</string>
-    <string name="clear">これにより、SmartCookieWebに保存されているすべてのデータが端末に消去されます</string>
+    <string name="clear">これにより、yLoadに保存されているすべてのデータが端末に消去されます</string>
     <string name="only_clear">ブラウザーセッション終了時にのみクリアする</string>
     <string name="only_clear_summary">アプリを終了するのではなく、すべてのブラウザタブが閉じられている場合にのみ、上記のオプションを消去してください</string>
     <string name="enable_in_settings">このオプションを有効にするには、Androidの設定で自動入力を設定する必要があります</string>

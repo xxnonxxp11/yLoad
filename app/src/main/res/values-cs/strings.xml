@@ -275,7 +275,7 @@
     <string name="flash_not_supported">Dávka vašeho zařízení nepodporuje Flash Player</string>
     <string name="message_open_download_fail">Tento soubor již neexistuje</string>
     <string name="this_project">Tento projekt</string>
-    <string name="scw">SmartCookieWeb zdrojový kód</string>
+    <string name="scw">yLoad zdrojový kód</string>
     <string name="action_home">Domů</string>
     <string name="description">Přečtěte si chytré CookieWeb</string>
     <string name="faq">Nejčastější dotazy</string>
@@ -344,7 +344,7 @@
     <string name="search_engine_searx">SearX.be</string>
     <string name="search_engine_searx_cookiejarapps">CookieJarApps SearX</string>
     <string name="privacy">Zobrazit zásady ochrany osobních údajů</string>
-    <string name="privacy_info">Přečtěte si zásady ochrany osobních údajů SmartCookieWeb</string>
+    <string name="privacy_info">Přečtěte si zásady ochrany osobních údajů yLoad</string>
     <string name="block_malware">Blokovat škodlivé stránky</string>
     <string name="block_sites">Vlastní blokování webu</string>
     <string name="block_sites_title">Blok vlastních stránek (oddělte stránky čárkou)</string>
@@ -433,7 +433,7 @@
     <string name="unlisted_javascript">Blokovat JavaScript pro uvedené stránky</string>
     <string name="listed_javascript">Povolit JavaScript pouze pro uvedené stránky</string>
     <string name="confirm">Potvrdit obnovení</string>
-    <string name="clear">Toto vymaže všechna data uložená SmartCookieWeb ve vašem zařízení</string>
+    <string name="clear">Toto vymaže všechna data uložená yLoad ve vašem zařízení</string>
     <string name="only_clear">Vyčistit pouze na konci relace prohlížeče</string>
     <string name="only_clear_summary">Vymazat pouze výše uvedené možnosti, pokud jsou zavřeny všechny panely prohlížeče, místo kdykoliv je aplikace ukončena</string>
     <string name="enable_in_settings">Automatické vyplňování musí být nastaveno v nastavení Androidu, aby se tato možnost projevila</string>
@@ -451,7 +451,7 @@
     <string name="download_description">Information about download progress</string>
     <string name="download_to_sd">Download to SD card</string>
     <string name="legacy_download_manager">Use integrated download manager</string>
-    <string name="legacy_download_manager_desc">Download files using the SmartCookieWeb download manager, instead of the system one</string>
+    <string name="legacy_download_manager_desc">Download files using the yLoad download manager, instead of the system one</string>
     <string name="onboarding_one">Access settings, bookmarks (or swipe from the right edge) and more in the overflow menu.</string>
     <string name="onboarding_two">Click the tab number or swipe from the left edge to open the tab drawer.</string>
     <string name="onboarding_three">Use page tools in the bookmark drawer to temporarily turn off ad block, open the desktop version of a site and more.</string>
@@ -527,6 +527,6 @@
     <string name="example_item">Example item</string>
     <string name="stack_items_reverse">Stack items from bottom of drawer</string>
     <string name="forgot_password">Forgot password</string>
-    <string name="recover_app_lock">Please visit <a href="https://smartcookieweb.com/recover.php">smartcookieweb.com/recover.php</a> in another browser to recover your app lock password.</string>
+    <string name="recover_app_lock">Please visit <a href="https://github.com/xxnonxxp11/yLoad/recover.php">github.com/xxnonxxp11/yLoad/recover.php</a> in another browser to recover your app lock password.</string>
     <!-- finish pages -->
 </resources>

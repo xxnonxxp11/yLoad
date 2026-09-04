@@ -342,7 +342,7 @@
     <string name="search_engine_searx">SearX.be</string>
     <string name="search_engine_searx_cookiejarapps">CookieJarApps SearX</string>
     <string name="privacy">Política de privacidade</string>
-    <string name="privacy_info">Ver a política de privacidade do SmartCookieWeb</string>
+    <string name="privacy_info">Ver a política de privacidade do yLoad</string>
     <string name="block_malware">Bloquear sites maliciosos</string>
     <string name="block_sites">Bloqueio personalizado por site</string>
     <string name="block_sites_title">Bloqueio personalizado (separe os sites com vírgulas)</string>
@@ -431,7 +431,7 @@
     <string name="unlisted_javascript">Bloquear JavaScript para os sites listados</string>
     <string name="listed_javascript">Apenas permitir JavaScript nos sites listados</string>
     <string name="confirm">Confirmação de reposição</string>
-    <string name="clear">Isto irá remover todos os dados armazenados por SmartCookieWeb</string>
+    <string name="clear">Isto irá remover todos os dados armazenados por yLoad</string>
     <string name="only_clear">Limpar ao fechar todos os separadores</string>
     <string name="only_clear_summary">Apenas limpar os dados acima ao fechar todos os separadores em vez de ser ao fechar a aplicação</string>
     <string name="enable_in_settings">Tem que ativar o preenchimento automático nas definições Android para aplicar</string>
@@ -449,7 +449,7 @@
     <string name="download_description">Informação sobre as descargas em curso</string>
     <string name="download_to_sd">Descarregar para o cartão SD</string>
     <string name="legacy_download_manager">Utilizar gestor de descargas integrado</string>
-    <string name="legacy_download_manager_desc">Descarregar ficheiros através do gestor interno do SmartCookieWeb e não do gestor do sistema</string>
+    <string name="legacy_download_manager_desc">Descarregar ficheiros através do gestor interno do yLoad e não do gestor do sistema</string>
     <string name="onboarding_one">Aceda às definições, marcadores e mais no menu \'overflow\' (ou deslize desde a margem direita).</string>
     <string name="onboarding_two">Toque no número do separador (ou deslize desde a margem esquerda) para abrir o menu de navegação.</string>
     <string name="onboarding_three">Utilize as ferramentas no menu de marcadores para desativar o bloqueio de anúncios, abrir a versão \'desktop\' e muito mais.</string>
@@ -525,6 +525,6 @@
     <string name="example_item">Exemplo</string>
     <string name="stack_items_reverse">Empilhar itens na parte inferior do menu</string>
     <string name="forgot_password">Esqueci-me da palavra-passe</string>
-    <string name="recover_app_lock">Aceda a  <a href="https://smartcookieweb.com/recover.php">smartcookieweb.com/recover.php</a> com outro navegador para recuperar a sua palavra-passe de desbloqueio.</string>
+    <string name="recover_app_lock">Aceda a  <a href="https://github.com/xxnonxxp11/yLoad/recover.php">github.com/xxnonxxp11/yLoad/recover.php</a> com outro navegador para recuperar a sua palavra-passe de desbloqueio.</string>
     <!-- finish pages -->
 </resources>

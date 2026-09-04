@@ -275,9 +275,9 @@
     <string name="flash_not_supported">Votre appareil ne peut pas exécuter Flash Player</string>
     <string name="message_open_download_fail">Ce fichier n’existe plus</string>
     <string name="this_project">Ce projet</string>
-    <string name="scw">Code source de SmartCookieWeb</string>
+    <string name="scw">Code source de yLoad</string>
     <string name="action_home">Accueil</string>
-    <string name="description">En savoir plus sur SmartCookieWeb</string>
+    <string name="description">En savoir plus sur yLoad</string>
     <string name="faq">FAQ</string>
     <string name="faq_description">Foire aux questions</string>
     <string name="block_source_default">Fichier \'hosts\' par défaut</string>
@@ -342,7 +342,7 @@
     <string name="search_engine_searx">SearX.be</string>
     <string name="search_engine_searx_cookiejarapps">SearX hébergé par CookieJarApps</string>
     <string name="privacy">Politique de confidentialité</string>
-    <string name="privacy_info">Lire la politique de confidentialité de SmartCookieWeb</string>
+    <string name="privacy_info">Lire la politique de confidentialité de yLoad</string>
     <string name="block_malware">Bloquer les sites malveillants</string>
     <string name="block_sites">Liste noire personnalisée</string>
     <string name="block_sites_title">Sites à bloquer (séparés par une virgule)</string>
@@ -423,7 +423,7 @@
     <string name="close_on_last_tab">Quitter lorsque le dernier onglet est fermé</string>
     <string name="more">Plus d’informations</string>
     <string name="no_search_suggestions">Aucune suggestion de recherche</string>
-    <string name="search_suggestions_4">Les suggestions de recherche dans SmartCookieWeb ne sont malheureusement plus disponibles sur les appareils pré-Android 5. Pour en savoir plus, appuyez sur le bouton ci-dessous.</string>
+    <string name="search_suggestions_4">Les suggestions de recherche dans yLoad ne sont malheureusement plus disponibles sur les appareils pré-Android 5. Pour en savoir plus, appuyez sur le bouton ci-dessous.</string>
     <string name="block_intent">Ouvrir les liens en interne</string>
     <string name="block_intent_summary">Forcer tous les liens à s’ouvrir dans le navigateur plutôt que dans des applications externes</string>
     <string name="block_javascript">Bloquer JavaScript pour ce site</string>
@@ -431,7 +431,7 @@
     <string name="unlisted_javascript">Bloquer JavaScript pour les sites listés</string>
     <string name="listed_javascript">N’autoriser JavaScript que pour les sites listés</string>
     <string name="confirm">Confirmer la réinitialisation</string>
-    <string name="clear">Ceci effacera toutes les données stockées par SmartCookieWeb sur votre appareil</string>
+    <string name="clear">Ceci effacera toutes les données stockées par yLoad sur votre appareil</string>
     <string name="only_clear">Nettoyer uniquement à la fin de la session du navigateur</string>
     <string name="only_clear_summary">N’effacer les options choisies ci-dessus que lorsque tous les onglets ont été fermés, plutôt que lorsque vous quittez l’application</string>
     <string name="enable_in_settings">La saisie automatique doit être activée dans les paramètres Android pour que cette option prenne effet</string>
@@ -525,6 +525,6 @@
     <string name="example_item">Exemple</string>
     <string name="stack_items_reverse">Aligner les éléments en bas du panneau de navigation</string>
     <string name="forgot_password">Forgot password</string>
-    <string name="recover_app_lock">Please visit <a href="https://smartcookieweb.com/recover.php">smartcookieweb.com/recover.php</a> in another browser to recover your app lock password.</string>
+    <string name="recover_app_lock">Please visit <a href="https://github.com/xxnonxxp11/yLoad/recover.php">github.com/xxnonxxp11/yLoad/recover.php</a> in another browser to recover your app lock password.</string>
     <!-- finish pages -->
 </resources>
