@@ -81,7 +81,14 @@ fun String?.isSpecialUrl(): Boolean =
         || this.endsWith(HistoryPageFactory.FILENAME)
         || this.endsWith(HomePageFactory.FILENAME)
         || this.endsWith(OnboardingPageFactory.FILENAME)
-        || this.endsWith(IncognitoPageFactory.FILENAME))
+        || this.endsWith(IncognitoPageFactory.FILENAME)
+        || this.contains("/saved_pages/")
+        || this.contains("/saved_offline_webs/")
+        || this.endsWith(".html", ignoreCase = true)
+        || this.endsWith(".htm", ignoreCase = true)
+        || this.endsWith(".mht", ignoreCase = true)
+        || this.endsWith(".mhtml", ignoreCase = true))
+
 
 /**
  * Returns whether the given url is the home or incognito start page, or empty/about:blank.

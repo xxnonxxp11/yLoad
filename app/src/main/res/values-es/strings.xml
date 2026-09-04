@@ -45,7 +45,7 @@
     <string name="clear_history">Borrar el historial del navegador</string>
     <string name="dialog_image">¿Qué te gustaría hacer con esta imagen?</string>
     <string name="action_download">Descargar</string>
-    <string name="action_open">Abierto</string>
+    <string name="action_open">Abrir</string>
     <string name="dialog_link">¿Qué te gustaría hacer con este enlace?</string>
     <string name="dialog_title_share">Comparte esta página</string>
     <string name="dialog_history_long_press">¿Qué te gustaría hacer con este elemento del historial?</string>

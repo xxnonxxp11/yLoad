@@ -258,9 +258,11 @@ class SmartCookieWebClient(
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
-        val offlineResponse = com.cookiegames.smartcookie.offline.OfflineWebRecorder.interceptRequest(request)
-        if (offlineResponse != null) {
-            return offlineResponse
+        if (!request.isForMainFrame) {
+            val offlineResponse = com.cookiegames.smartcookie.offline.OfflineWebRecorder.interceptRequest(request)
+            if (offlineResponse != null) {
+                return offlineResponse
+            }
         }
 
         val requestUrl = request.url.toString()
@@ -1121,6 +1123,10 @@ class SmartCookieWebClient(
             }
         } else if (URLUtil.isFileUrl(url) && !url.isSpecialUrl()) {
             val file = File(url.replace(FILE, ""))
+            val ext = Utils.guessFileExtension(file.toString())?.toLowerCase(Locale.ROOT)
+            if (ext == "html" || ext == "htm" || ext == "mht" || ext == "mhtml") {
+                return false
+            }
 
             if (file.exists()) {
                 val newMimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(Utils.guessFileExtension(file.toString()))

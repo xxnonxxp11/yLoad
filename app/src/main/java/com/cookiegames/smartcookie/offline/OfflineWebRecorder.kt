@@ -397,6 +397,11 @@ object OfflineWebRecorder {
         if (isRecording) {
             val session = currentSession ?: return null
 
+            // Do not intercept main frame HTML navigation; let Chromium handle it natively
+            if (request.isForMainFrame) {
+                return null
+            }
+
             if (request.method.equals("GET", ignoreCase = true)) {
                 if (urlStr.startsWith("data:") || urlStr.startsWith("blob:") || urlStr.startsWith("javascript:")) {
                     return null
@@ -473,8 +478,20 @@ object OfflineWebRecorder {
                             val mime = conn.contentType?.substringBefore(';') ?: getMimeType(urlStr)
                             val encoding = if ("gzip".equals(contentEncoding, ignoreCase = true)) "UTF-8" else (contentEncoding ?: "UTF-8")
                             val headers = mutableMapOf<String, String>()
+                            val excludedHeaders = setOf(
+                                "content-encoding",
+                                "transfer-encoding",
+                                "content-length",
+                                "connection",
+                                "keep-alive",
+                                "proxy-authenticate",
+                                "proxy-authorization",
+                                "te",
+                                "trailer",
+                                "upgrade"
+                            )
                             conn.headerFields?.forEach { (k, list) ->
-                                if (k != null && list.isNotEmpty() && !k.equals("Content-Encoding", ignoreCase = true)) {
+                                if (k != null && list.isNotEmpty() && !excludedHeaders.contains(k.toLowerCase(Locale.ROOT))) {
                                     headers[k] = list.joinToString(", ")
                                 }
                             }

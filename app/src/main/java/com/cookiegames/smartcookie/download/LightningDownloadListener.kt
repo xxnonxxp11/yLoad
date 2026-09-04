@@ -58,6 +58,18 @@ class LightningDownloadListener(context: Activity) : DownloadListener {
             return
         }
         val fileName = URLUtil.guessFileName(url, contentDisposition, mimetype)
+
+        // Safety: If navigation to a webpage or game failed and defaulted to downloadfile.bin without explicit attachment:
+        if (fileName == "downloadfile.bin" && (contentDisposition == null || !contentDisposition.contains("attachment", ignoreCase = true))) {
+            Log.w(TAG, "Prevented downloadfile.bin fallback for URL: $url")
+            (mActivity as? com.cookiegames.smartcookie.browser.activity.BrowserActivity)?.let { act ->
+                act.runOnUiThread {
+                    act.tabsManager.currentTab?.loadUrl(url)
+                }
+            }
+            return
+        }
+
         val downloadSize: String = if (contentLength > 0) {
             Formatter.formatFileSize(mActivity, contentLength)
         } else {
