@@ -2870,6 +2870,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
             } else if (!isDarkTheme) {
                 decorView.systemUiVisibility = decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             }
+        }
     }
 
     companion object {
