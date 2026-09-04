@@ -10,6 +10,7 @@ import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Build
 import android.text.format.Formatter
+import android.util.Log
 import android.view.View
 import android.webkit.DownloadListener
 import android.webkit.URLUtil
