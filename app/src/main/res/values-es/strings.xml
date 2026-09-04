@@ -97,6 +97,7 @@
     <string name="action_incognito">Nueva pestaña de incógnito</string>
     <string name="action_homepage">Defecto</string>
     <string name="action_back">atrás</string>
+    <string name="action_refresh">Actualizar</string>
     <string name="action_find">Buscar en la página</string>
     <string name="download_pending">Iniciando descarga \ u2026</string>
     <string name="cannot_download">Solo puede descargar URL HTTP o HTTPS.</string>

@@ -103,6 +103,7 @@
     <string name="action_incognito">New private tab</string>
     <string name="action_homepage">Default</string>
     <string name="action_back">Back</string>
+    <string name="action_refresh">Refresh</string>
     <string name="action_find">Find in page</string>
     <string name="download_pending">Starting download\u2026</string>
     <string name="cannot_download">Can only download HTTP or HTTPS URLs.</string>
