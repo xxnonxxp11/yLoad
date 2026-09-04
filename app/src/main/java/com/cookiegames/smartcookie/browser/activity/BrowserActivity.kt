@@ -92,6 +92,7 @@ import com.cookiegames.smartcookie.js.DarkReaderHelper
 import com.cookiegames.smartcookie.interpolator.BezierDecelerateInterpolator
 import com.cookiegames.smartcookie.log.Logger
 import com.cookiegames.smartcookie.notifications.IncognitoNotification
+import com.cookiegames.smartcookie.offline.OfflineWebRecorder
 import com.cookiegames.smartcookie.onboarding.Onboarding
 import com.cookiegames.smartcookie.popup.PopUpClass
 import com.cookiegames.smartcookie.search.SearchEngineProvider
@@ -576,7 +577,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
             presenter?.setupTabs(intent)
             setIntent(null)
             proxyUtils.checkForProxy(this)
-
+            updateTopBarVisibilityForUrl(tabsManager.currentTab?.url)
         }
 
         if(userPreferences.passwordChoiceLock == PasswordChoice.CUSTOM){
@@ -841,6 +842,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
                     }
                     R.id.home -> {
                         tabsManager.currentTab?.loadHomePage()
+                        updateTopBarVisibilityForUrl(null)
                         false
                     }
                     R.id.tabs -> {
@@ -1202,9 +1204,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 
         view.requestFocus()
 
-
-
-
+        updateTopBarVisibilityForUrl(tabsManager.currentTab?.url)
 
         showActionBar()
 
@@ -1529,7 +1529,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
      * searches the web for the query fixing any and all problems with the input
      * checks if it is a search, url, etc.
      */
-    private fun searchTheWeb(query: String) {
+    fun searchTheWeb(query: String) {
         val currentTab = tabsManager.currentTab
         if (query.isEmpty()) {
             return
@@ -1537,7 +1537,9 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         val searchUrl = "$searchText$QUERY_PLACE_HOLDER"
         if (currentTab != null) {
             currentTab.stopLoading()
-            presenter?.loadUrlInCurrentView(smartUrlFilter(query.trim(), true, searchUrl))
+            val filteredUrl = smartUrlFilter(query.trim(), true, searchUrl)
+            updateTopBarVisibilityForUrl(filteredUrl)
+            presenter?.loadUrlInCurrentView(filteredUrl)
         }
     }
 
@@ -1657,6 +1659,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         if(!isIncognito()){
             saveOpenTabs()
         }
+        updateTopBarVisibilityForUrl(url)
         if (url == null || searchView?.hasFocus() != false) {
             return
         }
@@ -2036,6 +2039,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 
     override fun onHomeButtonPressed() {
         tabsManager.currentTab?.loadHomePage()
+        updateTopBarVisibilityForUrl(null)
         closeDrawers(null)
     }
 
@@ -2262,7 +2266,10 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
             R.id.home_button -> when {
                 searchView?.hasFocus() == true -> currentTab.requestFocus()
                 shouldShowTabsInDrawer -> drawer_layout.openDrawer(getTabDrawer())
-                else -> currentTab.loadHomePage()
+                else -> {
+                    currentTab.loadHomePage()
+                    updateTopBarVisibilityForUrl(null)
+                }
             }
             R.id.more_button -> {
                 showViaMenu()
@@ -2549,7 +2556,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         // ================= PAGE 2 ACTIONS (HERRAMIENTAS) =================
         page2View.findViewById<View>(R.id.btn_via_save)?.setOnClickListener {
             dialog.dismiss()
-            currentTab?.webView?.let { currentTab.createWebPagePrint(it) }
+            showSaveWebDialog()
         }
 
         page2View.findViewById<View>(R.id.btn_via_clear_data)?.setOnClickListener {
@@ -2845,6 +2852,162 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         }
         sendBroadcast(addIntent)
         Toast.makeText(this, "Aplicación instalada en la pantalla de inicio", Toast.LENGTH_SHORT).show()
+    }
+
+    fun updateTopBarVisibilityForUrl(url: String?) {
+        val isHome = url.isHomeUrl()
+        val targetVis = if (isHome) View.GONE else View.VISIBLE
+        findViewById<View>(R.id.toolbar)?.let { tb ->
+            if (tb.visibility != targetVis) {
+                tb.visibility = targetVis
+            }
+        }
+        searchBackground?.visibility = targetVis
+    }
+
+    private fun showSaveWebDialog() {
+        val currentTab = tabsManager.currentTab
+        val webView = currentTab?.webView
+        val title = currentTab?.title ?: "Web"
+        val url = currentTab?.url ?: ""
+
+        val isRec = OfflineWebRecorder.isRecording
+        val options = arrayOf(
+            "💾 Guardar página completa ahora (MHTML)",
+            if (isRec) "⏹ Detener y guardar grabación de juego" else "🔴 Iniciar grabación para juegos web (Offline)",
+            "📂 Ver páginas y juegos guardados"
+        )
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Guardar web offline")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> {
+                        if (url.isHomeUrl()) {
+                            Toast.makeText(this, "No se puede guardar la pantalla de inicio", Toast.LENGTH_SHORT).show()
+                            return@setItems
+                        }
+                        Toast.makeText(this, "Guardando página completa...", Toast.LENGTH_SHORT).show()
+                        OfflineWebRecorder.savePageSnapshot(this, webView, title) { file ->
+                            runOnUiThread {
+                                if (file != null) {
+                                    Toast.makeText(this, "Página guardada: ${file.name}", Toast.LENGTH_LONG).show()
+                                } else {
+                                    Toast.makeText(this, "Error al guardar la página", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    }
+                    1 -> {
+                        if (isRec) {
+                            stopWebRecording()
+                        } else {
+                            if (url.isHomeUrl()) {
+                                Toast.makeText(this, "Navega a un juego o web para iniciar la grabación", Toast.LENGTH_SHORT).show()
+                                return@setItems
+                            }
+                            startWebRecording()
+                        }
+                    }
+                    2 -> {
+                        showSavedWebsDialog()
+                    }
+                }
+            }
+            .setNegativeButton(R.string.action_cancel, null)
+            .show()
+    }
+
+    private fun startWebRecording() {
+        val currentTab = tabsManager.currentTab
+        val webView = currentTab?.webView
+        val title = currentTab?.title ?: "Juego"
+        OfflineWebRecorder.startRecording(this, webView, title) { success ->
+            runOnUiThread {
+                if (success) {
+                    val banner = findViewById<View>(R.id.banner_web_recorder)
+                    val textStatus = findViewById<TextView>(R.id.text_recorder_status)
+                    val btnStop = findViewById<TextView>(R.id.btn_stop_recorder)
+
+                    banner?.visibility = View.VISIBLE
+                    textStatus?.text = "Grabando juego web (0 recursos)..."
+                    btnStop?.setOnClickListener {
+                        stopWebRecording()
+                    }
+                    OfflineWebRecorder.onResourceCapturedListener = { count ->
+                        runOnUiThread {
+                            textStatus?.text = "Grabando juego web ($count recursos)..."
+                        }
+                    }
+                    Toast.makeText(this, "🔴 Grabación iniciada. Juega o navega con normalidad para capturar recursos.", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "No se pudo iniciar la grabación", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun stopWebRecording() {
+        val savedItem = OfflineWebRecorder.stopRecording(this)
+        findViewById<View>(R.id.banner_web_recorder)?.visibility = View.GONE
+        OfflineWebRecorder.onResourceCapturedListener = null
+        if (savedItem != null) {
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Juego web guardado")
+                .setMessage("Se guardó \"${savedItem.title}\" con ${savedItem.resourceCount} recursos capturados.\n\nPuedes jugarlo 100% sin conexión desde \"Ver páginas y juegos guardados\".")
+                .setPositiveButton("Abrir ahora") { _, _ ->
+                    OfflineWebRecorder.preparePlayback(savedItem.dir)
+                    tabsManager.currentTab?.loadUrl("file://${savedItem.entryFile.absolutePath}")
+                }
+                .setNegativeButton("Aceptar", null)
+                .show()
+        } else {
+            Toast.makeText(this, "Grabación finalizada", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun showSavedWebsDialog() {
+        val items = OfflineWebRecorder.getSavedItems(this)
+        if (items.isEmpty()) {
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Páginas y juegos guardados")
+                .setMessage("No tienes páginas ni juegos guardados aún.\n\nUsa \"Guardar página\" o \"Iniciar grabación\" para tener tus webs y juegos favoritos disponibles sin conexión.")
+                .setPositiveButton(R.string.action_ok, null)
+                .show()
+            return
+        }
+
+        val titles = items.map { item ->
+            val icon = if (item.isGamePackage) "🎮" else "💾"
+            val info = if (item.isGamePackage) "${item.resourceCount} recursos" else "MHTML"
+            val dateStr = android.text.format.DateFormat.format("dd/MM/yyyy HH:mm", item.date)
+            "$icon ${item.title}\n   $info • $dateStr"
+        }.toTypedArray()
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Páginas y juegos guardados (${items.size})")
+            .setItems(titles) { _, which ->
+                val selected = items[which]
+                MaterialAlertDialogBuilder(this)
+                    .setTitle(selected.title)
+                    .setMessage(if (selected.isGamePackage) "Paquete de juego web con ${selected.resourceCount} recursos capturados." else "Archivo de página web MHTML.")
+                    .setPositiveButton("Abrir sin conexión") { _, _ ->
+                        if (selected.isGamePackage) {
+                            OfflineWebRecorder.preparePlayback(selected.dir)
+                        }
+                        tabsManager.currentTab?.loadUrl("file://${selected.entryFile.absolutePath}")
+                        Toast.makeText(this, "Cargando \"${selected.title}\" offline...", Toast.LENGTH_SHORT).show()
+                    }
+                    .setNeutralButton("Eliminar") { _, _ ->
+                        OfflineWebRecorder.deleteSavedItem(selected)
+                        Toast.makeText(this, "Elemento eliminado", Toast.LENGTH_SHORT).show()
+                        showSavedWebsDialog()
+                    }
+                    .setNegativeButton(R.string.action_cancel, null)
+                    .show()
+            }
+            .setNegativeButton(R.string.action_cancel, null)
+            .show()
     }
 
     companion object {

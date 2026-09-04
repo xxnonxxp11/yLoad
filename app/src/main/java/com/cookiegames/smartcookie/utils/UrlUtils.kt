@@ -84,6 +84,15 @@ fun String?.isSpecialUrl(): Boolean =
         || this.endsWith(IncognitoPageFactory.FILENAME))
 
 /**
+ * Returns whether the given url is the home or incognito start page, or empty/about:blank.
+ */
+fun String?.isHomeUrl(): Boolean {
+    if (this.isNullOrBlank() || this == "about:blank") return true
+    val clean = this.substringBefore('?').substringBefore('#')
+    return clean.startsWith(FILE) && (clean.endsWith(HomePageFactory.FILENAME) || clean.endsWith(IncognitoPageFactory.FILENAME))
+}
+
+/**
  * Determines if the url is a url for the bookmark page.
  *
  * @return true if the url is a bookmark url, false otherwise.

@@ -273,13 +273,7 @@
             var input = document.getElementById("search_input");
             var query = input.value.trim();
             if (query !== "") {
-                if (/^(https?:\/\/|about:|file:)/i.test(query)) {
-                    window.location.href = query;
-                } else if (!query.includes(" ") && /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$/i.test(query)) {
-                    window.location.href = "https://" + query;
-                } else {
-                    window.location.href = "${BASE_URL}" + encodeURIComponent(query).replace(/%20/g, "+");
-                }
+                window.location.href = "yload://search?q=" + encodeURIComponent(query);
                 input.value = "";
             }
             return false;

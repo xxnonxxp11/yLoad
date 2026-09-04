@@ -227,7 +227,7 @@
         function search() {
             var search_query = document.getElementById("search_input").value.trim();
             if (search_query != "") {
-                window.location.href = "${BASE_URL}" + encodeURIComponent(search_query).replace(/%20/g, "+");
+                window.location.href = "yload://search?q=" + encodeURIComponent(search_query);
                 document.getElementById("search_input").value = "";
             }
             return false;

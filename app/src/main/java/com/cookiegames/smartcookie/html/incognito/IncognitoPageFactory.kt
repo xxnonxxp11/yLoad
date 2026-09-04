@@ -56,11 +56,7 @@ class IncognitoPageFactory @Inject constructor(
                         id("search_input") { attr("style", "background: url('" + iconUrl + "') no-repeat scroll 7px 7px;background-size: 22px 22px;") }
                         tag("script") {
                             html(
-                                    html()
-                                                .replace("\${BASE_URL}", queryUrl)
-                                                .replace("&", "\\u0026")
-
-
+                                html().replace("\${BASE_URL}", queryUrl)
                             )
                         }
 

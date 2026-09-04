@@ -742,20 +742,25 @@ class SmartCookieView(
     }
 
     fun createWebPagePrint(webView: WebView) {
-        /*if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
-            return;*/
-        val printManager: PrintManager = activity.getSystemService(Context.PRINT_SERVICE) as PrintManager
-        val printAdapter: PrintDocumentAdapter = webView.createPrintDocumentAdapter()
-        val jobName: String = " Document"
-        val builder: PrintAttributes.Builder = PrintAttributes.Builder()
-        builder.setMediaSize(PrintAttributes.MediaSize.ISO_A5)
-        val printJob: PrintJob = printManager.print(jobName, printAdapter, builder.build())
-        if (printJob.isCompleted()) {
-            Toast.makeText(activity, R.string.yes, Toast.LENGTH_LONG).show()
-        } else if (printJob.isFailed()) {
-            Toast.makeText(activity, R.string.no, Toast.LENGTH_LONG).show()
+        try {
+            val printManager = activity.getSystemService(Context.PRINT_SERVICE) as? PrintManager
+            if (printManager == null) {
+                Toast.makeText(activity, "Servicio de impresión no disponible", Toast.LENGTH_SHORT).show()
+                return
+            }
+            val jobName = (titleInfo.title ?: "Documento").take(25)
+            val printAdapter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                webView.createPrintDocumentAdapter(jobName)
+            } else {
+                @Suppress("DEPRECATION")
+                webView.createPrintDocumentAdapter()
+            }
+            val builder = PrintAttributes.Builder().setMediaSize(PrintAttributes.MediaSize.ISO_A4)
+            printManager.print(jobName, printAdapter, builder.build())
+        } catch (e: Exception) {
+            Log.e(TAG, "Print error: ${e.message}")
+            Toast.makeText(activity, "No se pudo imprimir el documento", Toast.LENGTH_SHORT).show()
         }
-        // Save the job object for later status checking
     }
 
     /**

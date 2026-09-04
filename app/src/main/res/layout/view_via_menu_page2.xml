@@ -25,13 +25,13 @@
                 android:id="@+id/icon_via_save"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_round_print" />
+                android:src="@drawable/ic_file_download_black" />
             <TextView
                 android:id="@+id/text_via_save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Guardar"
+                android:text="Guardar web"
                 android:textSize="11sp"
                 android:gravity="center"
                 android:maxLines="2"

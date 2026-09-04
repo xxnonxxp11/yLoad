@@ -257,6 +257,11 @@ class SmartCookieWebClient(
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
+        val offlineResponse = com.cookiegames.smartcookie.offline.OfflineWebRecorder.interceptRequest(request)
+        if (offlineResponse != null) {
+            return offlineResponse
+        }
+
         val requestUrl = request.url.toString()
         if (shouldRequestBeBlocked(currentUrl, requestUrl)) {
             if (request.isForMainFrame && request.url.host.toString() != lastBlockedDomain) {
@@ -1017,6 +1022,15 @@ class SmartCookieWebClient(
             uri.getQueryParameter("link4")?.let { if (it.isNotBlank()) userPreferences.link4 = it }
             activity.runOnUiThread {
                 smartCookieView.loadHomePage()
+            }
+            return true
+        }
+
+        if (url.startsWith("yload://search")) {
+            val uri = Uri.parse(url)
+            val query = uri.getQueryParameter("q") ?: ""
+            activity.runOnUiThread {
+                (activity as? BrowserActivity)?.searchTheWeb(query)
             }
             return true
         }
