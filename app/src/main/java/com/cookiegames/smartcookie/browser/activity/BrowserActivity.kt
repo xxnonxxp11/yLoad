@@ -550,7 +550,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 
         searchBackground = customView.findViewById<View>(R.id.search_container).apply {
             // initialize search background color
-            background.tint(getSearchBarColor(primaryColor, primaryColor))
+            background?.tint(getSearchBarColor(primaryColor, primaryColor))
         }
 
         drawer_layout.setDrawerShadow(R.drawable.drawer_right_shadow, GravityCompat.END)

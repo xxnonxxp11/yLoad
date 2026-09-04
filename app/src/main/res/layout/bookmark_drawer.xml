@@ -25,8 +25,7 @@
             android:contentDescription="@string/action_back"
             android:padding="8dp"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/ic_action_star"
-            app:tint="?attr/iconColor" />
+            app:srcCompat="@drawable/ic_action_star" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -74,34 +73,16 @@
         android:paddingStart="16dp"
         android:paddingEnd="16dp">
 
-        <LinearLayout
+        <ImageView
             android:id="@+id/action_add_bookmark"
-            android:layout_width="match_parent"
-            android:layout_height="34dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:contentDescription="@null"
-                app:srcCompat="@drawable/ic_round_add"
-                app:tint="?attr/iconColor" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:fontFamily="sans-serif-medium"
-                android:text="@string/action_add_bookmark"
-                android:textColor="?attr/autoCompleteTitleColor"
-                android:textSize="13sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/action_add_bookmark"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:scaleType="center"
+            app:srcCompat="@drawable/state_ic_bookmark" />
 
     </LinearLayout>
 
