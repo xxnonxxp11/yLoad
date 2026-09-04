@@ -10,7 +10,6 @@ import com.cookiegames.smartcookie.browser.bookmarks.BookmarksDrawerView
 import com.cookiegames.smartcookie.device.BuildInfo
 import com.cookiegames.smartcookie.dialog.LightningDialogBuilder
 import com.cookiegames.smartcookie.download.LightningDownloadListener
-import com.cookiegames.smartcookie.reading.activity.ReadingActivity
 import com.cookiegames.smartcookie.search.SuggestionsAdapter
 import com.cookiegames.smartcookie.settings.activity.SettingsActivity
 import com.cookiegames.smartcookie.settings.activity.ThemableSettingsActivity
@@ -60,8 +59,6 @@ interface AppComponent {
     fun inject(advancedSettingsFragment: AdvancedSettingsFragment)
 
     fun inject(app: BrowserApp)
-
-    fun inject(activity: ReadingActivity)
 
     fun inject(webClient: SmartCookieWebClient)
 

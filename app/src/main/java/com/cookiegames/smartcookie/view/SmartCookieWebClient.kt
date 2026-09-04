@@ -488,7 +488,9 @@ class SmartCookieWebClient(
         } else {
             smartCookieView.titleInfo.setTitle(view.title)
         }
-        if (smartCookieView.invertPage) {
+        if (userPreferences.invertColors) {
+            com.cookiegames.smartcookie.js.DarkReaderHelper.enable(view)
+        } else if (smartCookieView.invertPage) {
             view.evaluateJavascript(invertPageJs.provideJs(), null)
         }
         if (userPreferences.darkModeExtension && !WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {

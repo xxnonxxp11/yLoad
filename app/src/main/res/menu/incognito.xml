@@ -26,10 +26,7 @@
         android:icon="@drawable/ic_bookmark"
         android:title="@string/action_bookmarks"/>
     
-    <item
-        android:id="@+id/action_reading_mode"
-        android:icon="@drawable/ic_action_reading"
-        android:title="@string/reading_mode"/>
+    
     <!--<item
         android:icon="@drawable/ic_round_settings"
         android:id="@+id/action_settings"

@@ -186,9 +186,6 @@ dependencies {
     // color picker
     implementation 'com.github.QuadFlask:colorpicker:0.0.15'
 
-    // reading mode
-    implementation 'net.dankito.readability4j:readability4j:1.0.3'
-
     // webview tools
     implementation 'androidx.webkit:webkit:1.4.0'
 

@@ -45,7 +45,6 @@ import com.cookiegames.smartcookie.extensions.drawable
 import com.cookiegames.smartcookie.extensions.snackbar
 import com.cookiegames.smartcookie.history.HistoryActivity
 import com.cookiegames.smartcookie.preference.UserPreferences
-import com.cookiegames.smartcookie.reading.activity.ReadingActivity
 import com.cookiegames.smartcookie.settings.activity.SettingsActivity
 import com.cookiegames.smartcookie.utils.IntentUtils
 import com.cookiegames.smartcookie.utils.Utils
@@ -171,7 +170,6 @@ class PopUpClass {
                 MenuDividerClass(),
                 MenuItemClass("find_in_page", R.string.action_find, R.drawable.ic_search_find, true),
                 MenuItemClass("copy_link", R.string.dialog_copy_link, R.drawable.ic_content_copy_black, true),
-                MenuItemClass("reading_mode", R.string.reading_mode, R.drawable.ic_action_reading, true),
                 MenuDividerClass(),
                 MenuItemClass("page_tools", R.string.dialog_tools_title, R.drawable.ic_page_tools, true),
                 MenuItemClass("add_to_homepage", R.string.action_add_to_homescreen, R.drawable.ic_round_smartphone, true),
@@ -219,7 +217,14 @@ class PopUpClass {
 
             when((finalMenu[position] as MenuItemClass).id){
                 "new_tab" -> uiController!!.newTabButtonClicked() // 0 - New tab
-                "new_private_tab" -> view.context.startActivity(Intent(view.context, IncognitoActivity::class.java)) // 1 - New incognito tab
+                "new_private_tab" -> {
+                    if (activity.isIncognito()) {
+                        android.widget.Toast.makeText(activity, "Modo incógnito desactivado", android.widget.Toast.LENGTH_SHORT).show()
+                        activity.finish()
+                    } else {
+                        view.context.startActivity(Intent(view.context, IncognitoActivity::class.java))
+                    }
+                } // 1 - Incognito tab toggle
                 "share" -> IntentUtils(activity).shareUrl(currentUrl, currentView?.title) // 2 - Share
                 "print" -> currentView!!.webView?.let { currentView.createWebPagePrint(it) } // 3 - Print
                 "history" -> view.context.startActivity(Intent(view.context, HistoryActivity::class.java)) // 4 - History
@@ -247,11 +252,6 @@ class PopUpClass {
                     }
                 }
                 "bookmarks" -> activity.drawer_layout.openDrawer(activity.getBookmarkDrawer()) // 9 - Bookmarks
-                "reading_mode" -> {
-                    if (currentUrl != null) { // 10 - Reading mode
-                        ReadingActivity.launch(view.context, currentUrl, false)
-                    }
-                }
                 "page_tools" -> {
                     val currentTab = activity.tabsManager.currentTab ?: return@setOnItemClickListener
                     val isAllowedAds = allowListModel.isUrlAllowedAds(currentTab.url)

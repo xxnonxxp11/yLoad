@@ -4,12 +4,12 @@
     android:tint="?attr/iconColor"
     android:viewportWidth="24"
     android:viewportHeight="24">
-    <!-- Sleek thin chevron right outline like Via Browser -->
+    <!-- Distinctive aerodynamic swept chevron right -->
     <path
         android:strokeWidth="1.8"
         android:strokeColor="#FFFFFF"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
         android:fillColor="#00000000"
-        android:pathData="M9,5 L16,12 L9,19" />
+        android:pathData="M8,5.2 C10.2,7.8 13.2,10.4 15.8,12 C13.2,13.6 10.2,16.2 8,18.8" />
 </vector>

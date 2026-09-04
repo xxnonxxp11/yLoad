@@ -205,18 +205,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".reading.activity.ReadingActivity"
-            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|keyboard"
-            android:label="@string/reading_mode"
-            android:theme="@style/Theme.SettingsTheme"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.READING" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
 
         <activity
             android:name=".webapp.WebappActivity"

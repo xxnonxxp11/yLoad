@@ -57,7 +57,6 @@ import android.graphics.drawable.Icon
 import com.anthonycr.grant.PermissionsManager
 import com.cookiegames.smartcookie.AppTheme
 import com.cookiegames.smartcookie.IncognitoActivity
-import com.cookiegames.smartcookie.reading.activity.ReadingActivity
 import com.cookiegames.smartcookie.adblock.allowlist.AllowListModel
 import com.cookiegames.smartcookie.download.DownloadActivity
 import com.cookiegames.smartcookie.history.HistoryActivity
@@ -88,6 +87,7 @@ import com.cookiegames.smartcookie.html.incognito.IncognitoPageFactory
 import com.cookiegames.smartcookie.html.onboarding.OnboardingPageFactory
 import com.cookiegames.smartcookie.icon.TabCountView
 import com.cookiegames.smartcookie.icon.TabCountDrawable
+import com.cookiegames.smartcookie.js.DarkReaderHelper
 import com.cookiegames.smartcookie.interpolator.BezierDecelerateInterpolator
 import com.cookiegames.smartcookie.log.Logger
 import com.cookiegames.smartcookie.notifications.IncognitoNotification
@@ -2430,9 +2430,12 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
             page1View.findViewById<TextView>(R.id.text_via_desktop)?.setTextColor(activeColor)
         }
 
-        if (this is IncognitoActivity) {
+        if (isIncognito()) {
             page1View.findViewById<androidx.appcompat.widget.AppCompatImageView>(R.id.icon_via_incognito)?.setColorFilter(activeColor)
-            page1View.findViewById<TextView>(R.id.text_via_incognito)?.setTextColor(activeColor)
+            page1View.findViewById<TextView>(R.id.text_via_incognito)?.apply {
+                setTextColor(activeColor)
+                text = "Salir de incógnito"
+            }
         }
 
         if (userPreferences.adBlockEnabled) {
@@ -2468,7 +2471,15 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         page1View.findViewById<View>(R.id.btn_via_night_mode)?.setOnClickListener {
             dialog.dismiss()
             userPreferences.invertColors = !userPreferences.invertColors
-            currentTab?.reload()
+            val enabled = userPreferences.invertColors
+            currentTab?.webView?.let { wv ->
+                DarkReaderHelper.toggle(wv, enabled)
+            }
+            Toast.makeText(
+                this,
+                if (enabled) "Modo nocturno (Dark Reader) activado" else "Modo nocturno desactivado",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         page1View.findViewById<View>(R.id.btn_via_bookmarks)?.setOnClickListener {
@@ -2488,7 +2499,16 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 
         page1View.findViewById<View>(R.id.btn_via_incognito)?.setOnClickListener {
             dialog.dismiss()
-            startActivity(IncognitoActivity.createIntent(this, null))
+            if (isIncognito()) {
+                Toast.makeText(this, "Modo incógnito desactivado", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                }
+                startActivity(intent)
+                finish()
+            } else {
+                startActivity(IncognitoActivity.createIntent(this, null))
+            }
         }
 
         page1View.findViewById<View>(R.id.btn_via_add_bookmark)?.setOnClickListener {
@@ -2531,11 +2551,19 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
             currentTab?.webView?.let { currentTab.createWebPagePrint(it) }
         }
 
-        page2View.findViewById<View>(R.id.btn_via_saved_pages)?.setOnClickListener {
+        page2View.findViewById<View>(R.id.btn_via_clear_data)?.setOnClickListener {
             dialog.dismiss()
-            currentTab?.let { tab ->
-                ReadingActivity.launch(this, tab.url, false)
-            }
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.clear_history)
+                .setMessage("¿Deseas borrar las cookies, caché y datos de navegación?")
+                .setPositiveButton(R.string.action_yes) { _, _ ->
+                    tabsManager.currentTab?.clearHistory()
+                    CookieManager.getInstance().removeAllCookies(null)
+                    android.webkit.WebStorage.getInstance().deleteAllData()
+                    Toast.makeText(this, "Datos borrados", Toast.LENGTH_SHORT).show()
+                }
+                .setNegativeButton(R.string.action_no, null)
+                .show()
         }
 
         page2View.findViewById<View>(R.id.btn_via_translate)?.setOnClickListener {

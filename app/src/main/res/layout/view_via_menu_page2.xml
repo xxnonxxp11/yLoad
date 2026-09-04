@@ -38,7 +38,7 @@
                 android:ellipsize="end" />
         </LinearLayout>
         <LinearLayout
-            android:id="@+id/btn_via_saved_pages"
+            android:id="@+id/btn_via_clear_data"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -48,16 +48,16 @@
             android:clickable="true"
             android:focusable="true">
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/icon_via_saved_pages"
+                android:id="@+id/icon_via_clear_data"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_action_reading" />
+                android:src="@drawable/ic_action_delete" />
             <TextView
-                android:id="@+id/text_via_saved_pages"
+                android:id="@+id/text_via_clear_data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Modo lectura"
+                android:text="Limpiar datos"
                 android:textSize="11sp"
                 android:gravity="center"
                 android:maxLines="2"

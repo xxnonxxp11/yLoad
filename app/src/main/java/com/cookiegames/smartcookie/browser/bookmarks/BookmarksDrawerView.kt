@@ -37,7 +37,6 @@ import com.cookiegames.smartcookie.extensions.drawable
 import com.cookiegames.smartcookie.extensions.inflater
 import com.cookiegames.smartcookie.favicon.FaviconModel
 import com.cookiegames.smartcookie.preference.UserPreferences
-import com.cookiegames.smartcookie.reading.activity.ReadingActivity
 import com.cookiegames.smartcookie.utils.isSpecialUrl
 import com.github.ahmadaghazadeh.editor.widget.CodeEditor
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

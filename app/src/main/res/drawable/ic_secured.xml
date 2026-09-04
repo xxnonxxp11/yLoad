@@ -4,19 +4,28 @@
     android:tint="?attr/iconColor"
     android:viewportWidth="24"
     android:viewportHeight="24">
-    <!-- Modern minimalist shield with checkmark outline like Via Browser -->
+    <!-- Modern Brave-style faceted angular shield -->
     <path
         android:strokeWidth="1.8"
         android:strokeColor="#FFFFFF"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
         android:fillColor="#00000000"
-        android:pathData="M12,3.5 L5.5,6.2 C5.5,12 8.3,17.4 12,20.5 C15.7,17.4 18.5,12 18.5,6.2 L12,3.5 Z" />
+        android:pathData="M12,2.5 L4.5,5.2 V11.2 C4.5,16.4 7.8,20.2 12,21.5 C16.2,20.2 19.5,16.4 19.5,11.2 V5.2 Z" />
+    <!-- Angular upper crest facet -->
+    <path
+        android:strokeWidth="1.5"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M8,6.5 L12,9.2 L16,6.5" />
+    <!-- Geometric checkmark inside -->
     <path
         android:strokeWidth="1.8"
         android:strokeColor="#FFFFFF"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
         android:fillColor="#00000000"
-        android:pathData="M9,12 L11,14 L15,9.5" />
+        android:pathData="M8.8,13.2 L11.2,15.5 L15.5,10.8" />
 </vector>
