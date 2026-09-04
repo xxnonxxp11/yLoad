@@ -55,9 +55,6 @@
         <activity
             android:theme="@style/Theme.SettingsTheme"
             android:name=".history.HistoryActivity" />
-        <activity
-            android:theme="@style/Theme.LightTheme"
-            android:name=".onboarding.Onboarding" />
         <!--
          <receiver android:name=".widget.SearchWidget" >
             <intent-filter>

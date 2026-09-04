@@ -9,6 +9,6 @@ import com.cookiegames.smartcookie.R
  */
 class GoogleSearch : BaseSearchEngine(
     "file:///android_asset/google.webp",
-    "https://www.google.com/search?client=smartcookieweb&ie=UTF-8&oe=UTF-8&q=",
+    "https://www.google.com/search?ie=UTF-8&oe=UTF-8&q=",
     R.string.search_engine_google
 )

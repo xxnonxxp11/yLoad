@@ -8,6 +8,6 @@ import com.cookiegames.smartcookie.R
  */
 class CookieJarAppsSearch : BaseSearchEngine(
     "file:///android_asset/smartcookieweb.webp",
-    "https://searx.cookiejarapps.com/?q=",
+    "https://searx.org/?q=",
     R.string.search_engine_searx_cookiejarapps
 )

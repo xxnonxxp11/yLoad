@@ -20,6 +20,7 @@ android {
     }
 
     defaultConfig {
+        applicationId "com.yload.browser"
         minSdkVersion project.minSdkVersion
         targetSdkVersion project.targetSdkVersion
         versionName "16.3"
@@ -65,17 +66,17 @@ android {
     productFlavors {
         scMain {
             dimension "capabilities"
-            applicationId "com.cookiegames.smartcookie"
+            applicationId "com.yload.browser"
             resValue "string", "app_name", "yLoad"
         }
         stable {
             dimension "capabilities"
-            applicationId "com.cookiegames.smartcookie"
+            applicationId "com.yload.browser"
             resValue "string", "app_name", "yLoad"
         }
         beta {
             dimension 'capabilities'
-            applicationId 'com.cookiejarapps.smartcookiebeta'
+            applicationId 'com.yload.browser'
             resValue "string", "app_name", "yLoad Beta"
             versionCode 12
             versionName "15.0-beta1"

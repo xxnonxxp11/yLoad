@@ -157,7 +157,7 @@ class DownloadHandler @Inject constructor(private val downloadsRepository: Downl
             val name: CharSequence = context.getString(R.string.download_channel)
             val description = context.getString(R.string.download_description)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("com.cookiegames.smartcookieweb.downloads", name, importance)
+            val channel = NotificationChannel("com.yload.browser.downloads", name, importance)
             channel.description = description
             val notificationManager = context.getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
@@ -165,7 +165,7 @@ class DownloadHandler @Inject constructor(private val downloadsRepository: Downl
 
         val fileName = getFileNameFromURL(url, contentDisposition, mimeType)
         val notificationManager = NotificationManagerCompat.from(context)
-        val builder = NotificationCompat.Builder(context, "com.cookiegames.smartcookieweb.downloads")
+        val builder = NotificationCompat.Builder(context, "com.yload.browser.downloads")
         Log.d(TAG, fileName)
 
         builder.setContentTitle(context.getString(R.string.action_download))

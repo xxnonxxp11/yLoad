@@ -42,8 +42,8 @@ class AboutSettingsFragment : AbstractSettingsFragment() {
         val aboutPref: androidx.preference.Preference? = findPreference(SETTINGS_VERSION)
         aboutPref!!.setOnPreferenceClickListener {
             val builder = MaterialAlertDialogBuilder(requireContext())
-            builder.setTitle("SCW v" + BuildConfig.VERSION_NAME)
-            builder.setMessage("What's new:\n- New settings page")
+            builder.setTitle("yLoad v" + BuildConfig.VERSION_NAME)
+            builder.setMessage("yLoad Browser - Rápido, ligero y seguro")
 
 
             builder.setPositiveButton(resources.getString(R.string.action_ok)){ dialogInterface, which ->

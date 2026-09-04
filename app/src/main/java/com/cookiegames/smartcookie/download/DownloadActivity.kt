@@ -246,7 +246,7 @@ class DownloadActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             intent.action = Intent.ACTION_VIEW
             val fileURI = filePath.toUri()
             if(getFileExtension(filePath) != "apk"){
-                val finalUri = FileProvider.getUriForFile(v.context, v.context.getApplicationContext().getPackageName().toString() + ".provider", File(filePath))
+                val finalUri = FileProvider.getUriForFile(v.context, BuildConfig.APPLICATION_ID + ".fileprovider", File(filePath))
                 intent.setDataAndType(finalUri, MimeTypeMap.getSingleton().getMimeTypeFromExtension(getFileExtension(filePath)))
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 if (intent.resolveActivity(v.context.packageManager) != null) {
@@ -254,13 +254,12 @@ class DownloadActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                 } else {
                     Toast.makeText(v.context, v.context.resources.getString(R.string.title_error), Toast.LENGTH_LONG).show()
                 }
-                v.context.startActivity(intent)
             }
             else{
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     val contentUri = FileProvider.getUriForFile(
                             v.context,
-                            BuildConfig.APPLICATION_ID + ".provider",
+                            BuildConfig.APPLICATION_ID + ".fileprovider",
                             File(filePath)
                     )
                     val install = Intent(Intent.ACTION_VIEW)

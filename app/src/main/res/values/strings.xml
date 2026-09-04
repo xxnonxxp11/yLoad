@@ -376,11 +376,11 @@
     <string name="search_engine_baidu">Baidu</string>
     <string name="search_engine_yandex">Yandex</string>
     <string name="search_engine_searx">SearX.be</string>
-    <string name="search_engine_searx_cookiejarapps">CookieJarApps SearX</string>
+    <string name="search_engine_searx_cookiejarapps">SearX</string>
 
     <string name="privacy">View Privacy Policy</string>
     <string name="privacy_info">Read the yLoad privacy policy</string>
-    <string name="url_project" translatable="false">https://github.com/CookieJarApps/SmartCookieWeb</string>
+    <string name="url_project" translatable="false">https://github.com/xxnonxxp11/yLoad</string>
     <string name="block_malware">Block malicious sites</string>
     <string name="block_sites">Custom site block</string>
     <string name="block_sites_title">Custom site block (separate sites with a comma)</string>
@@ -470,7 +470,7 @@
     <string name="dark_mode">Dark mode</string>
     <string name="submit">Submit extension</string>
 
-    <string name="submit_link" translatable="false">https://cookiejarapps.com/extensions/create.html</string>
+    <string name="submit_link" translatable="false">https://github.com/xxnonxxp11/yLoad/issues</string>
 
     <string name="translator">Translator (beta)</string>
     <string name="coming_soon">More coming soon...</string>
