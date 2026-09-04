@@ -468,6 +468,10 @@ class SmartCookieWebClient(
             view.postInvalidate()
         }
 
+        if (com.cookiegames.smartcookie.offline.OfflineWebRecorder.isRecording) {
+            com.cookiegames.smartcookie.offline.OfflineWebRecorder.onPageChanged(url, view.title)
+        }
+
         if(userPreferences.forceZoom){
             view.loadUrl(
                     "javascript:(function() { document.querySelector('meta[name=\"viewport\"]').setAttribute(\"content\",\"width=device-width\"); })();"

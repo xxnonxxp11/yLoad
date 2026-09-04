@@ -432,8 +432,8 @@ class SmartCookieView(
             displayZoomControls = false
             allowContentAccess = true
             allowFileAccess = true
-            allowFileAccessFromFileURLs = false
-            allowUniversalAccessFromFileURLs = false
+            allowFileAccessFromFileURLs = true
+            allowUniversalAccessFromFileURLs = true
 
             getPathObservable("appcache")
                 .subscribeOn(databaseScheduler)

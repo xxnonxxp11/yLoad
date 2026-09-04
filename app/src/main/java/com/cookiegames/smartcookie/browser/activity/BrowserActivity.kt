@@ -2857,12 +2857,26 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
     fun updateTopBarVisibilityForUrl(url: String?) {
         val isHome = url.isHomeUrl()
         val targetVis = if (isHome) View.GONE else View.VISIBLE
+        findViewById<View>(R.id.toolbar_layout)?.let { tbl ->
+            if (tbl.visibility != targetVis) {
+                tbl.visibility = targetVis
+            }
+        }
         findViewById<View>(R.id.toolbar)?.let { tb ->
             if (tb.visibility != targetVis) {
                 tb.visibility = targetVis
             }
         }
         searchBackground?.visibility = targetVis
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val decorView = window.decorView
+            if (isHome) {
+                decorView.systemUiVisibility = decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+            } else if (!isDarkTheme) {
+                decorView.systemUiVisibility = decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            }
+        }
     }
 
     private fun showSaveWebDialog() {
@@ -2873,7 +2887,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 
         val isRec = OfflineWebRecorder.isRecording
         val options = arrayOf(
-            "💾 Guardar página completa ahora (MHTML)",
+            "💾 Guardar página completa ahora",
             if (isRec) "⏹ Detener y guardar grabación de juego" else "🔴 Iniciar grabación para juegos web (Offline)",
             "📂 Ver páginas y juegos guardados"
         )
@@ -2888,7 +2902,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
                             return@setItems
                         }
                         Toast.makeText(this, "Guardando página completa...", Toast.LENGTH_SHORT).show()
-                        OfflineWebRecorder.savePageSnapshot(this, webView, title) { file ->
+                        OfflineWebRecorder.savePageSnapshot(this, webView, title, url) { file ->
                             runOnUiThread {
                                 if (file != null) {
                                     Toast.makeText(this, "Página guardada: ${file.name}", Toast.LENGTH_LONG).show()
@@ -2948,21 +2962,26 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
     }
 
     private fun stopWebRecording() {
-        val savedItem = OfflineWebRecorder.stopRecording(this)
-        findViewById<View>(R.id.banner_web_recorder)?.visibility = View.GONE
-        OfflineWebRecorder.onResourceCapturedListener = null
-        if (savedItem != null) {
-            MaterialAlertDialogBuilder(this)
-                .setTitle("Juego web guardado")
-                .setMessage("Se guardó \"${savedItem.title}\" con ${savedItem.resourceCount} recursos capturados.\n\nPuedes jugarlo 100% sin conexión desde \"Ver páginas y juegos guardados\".")
-                .setPositiveButton("Abrir ahora") { _, _ ->
-                    OfflineWebRecorder.preparePlayback(savedItem.dir)
-                    tabsManager.currentTab?.loadUrl("file://${savedItem.entryFile.absolutePath}")
+        val currentTab = tabsManager.currentTab
+        val webView = currentTab?.webView
+        OfflineWebRecorder.stopRecording(this, webView) { savedItem ->
+            runOnUiThread {
+                findViewById<View>(R.id.banner_web_recorder)?.visibility = View.GONE
+                OfflineWebRecorder.onResourceCapturedListener = null
+                if (savedItem != null) {
+                    MaterialAlertDialogBuilder(this)
+                        .setTitle("Juego web guardado")
+                        .setMessage("Se guardó \"${savedItem.title}\" con ${savedItem.resourceCount} recursos capturados.\n\nPuedes jugarlo 100% sin conexión desde \"Ver páginas y juegos guardados\".")
+                        .setPositiveButton("Abrir ahora") { _, _ ->
+                            OfflineWebRecorder.preparePlayback(savedItem.dir)
+                            tabsManager.currentTab?.loadUrl("file://${savedItem.entryFile.absolutePath}")
+                        }
+                        .setNegativeButton("Aceptar", null)
+                        .show()
+                } else {
+                    Toast.makeText(this, "Grabación finalizada", Toast.LENGTH_SHORT).show()
                 }
-                .setNegativeButton("Aceptar", null)
-                .show()
-        } else {
-            Toast.makeText(this, "Grabación finalizada", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

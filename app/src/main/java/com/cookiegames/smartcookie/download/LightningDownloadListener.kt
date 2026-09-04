@@ -54,6 +54,9 @@ class LightningDownloadListener(context: Activity) : DownloadListener {
         mimetype: String?,
         contentLength: Long
     ) {
+        if (url.startsWith("file://") || url.startsWith("about:") || url.startsWith("data:")) {
+            return
+        }
         val fileName = URLUtil.guessFileName(url, contentDisposition, mimetype)
         val downloadSize: String = if (contentLength > 0) {
             Formatter.formatFileSize(mActivity, contentLength)
