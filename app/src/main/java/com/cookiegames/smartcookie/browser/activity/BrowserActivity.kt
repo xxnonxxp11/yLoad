@@ -2557,7 +2557,8 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
                 .setTitle(R.string.clear_history)
                 .setMessage("¿Deseas borrar las cookies, caché y datos de navegación?")
                 .setPositiveButton(R.string.action_yes) { _, _ ->
-                    tabsManager.currentTab?.clearHistory()
+                    currentTab?.webView?.clearHistory()
+                    currentTab?.webView?.clearCache(true)
                     CookieManager.getInstance().removeAllCookies(null)
                     android.webkit.WebStorage.getInstance().deleteAllData()
                     Toast.makeText(this, "Datos borrados", Toast.LENGTH_SHORT).show()
