@@ -59,7 +59,7 @@ class HomePageFactory @Inject constructor(
                     if(userPreferences.imageUrlString != ""){ tag("body") { attr("style", "background: url('" + userPreferences.imageUrlString + "') no-repeat scroll;") } }
 
                     // Set search engine icon
-                    id("search_input") { attr("style", "background: url('$iconUrl') no-repeat scroll 14px center !important; background-size: 20px 20px !important; padding-left: 44px !important;") }
+                    id("search_engine_icon") { attr("src", iconUrl) }
 
                     // Fill params in scripts
                     tag("script") {

@@ -40050,3 +40050,4 @@
 0.0.0.0 zzxlukodff.com
 0.0.0.0 zzyonghao.com
 0.0.0.0 zzznews.ru
+0.0.0.0 udc.yahoo.com

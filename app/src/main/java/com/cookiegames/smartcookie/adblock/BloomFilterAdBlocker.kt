@@ -71,8 +71,27 @@ class BloomFilterAdBlocker @Inject constructor(
                     val host = if (spaceIdx != -1) trimmed.substring(spaceIdx + 1).trim() else trimmed
                     fastHostSet.add(host.toLowerCase(Locale.ROOT))
                 }
-                logger.log(TAG, "FastAdBlocker loaded ${fastHostSet.size} hosts into memory")
             }
+            val essentialAdHosts = arrayOf(
+                "ymatuhin.ru", "js.sentry-cdn.com", "browser.sentry-cdn.com",
+                "sentry.io", "bugsnag.com", "udc.yahoo.com", "graph.facebook.com",
+                "firebaseinstallations.googleapis.com", "branch.io", "braze.com",
+                "pagead2.googlesyndication.com", "securepubads.g.doubleclick.net",
+                "adservice.google.com", "google-analytics.com", "googletagmanager.com",
+                "stats.g.doubleclick.net", "mc.yandex.ru", "an.yandex.ru",
+                "analytics.tiktok.com", "bat.bing.com", "ads.tiktok.com",
+                "ads.linkedin.com", "ads-api.twitter.com", "static.ads-twitter.com",
+                "ads.pinterest.com", "pixel.facebook.com", "an.facebook.com",
+                "tr.snapchat.com", "ad.admitad.com", "criteo.com", "taboola.com",
+                "outbrain.com", "rubiconproject.com", "pubmatic.com", "openx.net",
+                "casalemedia.com", "adnxs.com", "smartadserver.com", "amazon-adsystem.com",
+                "scorecardresearch.com", "app-measurement.com", "adcolony.com",
+                "applovin.com", "chartbeat.com", "hotjar.com", "clarity.ms"
+            )
+            for (h in essentialAdHosts) {
+                fastHostSet.add(h)
+            }
+            logger.log(TAG, "FastAdBlocker loaded ${fastHostSet.size} hosts into memory")
         } catch (e: Exception) {
             logger.log(TAG, "Failed loading fast hosts", e)
         }
@@ -152,17 +171,17 @@ class BloomFilterAdBlocker @Inject constructor(
     override fun isAd(url: String): Boolean {
         val domain = try {
             getDomainName(url)
-        } catch (exception: URISyntaxException) {
+        } catch (exception: Exception) {
             return false
         }
 
         var current = domain.name.toLowerCase(Locale.ROOT)
         while (current.isNotEmpty()) {
-            synchronized(fastHostSet) {
-                if (fastHostSet.contains(current)) {
-                    logger.log(TAG, "URL '$url' blocked by fast host rule: $current")
-                    return true
-                }
+            if (fastHostSet.contains(current)) {
+                return true
+            }
+            if (bloomFilter.delegate?.contains(Host(current)) == true) {
+                return true
             }
             val dotIndex = current.indexOf('.')
             if (dotIndex != -1 && dotIndex < current.length - 1) {

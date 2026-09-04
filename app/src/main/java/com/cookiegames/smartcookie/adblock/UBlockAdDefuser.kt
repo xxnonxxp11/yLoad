@@ -41,13 +41,21 @@ class UBlockAdDefuser @Inject constructor() {
         .ad-sidebar,
         [aria-label="advertisement" i],
         [aria-label="sponsored" i],
+        #yandex_rtb_R-A-491776-1,
+        [id*="yandex_rtb_"],
+        [class*="yandex-rtb"],
+        [data-ads],
+        .includeWrapper,
         ytd-ad-slot-renderer,
         ytd-banner-promo-renderer,
         ytd-promoted-sparkles-web-renderer,
         ytd-compact-promoted-video-renderer,
         ytm-promoted-sparkles-web-renderer,
+        #player-ads,
         #masthead-ad,
         .ytp-ad-module,
+        .ytp-ad-overlay-container,
+        .ytp-ad-message-container,
         .video-ads {
             display: none !important;
             height: 0 !important;
@@ -132,9 +140,9 @@ class UBlockAdDefuser @Inject constructor() {
             function pruneAds(obj) {
                 if (!obj || typeof obj !== 'object') return obj;
                 try {
-                    delete obj.adPlacements;
-                    delete obj.playerAds;
-                    delete obj.adSlots;
+                    if (obj.adPlacements) obj.adPlacements = [];
+                    if (obj.playerAds) obj.playerAds = [];
+                    if (obj.adSlots) obj.adSlots = [];
                     delete obj.adBreakHeartbeatParams;
                     if (obj.playbackTracking) {
                         delete obj.playbackTracking.videostatsPlaybackUrl;
@@ -142,6 +150,10 @@ class UBlockAdDefuser @Inject constructor() {
                         delete obj.playbackTracking.videostatsWatchtimeUrl;
                         delete obj.playbackTracking.qoeUrl;
                         delete obj.playbackTracking.atrUrl;
+                        delete obj.playbackTracking.ptrackingUrl;
+                    }
+                    if (obj.playerConfig && obj.playerConfig.adConfig) {
+                        delete obj.playerConfig.adConfig;
                     }
                 } catch(e) {}
                 return obj;
@@ -208,14 +220,28 @@ class UBlockAdDefuser @Inject constructor() {
                 };
             }
 
-            // 4. Click skip button automatically when visible (uBlock Origin behavior)
+            // 4. Auto-skip video ads and fast-forward in 300ms safely
             function autoSkip() {
-                var skipBtn = document.querySelector('.ytp-ad-skip-button, .ytp-ad-skip-button-modern, .ytp-skip-ad-button, .videoAdUiSkipButton');
+                var player = document.querySelector('.html5-video-player');
+                var isAdActive = player && (player.classList.contains('ad-showing') || player.classList.contains('ad-interrupting'));
+                if (isAdActive) {
+                    var video = player.querySelector('video') || document.querySelector('video');
+                    if (video) {
+                        try {
+                            video.muted = true;
+                            video.playbackRate = 16.0;
+                            if (isFinite(video.duration) && video.duration > 0) {
+                                video.currentTime = video.duration;
+                            }
+                        } catch(e) {}
+                    }
+                }
+                var skipBtn = document.querySelector('.ytp-ad-skip-button, .ytp-ad-skip-button-modern, .ytp-skip-ad-button, .ytp-ad-skip-button-slot button, .videoAdUiSkipButton');
                 if (skipBtn) {
                     try { skipBtn.click(); } catch(e) {}
                 }
             }
-            setInterval(autoSkip, 1000);
+            setInterval(autoSkip, 300);
         })();
     """.trimIndent()
 }

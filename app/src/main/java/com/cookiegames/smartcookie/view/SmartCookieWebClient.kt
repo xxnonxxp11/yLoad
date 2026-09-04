@@ -146,11 +146,49 @@ class SmartCookieWebClient(
         activity.injector.provideNoOpAdBlocker()
     }
 
+    private val blockedCorsHeaders = mapOf(
+        "Access-Control-Allow-Origin" to "*",
+        "Access-Control-Allow-Methods" to "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers" to "*",
+        "Cache-Control" to "no-store"
+    )
+
+    private fun createBlockedResponse(url: String): WebResourceResponse {
+        val lower = url.toLowerCase(Locale.ROOT)
+        val mimeType = when {
+            lower.endsWith(".js") || lower.contains("/js/") || lower.contains(".js?") -> "application/javascript"
+            lower.endsWith(".css") || lower.contains("/css/") || lower.contains(".css?") -> "text/css"
+            lower.endsWith(".png") || lower.contains(".png?") -> "image/png"
+            lower.endsWith(".jpg") || lower.endsWith(".jpeg") -> "image/jpeg"
+            lower.endsWith(".gif") || lower.contains(".gif?") -> "image/gif"
+            lower.endsWith(".svg") || lower.contains(".svg?") -> "image/svg+xml"
+            lower.endsWith(".json") || lower.contains("/json") -> "application/json"
+            else -> "text/plain"
+        }
+        return WebResourceResponse(
+            mimeType,
+            "UTF-8",
+            403,
+            "Blocked by yLoad AdBlock",
+            blockedCorsHeaders,
+            ByteArrayInputStream(emptyResponseByteArray)
+        )
+    }
+
     private fun shouldRequestBeBlocked(pageUrl: String, requestUrl: String): Boolean {
+        if (!userPreferences.adBlockEnabled) return false
         if (whitelistModel.isUrlAllowedAds(pageUrl)) return false
-        if (adBlock.isAd(requestUrl)) return true
 
         val lower = requestUrl.toLowerCase(Locale.ROOT)
+        // Never block actual YouTube video streams or player core scripts
+        if (lower.contains("googlevideo.com") ||
+            lower.contains("youtube.com/s/player/") ||
+            lower.contains("youtube.com/yts/")) {
+            return false
+        }
+
+        if (adBlock.isAd(requestUrl)) return true
+
         if (lower.contains("fakepage.html") ||
             lower.contains("/pagead/") ||
             lower.contains("/ads.js") ||
@@ -167,7 +205,25 @@ class SmartCookieWebClient(
             lower.contains("taboola.com") ||
             lower.contains("outbrain.com") ||
             lower.contains("adservice.google") ||
-            lower.contains("googlesyndication")
+            lower.contains("googlesyndication") ||
+            lower.contains("googleadservices") ||
+            lower.contains("pr_advertising_ads_banner") ||
+            lower.contains("_ads_banner") ||
+            lower.contains("/banners/pr_") ||
+            lower.contains("/banners/advertising") ||
+            lower.contains("sentry-cdn.com") ||
+            lower.contains("bugsnag.min.js") ||
+            lower.contains("hotjar-") ||
+            lower.contains("static.hotjar.com") ||
+            lower.contains("mc.yandex.ru") ||
+            lower.contains("an.yandex.ru") ||
+            lower.contains("ymatuhin.ru") ||
+            lower.contains("gtag/js") ||
+            lower.contains("google-analytics.com") ||
+            lower.contains("clarity.ms") ||
+            lower.contains("popunder") ||
+            lower.contains("popupads") ||
+            lower.contains("d2wy8f7a9ursnm.cloudfront.net")
         ) {
             return true
         }
@@ -208,18 +264,7 @@ class SmartCookieWebClient(
                 return null
             }
 
-            return WebResourceResponse(
-                "text/plain",
-                "utf-8",
-                403,
-                "Blocked by yLoad AdBlock",
-                mapOf("Access-Control-Allow-Origin" to "*"),
-                object : InputStream() {
-                    override fun read(): Int {
-                        throw IOException("Blocked by yLoad AdBlock")
-                    }
-                }
-            )
+            return createBlockedResponse(requestUrl)
         }
         return super.shouldInterceptRequest(view, request)
     }
@@ -228,15 +273,7 @@ class SmartCookieWebClient(
     @TargetApi(Build.VERSION_CODES.KITKAT_WATCH)
     override fun shouldInterceptRequest(view: WebView, url: String): WebResourceResponse? {
         if (shouldRequestBeBlocked(currentUrl, url)) {
-            return WebResourceResponse(
-                "text/plain",
-                "utf-8",
-                object : InputStream() {
-                    override fun read(): Int {
-                        throw IOException("Blocked by yLoad AdBlock")
-                    }
-                }
-            )
+            return createBlockedResponse(url)
         }
         if (url.contains("detectPopBlock.js")) {
             val empty = ByteArrayInputStream(emptyResponseByteArray)
@@ -664,33 +701,10 @@ class SmartCookieWebClient(
         }
 
         if (userPreferences.forceHTTPSenabled || userPreferences.preferHTTPSenabled) {
-            if (url.contains("http://")) {
-                if (url.contains("https://")) {
-                    //Secure!
-                    return
-                } else {
-                    view.pauseTimers()
-                    val newUrl = url.replace("http://", "https://")
-                    if (exists(newUrl)) {
-                        //Supports HTTPS, but SSL isn't used, so redirect to HTTPS
-                        view.resumeTimers()
-
-                        view.loadUrl(newUrl)
-                    } else {
-                        //No HTTPS support
-                        if (userPreferences.forceHTTPSenabled) {
-                            view.settings.javaScriptEnabled = true
-                            if(userPreferences.useTheme == AppTheme.LIGHT){
-                                color = ""
-                            }
-                            val title = activity.getString(R.string.https_title)
-                            val reload = activity.getString(R.string.error_reload)
-                            view.loadDataWithBaseURL(null, buildErrorPage(color, title, "NET::ERR_HTTPS_NOT_SUPPORTED", reload, true), "text/html; charset=utf-8", "UTF-8", null)
-                            view.invalidate()
-                            view.settings.javaScriptEnabled = userPreferences.javaScriptEnabled
-                        }
-                    }
-                }
+            if (url.startsWith("http://")) {
+                val newUrl = url.replaceFirst("http://", "https://")
+                view.loadUrl(newUrl)
+                return
             }
         }
 
@@ -782,6 +796,9 @@ class SmartCookieWebClient(
         if (userPreferences.adBlockEnabled) {
             view.evaluateJavascript(uBlockAdDefuser.cosmeticInjectionJs, null)
             view.evaluateJavascript(uBlockAdDefuser.generalAdDefuserJs, null)
+            if (url.contains("youtube.com") || url.contains("youtu.be")) {
+                view.evaluateJavascript(uBlockAdDefuser.youtubeAdDefuserJs, null)
+            }
         }
 
         // Only set the SSL state if there isn't an error for the current URL.
@@ -802,6 +819,17 @@ class SmartCookieWebClient(
             uiController.showActionBar()
         }
         uiController.tabChanged(smartCookieView)
+    }
+
+    override fun onPageCommitVisible(view: WebView, url: String) {
+        super.onPageCommitVisible(view, url)
+        if (userPreferences.adBlockEnabled) {
+            view.evaluateJavascript(uBlockAdDefuser.cosmeticInjectionJs, null)
+            view.evaluateJavascript(uBlockAdDefuser.generalAdDefuserJs, null)
+            if (url.contains("youtube.com") || url.contains("youtu.be")) {
+                view.evaluateJavascript(uBlockAdDefuser.youtubeAdDefuserJs, null)
+            }
+        }
     }
 
     override fun onReceivedHttpAuthRequest(

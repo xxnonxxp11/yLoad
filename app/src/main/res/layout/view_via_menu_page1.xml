@@ -25,7 +25,7 @@
                 android:id="@+id/icon_via_night_mode"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_via_night" />
+                android:src="@drawable/ic_via_moon" />
             <TextView
                 android:id="@+id/text_via_night_mode"
                 android:layout_width="wrap_content"
@@ -243,7 +243,7 @@
                 android:id="@+id/icon_via_settings"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_settings_customize" />
+                android:src="@drawable/ic_via_settings" />
             <TextView
                 android:id="@+id/text_via_settings"
                 android:layout_width="wrap_content"
