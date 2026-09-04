@@ -29,6 +29,7 @@ import com.cookiegames.smartcookie.adblock.UBlockAdDefuser
 import com.cookiegames.smartcookie.adblock.allowlist.AllowListModel
 import com.cookiegames.smartcookie.browser.JavaScriptChoice
 import com.cookiegames.smartcookie.browser.SiteBlockChoice
+import com.cookiegames.smartcookie.browser.activity.BrowserActivity
 import com.cookiegames.smartcookie.constant.FILE
 import com.cookiegames.smartcookie.controller.UIController
 import com.cookiegames.smartcookie.database.javascript.JavaScriptDatabase

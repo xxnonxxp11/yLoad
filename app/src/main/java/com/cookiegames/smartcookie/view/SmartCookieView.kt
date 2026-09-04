@@ -748,7 +748,7 @@ class SmartCookieView(
                 Toast.makeText(activity, "Servicio de impresión no disponible", Toast.LENGTH_SHORT).show()
                 return
             }
-            val jobName = (titleInfo.title ?: "Documento").take(25)
+            val jobName = if (title.isNotBlank()) title.take(25) else "Documento"
             val printAdapter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 webView.createPrintDocumentAdapter(jobName)
             } else {

@@ -71,7 +71,7 @@ object OfflineWebRecorder {
 
     fun getMimeType(url: String, defaultMime: String = "application/octet-stream"): String {
         val clean = url.substringBefore('?').substringBefore('#')
-        val ext = MimeTypeMap.getFileExtensionFromUrl(clean).lowercase()
+        val ext = MimeTypeMap.getFileExtensionFromUrl(clean).toLowerCase(java.util.Locale.ROOT)
         return when (ext) {
             "wasm" -> "application/wasm"
             "json" -> "application/json"
