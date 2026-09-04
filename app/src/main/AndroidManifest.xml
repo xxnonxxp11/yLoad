@@ -222,11 +222,13 @@
             android:name=".webapp.WebappActivity"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|keyboard"
             android:exported="true"
-            android:launchMode="singleTask"
-            android:taskAffinity="com.yload.webapp"
+            android:hardwareAccelerated="true"
+            android:launchMode="standard"
+            android:documentLaunchMode="intoExisting"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
                 <action android:name="com.yload.browser.webapp.ACTION_OPEN_WEBAPP" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:scheme="http" />

@@ -37,15 +37,18 @@ class TabCountView @JvmOverloads constructor(
     }
     private var borderRadius: Float = 0F
     private var borderWidth: Float = 0F
+    private var baseTextSize: Float = 14F
     private val workingRect = RectF()
 
     private var count: Int = 0
+    private var isIncognito: Boolean = false
 
     init {
         setLayerType(LAYER_TYPE_SOFTWARE, null)
         context.withStyledAttributes(attrs, R.styleable.TabCountView) {
             paint.color = getColor(R.styleable.TabCountView_tabIconColor, Color.BLACK)
-            paint.textSize = getDimension(R.styleable.TabCountView_tabIconTextSize, 14F)
+            baseTextSize = getDimension(R.styleable.TabCountView_tabIconTextSize, 14F)
+            paint.textSize = baseTextSize
             borderRadius = getDimension(R.styleable.TabCountView_tabIconBorderRadius, 0F)
             borderWidth = getDimension(R.styleable.TabCountView_tabIconBorderWidth, 0F)
         }
@@ -56,13 +59,23 @@ class TabCountView @JvmOverloads constructor(
      */
     fun updateCount(count: Int) {
         this.count = count
-        contentDescription = count.toString()
+        contentDescription = if (count > 99) ":D" else count.toString()
+        invalidate()
+    }
+
+    fun setIsIncognito(incognito: Boolean) {
+        this.isIncognito = incognito
+        invalidate()
+    }
+
+    fun setColor(@androidx.annotation.ColorInt color: Int) {
+        paint.color = color
         invalidate()
     }
 
     override fun onDraw(canvas: Canvas) {
         val text: String = if (count > 99) {
-            context.getString(R.string.infinity)
+            if (isIncognito) ";)" else ":D"
         } else {
             numberFormat.format(count)
         }
@@ -79,6 +92,16 @@ class TabCountView @JvmOverloads constructor(
         canvas.drawRoundRect(workingRect, innerRadius, innerRadius, paint)
 
         paint.xfermode = overMode
+
+        // Auto-scale text to fit inside the rounded box without clipping
+        val innerWidth = width - (borderWidth * 2) - 4f
+        var currentTextSize = baseTextSize
+        paint.textSize = currentTextSize
+        val textWidth = paint.measureText(text)
+        if (textWidth > innerWidth && innerWidth > 0) {
+            currentTextSize = baseTextSize * (innerWidth / textWidth)
+            paint.textSize = currentTextSize
+        }
 
         val xPos = width / 2F
         val yPos = height / 2 - (paint.descent() + paint.ascent()) / 2

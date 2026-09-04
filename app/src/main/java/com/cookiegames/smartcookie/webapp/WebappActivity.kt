@@ -84,6 +84,7 @@ class WebappActivity : AppCompatActivity() {
             }
         }
 
+        webView.resumeTimers()
         setupWebViewSettings()
         setupClients()
 
@@ -94,12 +95,32 @@ class WebappActivity : AppCompatActivity() {
         }
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        webView.resumeTimers()
+
+        val targetUrl = intent?.getStringExtra(EXTRA_URL)
+            ?: intent?.dataString
+        if (!targetUrl.isNullOrBlank() && targetUrl != webView.url) {
+            webView.loadUrl(targetUrl)
+        }
+        val initialTitle = intent?.getStringExtra(EXTRA_TITLE)
+        if (!initialTitle.isNullOrBlank()) {
+            title = initialTitle
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                setTaskDescription(ActivityManager.TaskDescription(initialTitle))
+            }
+        }
+    }
+
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebViewSettings() {
         val settings = webView.settings
         settings.javaScriptEnabled = true
         settings.domStorageEnabled = true
         settings.databaseEnabled = true
+        settings.setGeolocationEnabled(true)
         settings.setSupportZoom(true)
         settings.builtInZoomControls = true
         settings.displayZoomControls = false
@@ -109,6 +130,12 @@ class WebappActivity : AppCompatActivity() {
         settings.allowFileAccess = true
         settings.allowContentAccess = true
         settings.cacheMode = WebSettings.LOAD_DEFAULT
+
+        // Clean user agent: strip "; wv" so modern web apps (YouTube, Twitter, Google) don't block features
+        val currentUa = settings.userAgentString
+        if (!currentUa.isNullOrEmpty() && currentUa.contains("; wv")) {
+            settings.userAgentString = currentUa.replace("; wv", "")
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             settings.mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
@@ -120,6 +147,8 @@ class WebappActivity : AppCompatActivity() {
         webView.isFocusable = true
         webView.isFocusableInTouchMode = true
         webView.scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
+        webView.requestFocus()
+        webView.resumeTimers()
     }
 
     private fun setupClients() {
@@ -228,7 +257,9 @@ class WebappActivity : AppCompatActivity() {
     }
 
     private fun handleUrlOverride(url: String): Boolean {
-        if (url.startsWith("http://") || url.startsWith("https://")) {
+        if (url.startsWith("http://") || url.startsWith("https://")
+            || url.startsWith("about:") || url.startsWith("data:")
+            || url.startsWith("blob:") || url.startsWith("javascript:")) {
             return false // Let WebView load it inside the standalone app
         }
 
@@ -294,6 +325,7 @@ class WebappActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         webView.onResume()
+        webView.resumeTimers()
     }
 
     override fun onPause() {
@@ -305,6 +337,8 @@ class WebappActivity : AppCompatActivity() {
         if (customView != null) {
             webView.webChromeClient?.onHideCustomView()
         }
+        (webView.parent as? ViewGroup)?.removeView(webView)
+        webView.stopLoading()
         webView.destroy()
         super.onDestroy()
     }

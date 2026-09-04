@@ -200,7 +200,6 @@ class TabsManager @Inject constructor(
      * onResume doesn't consistently resume it.
      */
     fun pauseAll() {
-        currentTab?.pauseTimers()
         tabList.forEach(SmartCookieView::onPause)
     }
 

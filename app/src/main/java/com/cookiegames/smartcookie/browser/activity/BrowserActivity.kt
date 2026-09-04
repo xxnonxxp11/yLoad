@@ -1659,7 +1659,26 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 
     override fun updateTabNumber(number: Int) {
         if (shouldShowTabsInDrawer && !isIncognito()) {
+            tabCountView?.setIsIncognito(false)
             tabCountView?.updateCount(number)
+        }
+        val extraBar = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        extraBar?.let { nav ->
+            try {
+                val badge = nav.getOrCreateBadge(R.id.tabs)
+                if (number > 0) {
+                    badge.isVisible = true
+                    if (number > 99) {
+                        badge.maxCharacterCount = 2
+                        badge.number = 99
+                    } else {
+                        badge.number = number
+                    }
+                } else {
+                    badge.isVisible = false
+                }
+            } catch (ignored: Exception) {
+            }
         }
     }
 
