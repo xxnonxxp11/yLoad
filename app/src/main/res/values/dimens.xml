@@ -10,10 +10,10 @@
     <dimen name="material_grid_touch_large">56dp</dimen>
     <dimen name="material_grid_touch_xlarge">72dp</dimen>
 
-    <dimen name="dialog_max_size">350dp</dimen>
-    <dimen name="dialog_padding">24dp</dimen>
+    <dimen name="dialog_max_size">300dp</dimen>
+    <dimen name="dialog_padding">16dp</dimen>
 
-    <dimen name="navigation_drawer_max_width">260dp</dimen>
+    <dimen name="navigation_drawer_max_width">220dp</dimen>
 
     <dimen name="toolbar_height_portrait">56dp</dimen>
     <dimen name="toolbar_height_landscape">52dp</dimen>

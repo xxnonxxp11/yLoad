@@ -12,13 +12,13 @@
         android:ellipsize="end"
         android:gravity="start"
         android:maxLines="2"
-        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
-        android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
-        android:paddingTop="@dimen/material_grid_margin"
-        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-        android:paddingRight="?android:attr/listPreferredItemPaddingRight"
-        android:paddingBottom="@dimen/material_grid_unit"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="8dp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="?attr/autoCompleteTitleColor"
+        android:textSize="15.5sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/dialog_list"

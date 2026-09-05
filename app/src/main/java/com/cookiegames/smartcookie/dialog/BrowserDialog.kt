@@ -195,7 +195,10 @@ object BrowserDialog {
         if (maxWidth > screenSize - 2 * padding) {
             maxWidth = screenSize - 2 * padding
         }
-        dialog.window?.setLayout(maxWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog.window?.let { window ->
+            window.setLayout(maxWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
+            window.setBackgroundDrawableResource(android.R.color.transparent)
+        }
     }
 
     /**

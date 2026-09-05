@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/tab_item_background"
     android:layout_width="match_parent"
-    android:layout_height="42dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginTop="2dp"
-    android:layout_marginBottom="2dp"
+    android:layout_height="36dp"
+    android:layout_marginStart="6dp"
+    android:layout_marginEnd="6dp"
+    android:layout_marginTop="1.5dp"
+    android:layout_marginBottom="1.5dp"
     android:clickable="true"
     android:focusable="true"
     android:gravity="center_vertical"
@@ -20,11 +20,11 @@
 
         <ImageView
             android:id="@+id/faviconTab"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:contentDescription="@null"
             android:scaleType="fitCenter" />
     </FrameLayout>
@@ -40,17 +40,17 @@
         android:maxLines="1"
         android:singleLine="true"
         android:textColor="?attr/autoCompleteTitleColor"
-        android:textSize="13.5sp" />
+        android:textSize="12.5sp" />
 
     <ImageView
         android:id="@+id/deleteAction"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="4dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/close_tab"
-        android:padding="9dp"
+        android:padding="6dp"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/ic_action_delete"
         app:tint="?attr/iconColor" />

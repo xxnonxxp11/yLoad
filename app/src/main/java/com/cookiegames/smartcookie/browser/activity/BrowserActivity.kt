@@ -2460,6 +2460,15 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
             page2View.findViewById<TextView>(R.id.text_via_fullscreen)?.setTextColor(activeColor)
         }
 
+        val isTranslated = currentTab?.url?.let {
+            it.contains("translate.google.com") || it.contains("translate.googleusercontent.com")
+        } == true
+
+        if (isTranslated) {
+            page2View.findViewById<androidx.appcompat.widget.AppCompatImageView>(R.id.icon_via_translate)?.setColorFilter(activeColor)
+            page2View.findViewById<TextView>(R.id.text_via_translate)?.setTextColor(activeColor)
+        }
+
         currentTab?.let { tab ->
             if (tab.url.isNotEmpty()) {
                 bookmarkManager.isBookmark(tab.url)
@@ -2572,9 +2581,31 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         page2View.findViewById<View>(R.id.btn_via_translate)?.setOnClickListener {
             dialog.dismiss()
             currentTab?.let { tab ->
-                if (tab.url.isNotBlank() && !tab.url.isSpecialUrl()) {
-                    val trUrl = "https://translate.google.com/translate?sl=auto&tl=es&u=" + java.net.URLEncoder.encode(tab.url, "UTF-8")
+                val url = tab.url
+                if (url.isBlank() || url.isSpecialUrl()) {
+                    return@setOnClickListener
+                }
+                val isCurrentlyTranslated = url.contains("translate.google.com") || url.contains("translate.googleusercontent.com")
+                if (isCurrentlyTranslated) {
+                    val originalUrl = try {
+                        android.net.Uri.parse(url).getQueryParameter("u")
+                    } catch (e: Exception) {
+                        null
+                    }
+                    if (!originalUrl.isNullOrBlank()) {
+                        presenter?.loadUrlInCurrentView(originalUrl)
+                        Toast.makeText(this, "Traducción desactivada", Toast.LENGTH_SHORT).show()
+                    } else if (tab.canGoBack()) {
+                        tab.goBack()
+                        Toast.makeText(this, "Traducción desactivada", Toast.LENGTH_SHORT).show()
+                    } else {
+                        tab.reload()
+                    }
+                } else {
+                    val lang = java.util.Locale.getDefault().language.ifBlank { "es" }
+                    val trUrl = "https://translate.google.com/translate?sl=auto&tl=$lang&u=" + java.net.URLEncoder.encode(url, "UTF-8")
                     presenter?.loadUrlInCurrentView(trUrl)
+                    Toast.makeText(this, "Traduciendo página...", Toast.LENGTH_SHORT).show()
                 }
             }
         }

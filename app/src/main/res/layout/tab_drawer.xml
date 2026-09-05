@@ -9,7 +9,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="38dp"
         android:background="@android:color/transparent"
         android:gravity="center_vertical"
         android:paddingStart="8dp"
@@ -17,12 +17,12 @@
 
         <ImageView
             android:id="@+id/tab_header_button"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/tabs"
-            android:padding="8dp"
+            android:padding="6dp"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_action_tabs"
             app:tint="?attr/iconColor" />
@@ -31,13 +31,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="6dp"
             android:layout_toEndOf="@id/tab_header_button"
             android:fontFamily="sans-serif-medium"
             android:text="@string/tabs"
             android:textColor="?attr/autoCompleteTitleColor"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textSize="13.5sp" />
 
     </RelativeLayout>
 
@@ -65,7 +64,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="38dp"
         android:background="@android:color/transparent"
         android:baselineAligned="false"
         android:gravity="center_vertical"
@@ -74,7 +73,7 @@
         <LinearLayout
             android:id="@+id/new_tab"
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="32dp"
             android:layout_gravity="center"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
@@ -86,8 +85,8 @@
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:contentDescription="@null"
                 app:srcCompat="@drawable/ic_round_add"
                 app:tint="?attr/iconColor" />
@@ -95,11 +94,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="6dp"
                 android:text="@string/action_new_tab"
                 android:textColor="?attr/autoCompleteTitleColor"
-                android:textSize="13sp"
-                android:textStyle="bold" />
+                android:textSize="12.5sp"
+                android:fontFamily="sans-serif-medium" />
         </LinearLayout>
 
         <ImageView
@@ -109,7 +108,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/action_back"
-            android:padding="12dp"
+            android:padding="8dp"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_action_back"
             app:tint="?attr/iconColor" />
@@ -121,7 +120,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/action_homepage"
-            android:padding="12dp"
+            android:padding="8dp"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_action_home"
             app:tint="?attr/iconColor" />
@@ -133,7 +132,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/action_forward"
-            android:padding="12dp"
+            android:padding="8dp"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_action_forward"
             app:tint="?attr/iconColor" />
@@ -145,7 +144,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/action_new_tab"
-            android:padding="12dp"
+            android:padding="8dp"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_round_add"
             app:tint="?attr/iconColor" />

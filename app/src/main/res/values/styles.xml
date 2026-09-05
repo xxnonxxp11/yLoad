@@ -67,7 +67,8 @@
         <item name="actionOverflowButtonStyle">@style/overFlowButtonStyle</item>
 
         <!-- Alert dialogs -->
-        <item name="alertDialogTheme">@style/AppCompatDialogStyle.Light</item>
+        <item name="alertDialogTheme">@style/ModernDialogStyle.Light</item>
+        <item name="materialAlertDialogTheme">@style/ModernDialogStyle.Light</item>
 
     </style>
 
@@ -97,7 +98,8 @@
         <item name="actionOverflowButtonStyle">@style/overFlowButtonStyle</item>
 
         <!-- Alert dialogs -->
-        <item name="alertDialogTheme">@style/AppCompatDialogStyle.Dark</item>
+        <item name="alertDialogTheme">@style/ModernDialogStyle.Dark</item>
+        <item name="materialAlertDialogTheme">@style/ModernDialogStyle.Dark</item>
 
     </style>
 
@@ -127,21 +129,83 @@
         <item name="actionOverflowButtonStyle">@style/overFlowButtonStyle</item>
 
         <!-- Alert dialogs -->
-        <item name="alertDialogTheme">@style/AppCompatDialogStyle.Dark</item>
+        <item name="alertDialogTheme">@style/ModernDialogStyle.Dark</item>
+        <item name="materialAlertDialogTheme">@style/ModernDialogStyle.Dark</item>
 
     </style>
 
-    <!-- AlertDialog Theming -->
+    <!-- Modern Compact Dialog Styles -->
+    <style name="ModernDialogStyle.Light" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="android:background">@drawable/dialog_rounded_bg_light</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Dialog</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/DialogTitleText.Light</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/DialogBodyText.Light</item>
+        <item name="buttonBarPositiveButtonStyle">@style/DialogButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/DialogButton</item>
+        <item name="buttonBarNeutralButtonStyle">@style/DialogButton</item>
+        <item name="colorAccent">#5C87F7</item>
+        <item name="colorPrimary">#5C87F7</item>
+    </style>
+
+    <style name="ModernDialogStyle.Dark" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="android:background">@drawable/dialog_rounded_bg_dark</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Dialog</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/DialogTitleText.Dark</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/DialogBodyText.Dark</item>
+        <item name="buttonBarPositiveButtonStyle">@style/DialogButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/DialogButton</item>
+        <item name="buttonBarNeutralButtonStyle">@style/DialogButton</item>
+        <item name="colorAccent">#5C87F7</item>
+        <item name="colorPrimary">#5C87F7</item>
+    </style>
+
+    <style name="ShapeAppearance.Dialog" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerSize">18dp</item>
+    </style>
+
+    <style name="DialogTitleText.Light" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textSize">15.5sp</item>
+        <item name="android:textColor">#1A1A1A</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="DialogTitleText.Dark" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textSize">15.5sp</item>
+        <item name="android:textColor">#EEEEEE</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="DialogBodyText.Light" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
+        <item name="android:textSize">13.5sp</item>
+        <item name="android:textColor">#4A4A4A</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="DialogBodyText.Dark" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
+        <item name="android:textSize">13.5sp</item>
+        <item name="android:textColor">#CCCCCC</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="DialogButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">#5C87F7</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:minHeight">36dp</item>
+    </style>
+
+    <!-- Legacy AlertDialog Fallback -->
     <style name="AppCompatDialogStyle.Light" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">@color/cookie_light</item>
+        <item name="colorAccent">#5C87F7</item>
     </style>
 
     <style name="AppCompatDialogStyle.Dark" parent="Theme.AppCompat.Dialog.Alert">
-        <item name="colorAccent">@color/cookie_light</item>
+        <item name="colorAccent">#5C87F7</item>
     </style>
 
     <style name="AppCompatDialogStyle.Black" parent="Theme.AppCompat.Dialog.Alert">
-        <item name="colorAccent">@color/cookie_light</item>
+        <item name="colorAccent">#5C87F7</item>
     </style>
 
     <!-- Overflow Menu Customization -->

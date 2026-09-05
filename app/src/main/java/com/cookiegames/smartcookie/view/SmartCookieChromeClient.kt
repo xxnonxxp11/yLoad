@@ -159,6 +159,47 @@ class SmartCookieChromeClient(
                     Unit
         })
 
+    override fun onJsAlert(view: WebView, url: String, message: String, result: JsResult): Boolean {
+        val host = try { Uri.parse(url).host ?: url } catch (e: Exception) { url }
+        MaterialAlertDialogBuilder(activity)
+            .setTitle(host)
+            .setMessage(message)
+            .setPositiveButton(android.R.string.ok) { _, _ -> result.confirm() }
+            .setOnCancelListener { result.cancel() }
+            .resizeAndShow()
+        return true
+    }
+
+    override fun onJsConfirm(view: WebView, url: String, message: String, result: JsResult): Boolean {
+        val host = try { Uri.parse(url).host ?: url } catch (e: Exception) { url }
+        MaterialAlertDialogBuilder(activity)
+            .setTitle(host)
+            .setMessage(message)
+            .setPositiveButton(android.R.string.ok) { _, _ -> result.confirm() }
+            .setNegativeButton(android.R.string.cancel) { _, _ -> result.cancel() }
+            .setOnCancelListener { result.cancel() }
+            .resizeAndShow()
+        return true
+    }
+
+    override fun onJsPrompt(view: WebView, url: String, message: String, defaultValue: String, result: JsPromptResult): Boolean {
+        val host = try { Uri.parse(url).host ?: url } catch (e: Exception) { url }
+        val input = android.widget.EditText(activity).apply {
+            setText(defaultValue)
+            setSingleLine()
+            setPadding(40, 20, 40, 20)
+        }
+        MaterialAlertDialogBuilder(activity)
+            .setTitle(host)
+            .setMessage(message)
+            .setView(input)
+            .setPositiveButton(android.R.string.ok) { _, _ -> result.confirm(input.text.toString()) }
+            .setNegativeButton(android.R.string.cancel) { _, _ -> result.cancel() }
+            .setOnCancelListener { result.cancel() }
+            .resizeAndShow()
+        return true
+    }
+
     override fun onCreateWindow(view: WebView, isDialog: Boolean, isUserGesture: Boolean,
                                 resultMsg: Message): Boolean {
         uiController.onCreateWindow(resultMsg)
